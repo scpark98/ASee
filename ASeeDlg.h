@@ -69,4 +69,6 @@ public:
 	afx_msg void OnDropFiles(HDROP hDropInfo);
 	afx_msg void OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/);
 	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
+//	afx_msg void OnMouseHWheel(UINT nFlags, short zDelta, CPoint pt);
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };

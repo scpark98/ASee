@@ -73,6 +73,8 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_WM_DROPFILES()
 	ON_WM_CONTEXTMENU()
 	ON_WM_GETMINMAXINFO()
+//	ON_WM_MOUSEHWHEEL()
+	ON_WM_MOUSEWHEEL()
 END_MESSAGE_MAP()
 
 
@@ -437,4 +439,19 @@ void CASeeDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 	lpMMI->ptMaxSize.y -= (is_auto_hide ? 2 : sz.cy);
 
 	CDialogEx::OnGetMinMaxInfo(lpMMI);
+}
+
+BOOL CASeeDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	if (IsCtrlPressed())
+	{
+		m_imgDlg.zoom(zDelta > 0 ? -1 : 1);
+	}
+	else
+	{
+		display_image((zDelta < 0 ? -1 : -2));
+	}
+
+	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
 }
