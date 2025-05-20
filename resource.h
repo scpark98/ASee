@@ -10,6 +10,8 @@
 #define IDR_MENU_CONTEXT                131
 #define ID_MENU_ROTATE_LEFT             32771
 #define ID_MENU_ALWAYS_ON_TOP           32772
+#define ID_MENU_INTERPOLATE             32772
+#define ID_MENU_SMOOTH                  32773
 #define ID_MENU_ZOOM_IN                 32774
 #define ID_MENU_ZOOM_ORIGIN             32775
 #define ID_MENU_ZOOM_STRETCH            32776
@@ -44,7 +46,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        131
-#define _APS_NEXT_COMMAND_VALUE         32771
+#define _APS_NEXT_COMMAND_VALUE         32774
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

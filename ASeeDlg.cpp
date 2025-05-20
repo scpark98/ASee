@@ -75,6 +75,36 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_WM_GETMINMAXINFO()
 //	ON_WM_MOUSEHWHEEL()
 	ON_WM_MOUSEWHEEL()
+	ON_COMMAND(ID_MENU_ALWAYS_ON_TOP, &CASeeDlg::OnMenuAlwaysOnTop)
+	ON_COMMAND(ID_MENU_OPEN_FOLDER, &CASeeDlg::OnMenuOpenFolder)
+	ON_COMMAND(ID_MENU_ZOOM_IN, &CASeeDlg::OnMenuZoomIn)
+	ON_COMMAND(ID_MENU_ZOOM_ORIGIN, &CASeeDlg::OnMenuZoomOrigin)
+	ON_COMMAND(ID_MENU_ZOOM_120, &CASeeDlg::OnMenuZoom120)
+	ON_COMMAND(ID_MENU_ZOOM_150, &CASeeDlg::OnMenuZoom150)
+	ON_COMMAND(ID_MENU_ZOOM_200, &CASeeDlg::OnMenuZoom200)
+	ON_COMMAND(ID_MENU_ZOOM_STRETCH, &CASeeDlg::OnMenuZoomStretch)
+	ON_COMMAND(ID_MENU_ZOOM_INPUT, &CASeeDlg::OnMenuZoomInput)
+	ON_COMMAND(ID_MENU_GOTO_HOME, &CASeeDlg::OnMenuGotoHome)
+	ON_COMMAND(ID_MENU_GOTO_END, &CASeeDlg::OnMenuGotoEnd)
+	ON_COMMAND(ID_MENU_SELECT_FOLDER, &CASeeDlg::OnMenuSelectFolder)
+	ON_COMMAND(ID_MENU_GOTO, &CASeeDlg::OnMenuGoto)
+	ON_COMMAND(ID_MENU_REFRESH, &CASeeDlg::OnMenuRefresh)
+	ON_COMMAND(ID_MENU_ROTATE_LEFT, &CASeeDlg::OnMenuRotateLeft)
+	ON_COMMAND(ID_MENU_ROTATE_RIGHT, &CASeeDlg::OnMenuRotateRight)
+	ON_COMMAND(ID_MENU_MIRROR, &CASeeDlg::OnMenuMirror)
+	ON_COMMAND(ID_MENU_FLIP, &CASeeDlg::OnMenuFlip)
+	ON_COMMAND(ID_MENU_SAVE_AS, &CASeeDlg::OnMenuSaveAs)
+	ON_COMMAND(ID_MENU_SLIDE_SHOW, &CASeeDlg::OnMenuSlideShow)
+	ON_COMMAND(ID_MENU_SLIDE_SHOW_INTERVAL, &CASeeDlg::OnMenuSlideShowInterval)
+	ON_COMMAND(ID_MENU_SLIDE_SHOW_REPEAT, &CASeeDlg::OnMenuSlideShowRepeat)
+	ON_COMMAND(ID_MENU_SHOW_FILENAME, &CASeeDlg::OnMenuShowFilename)
+	ON_COMMAND(ID_MENU_SHOW_PIXEL, &CASeeDlg::OnMenuShowPixel)
+	ON_COMMAND(ID_MENU_WALLPAPER, &CASeeDlg::OnMenuWallpaper)
+	ON_COMMAND(ID_MENU_COPY_TO_CLIPBOARD, &CASeeDlg::OnMenuCopyToClipboard)
+	ON_COMMAND(ID_MENU_DELETE, &CASeeDlg::OnMenuDelete)
+	ON_COMMAND(ID_MENU_CLOSE, &CASeeDlg::OnMenuClose)
+	ON_COMMAND(ID_MENU_SELECT, &CASeeDlg::OnMenuSelect)
+	ON_COMMAND(ID_MENU_SMOOTH, &CASeeDlg::OnMenuSmooth)
 END_MESSAGE_MAP()
 
 
@@ -111,8 +141,11 @@ BOOL CASeeDlg::OnInitDialog()
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	m_imgDlg.create(this);
-	m_imgDlg.fit2ctrl(true);// theApp.GetProfileInt(_T("setting"), _T("fit to dlg"), true));
-	m_imgDlg.zoom(GetProfileDouble(&theApp, _T("setting"), _T("zoom"), 1.0));
+	m_imgDlg.set_show_pixel(theApp.GetProfileInt(_T("setting"), _T("show pixel"), false));
+	bool fit = theApp.GetProfileInt(_T("setting"), _T("fit to ctrl"), true);
+	m_imgDlg.fit2ctrl(fit);
+	if (!fit)
+		m_imgDlg.zoom(GetProfileDouble(&theApp, _T("setting"), _T("zoom"), 1.0));
 
 	EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, 0);
 
@@ -235,6 +268,9 @@ void CASeeDlg::OnBnClickedOk()
 void CASeeDlg::OnBnClickedCancel()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_files.size() && m_index >= 0)
+		theApp.WriteProfileString(_T("setting"), _T("recent file"), m_files[m_index]);
+
 	CDialogEx::OnCancel();
 }
 
@@ -413,6 +449,8 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	pMenu->CheckMenuItem(ID_MENU_SHOW_PIXEL, (m_imgDlg.get_show_pixel() ? MF_CHECKED : MF_UNCHECKED));
 	//pMenu->CheckMenuItem(ID_MENU_SHOW_RESOLUTION, (m_show_resolution ? MF_CHECKED : MF_UNCHECKED));
 
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH, (m_imgDlg.get_smooth_interpolation() ? MF_CHECKED : MF_UNCHECKED));
+
 	//pMenu->CheckMenuItem(ID_MENU_ZOOM_ORIGIN, (m_zoom_type == zoom_original ? MF_CHECKED : MF_UNCHECKED));
 	//pMenu->CheckMenuItem(ID_MENU_ZOOM_120, (m_zoom == 1.2 ? MF_CHECKED : MF_UNCHECKED));
 	//pMenu->CheckMenuItem(ID_MENU_ZOOM_150, (m_zoom == 1.5 ? MF_CHECKED : MF_UNCHECKED));
@@ -444,9 +482,15 @@ void CASeeDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 BOOL CASeeDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	//Ctrl키를 누르고 wheel을 돌리면 확대/축소되는 기능은 이미 SCImageDlg에 구현되어 있다.
+	//메인에서는 그냥 wheel을 돌리면 이전/다음 이미지 표시 기능으로 동작한다.
+	TRACE(_T("%d OnMouseWheel\n"), GetTickCount());
+
 	if (IsCtrlPressed())
 	{
-		m_imgDlg.zoom(zDelta > 0 ? -1 : 1);
+		m_imgDlg.zoom(zDelta > 0 ? 1 : -1);
+		//return TRUE;
 	}
 	else
 	{
@@ -454,4 +498,160 @@ BOOL CASeeDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	}
 
 	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
+}
+
+void CASeeDlg::OnMenuAlwaysOnTop()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuOpenFolder()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuZoomIn()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuZoomOrigin()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuZoom120()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuZoom150()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuZoom200()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuZoomStretch()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuZoomInput()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuGotoHome()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuGotoEnd()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuSelectFolder()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuGoto()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuRefresh()
+{
+	reload_image();
+}
+
+void CASeeDlg::OnMenuRotateLeft()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuRotateRight()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuMirror()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuFlip()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuSaveAs()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuSlideShow()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuSlideShowInterval()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuSlideShowRepeat()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuShowFilename()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuShowPixel()
+{
+	m_imgDlg.set_show_pixel(!m_imgDlg.get_show_pixel());
+}
+
+void CASeeDlg::OnMenuWallpaper()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuCopyToClipboard()
+{
+	if (m_imgDlg.m_img.is_empty())
+		return;
+
+	m_imgDlg.m_img.copy_to_clipbard();
+	MessageBeep(0);
+
+	//m_notice.set_notice(_T("클립보드로 복사됨"));
+}
+
+void CASeeDlg::OnMenuDelete()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuClose()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuSelect()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuSmooth()
+{
+	m_imgDlg.set_smooth_interpolation(!m_imgDlg.get_smooth_interpolation());
 }
