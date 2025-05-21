@@ -54,6 +54,9 @@
     <ClInclude Include="..\Common\CStatic\SCStatic\SCStatic.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\AutoFont.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ASee.cpp">
@@ -80,6 +83,9 @@
     <ClCompile Include="..\Common\CStatic\SCStatic\SCStatic.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\AutoFont.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ASee.rc">
@@ -95,5 +101,8 @@
     <Image Include="res\ASee.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="readme.txt" />
   </ItemGroup>
 </Project>

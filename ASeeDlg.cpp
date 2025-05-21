@@ -189,6 +189,15 @@ BOOL CASeeDlg::OnInitDialog()
 
 	DragAcceptFiles();
 
+	CRect displayed(0, 0, 789, 675);
+	Gdiplus::RectF scr(123, 235, 413, 523), img;
+
+	for (int i = 0; i < 1000; i++)
+	{
+		get_real_coord_from_screen_coord(displayed, 431, scr, &img);
+		get_screen_coord_from_real_coord(displayed, 431, img, &scr);
+	}
+
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
