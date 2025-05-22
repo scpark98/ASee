@@ -8,6 +8,12 @@
 #define IDD_ASEE_DIALOG                 102
 #define IDR_MAINFRAME                   128
 #define IDR_MENU_CONTEXT                131
+#define IDD_ROI_INPUT                   131
+#define IDC_EDIT_CX                     1000
+#define IDC_SPIN_CX                     1001
+#define IDC_EDIT_CY                     1002
+#define IDC_SPIN_CX2                    1003
+#define IDC_SPIN_CY                     1003
 #define ID_MENU_ROTATE_LEFT             32771
 #define ID_MENU_ALWAYS_ON_TOP           32772
 #define ID_MENU_INTERPOLATE             32772
@@ -19,6 +25,8 @@
 #define ID_MENU_CLOSE                   32778
 #define ID_MENU_SELECT                  32779
 #define ID_MENU_OPEN_FOLDER             32780
+#define ID_MENU_ROI                     32780
+#define ID_MENU_INPUT_ROI               32781
 #define ID_MENU_SHOW_FILENAME           32786
 #define ID_MENU_SHOW_PIXEL              32787
 #define ID_MENU_ZOOM_120                32791
@@ -40,14 +48,15 @@
 #define ID_MENU_SAVE_AS                 32831
 #define ID_MENU_SELECT_FOLDER           32833
 #define ID_MENU_VIEW_TOGGLE             32835
+#define ID_MENU_SHOW_ROI_INFO           32836
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        131
-#define _APS_NEXT_COMMAND_VALUE         32774
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_RESOURCE_VALUE        133
+#define _APS_NEXT_COMMAND_VALUE         32782
+#define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

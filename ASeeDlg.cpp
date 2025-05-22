@@ -8,6 +8,8 @@
 #include "ASeeDlg.h"
 #include "afxdialogex.h"
 
+#include "RoiInputDlg.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -105,6 +107,8 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_CLOSE, &CASeeDlg::OnMenuClose)
 	ON_COMMAND(ID_MENU_SELECT, &CASeeDlg::OnMenuSelect)
 	ON_COMMAND(ID_MENU_SMOOTH, &CASeeDlg::OnMenuSmooth)
+	ON_COMMAND(ID_MENU_SHOW_ROI_INFO, &CASeeDlg::OnMenuShowRoiInfo)
+	ON_COMMAND(ID_MENU_INPUT_ROI, &CASeeDlg::OnMenuInputRoi)
 END_MESSAGE_MAP()
 
 
@@ -460,6 +464,9 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 
 	pMenu->CheckMenuItem(ID_MENU_SMOOTH, (m_imgDlg.get_smooth_interpolation() ? MF_CHECKED : MF_UNCHECKED));
 
+	pMenu->EnableMenuItem(ID_MENU_SHOW_ROI_INFO, (m_imgDlg.get_image_roi().IsEmptyArea() ? MF_DISABLED : MF_ENABLED));
+	pMenu->CheckMenuItem(ID_MENU_SHOW_ROI_INFO, (m_imgDlg.get_show_roi_info() ? MF_CHECKED : MF_UNCHECKED));
+
 	//pMenu->CheckMenuItem(ID_MENU_ZOOM_ORIGIN, (m_zoom_type == zoom_original ? MF_CHECKED : MF_UNCHECKED));
 	//pMenu->CheckMenuItem(ID_MENU_ZOOM_120, (m_zoom == 1.2 ? MF_CHECKED : MF_UNCHECKED));
 	//pMenu->CheckMenuItem(ID_MENU_ZOOM_150, (m_zoom == 1.5 ? MF_CHECKED : MF_UNCHECKED));
@@ -652,7 +659,7 @@ void CASeeDlg::OnMenuDelete()
 
 void CASeeDlg::OnMenuClose()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	OnBnClickedCancel();
 }
 
 void CASeeDlg::OnMenuSelect()
@@ -663,4 +670,26 @@ void CASeeDlg::OnMenuSelect()
 void CASeeDlg::OnMenuSmooth()
 {
 	m_imgDlg.set_smooth_interpolation(!m_imgDlg.get_smooth_interpolation());
+}
+
+void CASeeDlg::OnMenuShowRoiInfo()
+{
+	m_imgDlg.set_show_roi_info(!m_imgDlg.get_show_roi_info());
+}
+
+void CASeeDlg::OnMenuInputRoi()
+{
+	CRoiInputDlg dlg(this);
+
+	CSize sz = m_imgDlg.m_img.size();
+	Gdiplus::RectF roi = m_imgDlg.get_image_roi();
+
+	dlg.init(sz.cx, sz.cy, roi.Width, roi.Height);
+
+	if (dlg.DoModal() == IDCANCEL)
+		return;
+
+	roi.Width = dlg.m_roi_sz.cx;
+	roi.Height = dlg.m_roi_sz.cy;
+	m_imgDlg.set_image_roi(roi);
 }

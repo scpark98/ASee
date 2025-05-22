@@ -8,6 +8,7 @@
 #include "../Common/Functions.h"
 #include "../Common/GdiplusBitmap.h"
 #include "../Common/CDialog/SCImageDlg/SCImageDlg.h"
+#include "../Common/CDialog/SCShapeDlg/SCShapeDlg.h"
 
 // CASeeDlg 대화 상자
 class CASeeDlg : public CDialogEx
@@ -101,4 +102,6 @@ public:
 	afx_msg void OnMenuClose();
 	afx_msg void OnMenuSelect();
 	afx_msg void OnMenuSmooth();
+	afx_msg void OnMenuShowRoiInfo();
+	afx_msg void OnMenuInputRoi();
 };
