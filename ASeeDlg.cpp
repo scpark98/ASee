@@ -628,7 +628,7 @@ void CASeeDlg::OnMenuSlideShowRepeat()
 
 void CASeeDlg::OnMenuShowFilename()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_imgDlg.set_show_filename(!m_imgDlg.get_show_filename());
 }
 
 void CASeeDlg::OnMenuShowPixel()
