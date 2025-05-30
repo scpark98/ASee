@@ -9,6 +9,7 @@
 #include "afxdialogex.h"
 
 #include "RoiInputDlg.h"
+#include "../Common/messagebox/Win32InputBox/Win32InputBox.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -99,7 +100,6 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_SLIDE_SHOW, &CASeeDlg::OnMenuSlideShow)
 	ON_COMMAND(ID_MENU_SLIDE_SHOW_INTERVAL, &CASeeDlg::OnMenuSlideShowInterval)
 	ON_COMMAND(ID_MENU_SLIDE_SHOW_REPEAT, &CASeeDlg::OnMenuSlideShowRepeat)
-	ON_COMMAND(ID_MENU_SHOW_FILENAME, &CASeeDlg::OnMenuShowFilename)
 	ON_COMMAND(ID_MENU_SHOW_PIXEL, &CASeeDlg::OnMenuShowPixel)
 	ON_COMMAND(ID_MENU_WALLPAPER, &CASeeDlg::OnMenuWallpaper)
 	ON_COMMAND(ID_MENU_COPY_TO_CLIPBOARD, &CASeeDlg::OnMenuCopyToClipboard)
@@ -109,6 +109,10 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_SMOOTH, &CASeeDlg::OnMenuSmooth)
 	ON_COMMAND(ID_MENU_SHOW_ROI_INFO, &CASeeDlg::OnMenuShowRoiInfo)
 	ON_COMMAND(ID_MENU_INPUT_ROI, &CASeeDlg::OnMenuInputRoi)
+	ON_COMMAND(ID_MENU_SHOW_INFO, &CASeeDlg::OnMenuShowInfo)
+	ON_COMMAND(ID_MENU_SMOOTH_BILINEAR, &CASeeDlg::OnMenuSmoothBilinear)
+	ON_COMMAND(ID_MENU_SMOOTH_BICUBIC, &CASeeDlg::OnMenuSmoothBicubic)
+	ON_COMMAND(ID_MENU_SMOOTH_LANCZOS, &CASeeDlg::OnMenuSmoothLanczos)
 END_MESSAGE_MAP()
 
 
@@ -145,9 +149,11 @@ BOOL CASeeDlg::OnInitDialog()
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
 	m_imgDlg.create(this);
+	m_imgDlg.set_show_info(theApp.GetProfileInt(_T("setting"), _T("show info"), false));
 	m_imgDlg.set_show_pixel(theApp.GetProfileInt(_T("setting"), _T("show pixel"), false));
 	bool fit = theApp.GetProfileInt(_T("setting"), _T("fit to ctrl"), true);
 	m_imgDlg.fit2ctrl(fit);
+
 	if (!fit)
 		m_imgDlg.zoom(GetProfileDouble(&theApp, _T("setting"), _T("zoom"), 1.0));
 
@@ -245,9 +251,9 @@ void CASeeDlg::OnPaint()
 	}
 	else
 	{
-		//CDialogEx::OnPaint();
-		//CPaintDC dc(this);
-		//dc.FillSolidRect(CRect(0, 0, 20, 20), red);
+		//CASeeDlg::OnPaint()에서 특별히 하는 일이 없어도 CDialogEx::OnPaint(); 코드를 생략해선 안된다.
+		//생략할 경우 maximize, restore시에 제대로 이벤트가 발생하지 않는다.
+		CDialogEx::OnPaint();
 	}
 }
 
@@ -309,6 +315,10 @@ void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
 	CDialogEx::OnWindowPosChanged(lpwndpos);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
+	//CRect rc;
+	//GetClientRect(rc);
+	//m_imgDlg.MoveWindow(rc);
+
 	SaveWindowPosition(&theApp, this);
 }
 
@@ -478,20 +488,19 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	pMenu = menu.GetSubMenu(0);
 
 	pMenu->CheckMenuItem(ID_MENU_ALWAYS_ON_TOP, (theApp.GetProfileInt(_T("setting"), _T("always on top"), false) ? MF_CHECKED : MF_UNCHECKED));
-	pMenu->CheckMenuItem(ID_MENU_SHOW_FILENAME, (m_imgDlg.get_show_filename() ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SHOW_INFO, (m_imgDlg.get_show_info() ? MF_CHECKED : MF_UNCHECKED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_PIXEL, (m_imgDlg.get_show_pixel() ? MF_CHECKED : MF_UNCHECKED));
-	//pMenu->CheckMenuItem(ID_MENU_SHOW_RESOLUTION, (m_show_resolution ? MF_CHECKED : MF_UNCHECKED));
 
 	pMenu->CheckMenuItem(ID_MENU_SMOOTH, (m_imgDlg.get_smooth_interpolation() ? MF_CHECKED : MF_UNCHECKED));
 
 	pMenu->EnableMenuItem(ID_MENU_SHOW_ROI_INFO, (m_imgDlg.get_image_roi().IsEmptyArea() ? MF_DISABLED : MF_ENABLED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_ROI_INFO, (m_imgDlg.get_show_roi_info() ? MF_CHECKED : MF_UNCHECKED));
 
-	//pMenu->CheckMenuItem(ID_MENU_ZOOM_ORIGIN, (m_zoom_type == zoom_original ? MF_CHECKED : MF_UNCHECKED));
-	//pMenu->CheckMenuItem(ID_MENU_ZOOM_120, (m_zoom == 1.2 ? MF_CHECKED : MF_UNCHECKED));
-	//pMenu->CheckMenuItem(ID_MENU_ZOOM_150, (m_zoom == 1.5 ? MF_CHECKED : MF_UNCHECKED));
-	//pMenu->CheckMenuItem(ID_MENU_ZOOM_200, (m_zoom == 2.0 ? MF_CHECKED : MF_UNCHECKED));
-	//pMenu->CheckMenuItem(ID_MENU_ZOOM_STRETCH, (m_zoom_type == zoom_stretch ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_ZOOM_ORIGIN, (m_imgDlg.get_zoom_ratio() == 1.0 ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_ZOOM_120, (m_imgDlg.get_zoom_ratio() == 1.2 ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_ZOOM_150, (m_imgDlg.get_zoom_ratio() == 1.5 ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_ZOOM_200, (m_imgDlg.get_zoom_ratio() == 2.0 ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_ZOOM_STRETCH, (m_imgDlg.get_fit2ctrl() ? MF_CHECKED : MF_UNCHECKED));
 
 	//pMenu->CheckMenuItem(ID_MENU_SLIDE_SHOW, (m_slide_show ? MF_CHECKED : MF_UNCHECKED));
 	//pMenu->CheckMenuItem(ID_MENU_SLIDE_SHOW_REPEAT, (m_slide_show_repeat ? MF_CHECKED : MF_UNCHECKED));
@@ -538,7 +547,10 @@ BOOL CASeeDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 
 void CASeeDlg::OnMenuAlwaysOnTop()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	bool bAlwaysOnTop = theApp.GetProfileInt(_T("setting"), _T("always on top"), false);
+	bAlwaysOnTop = !bAlwaysOnTop;
+	theApp.WriteProfileInt(_T("setting"), _T("always on top"), bAlwaysOnTop);
+	SetWindowPos((bAlwaysOnTop ? &wndTopMost : &wndNoTopMost), 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 }
 
 void CASeeDlg::OnMenuOpenFolder()
@@ -553,32 +565,32 @@ void CASeeDlg::OnMenuOpenFolder()
 
 void CASeeDlg::OnMenuZoomIn()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_imgDlg.zoom(1);
 }
 
 void CASeeDlg::OnMenuZoomOrigin()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_imgDlg.zoom(0);
 }
 
 void CASeeDlg::OnMenuZoom120()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_imgDlg.zoom(1.2);
 }
 
 void CASeeDlg::OnMenuZoom150()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_imgDlg.zoom(1.5);
 }
 
 void CASeeDlg::OnMenuZoom200()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_imgDlg.zoom(2.0);
 }
 
 void CASeeDlg::OnMenuZoomStretch()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_imgDlg.fit2ctrl(true);
 }
 
 void CASeeDlg::OnMenuZoomInput()
@@ -588,22 +600,75 @@ void CASeeDlg::OnMenuZoomInput()
 
 void CASeeDlg::OnMenuGotoHome()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	if (m_files.size() == 0)
+		return;
+
+	display_image(0);
 }
 
 void CASeeDlg::OnMenuGotoEnd()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	if (m_files.size() == 0)
+		return;
+
+	display_image(m_files.size() - 1);
 }
 
 void CASeeDlg::OnMenuSelectFolder()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CString sSelected;
+
+	if (m_files.size())
+		sSelected = get_part(m_files[m_index], fn_folder);
+	else
+		sSelected = theApp.GetProfileString(_T("setting"), _T("recent folder"), _T(""));
+
+	if (!BrowseForFolder(m_hWnd, _T("폴더 선택"), sSelected, sSelected, false))
+		return;
+
+	theApp.WriteProfileString(_T("setting"), _T("recent folder"), sSelected);
+
+	m_files.clear();
+
+	m_files = find_all_files(sSelected, _T("*"), FILE_EXTENSION_IMAGE, _T(""), false);
+
+	if (m_files.size())
+	{
+		display_image(0, true);
+	}
+	else
+	{
+		//m_notice.set_notice(_T("선택된 폴더에는 이미지 파일이 없습니다."));
+	}
 }
 
 void CASeeDlg::OnMenuGoto()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	if (m_files.size() < 2)
+		return;
+
+	TCHAR buf[128] = { 0 };
+	CString str;
+
+	if (m_index >= 0)
+		_stprintf_s(buf, countof(buf), _T("%d"), m_index + 1);
+
+	str.Format(_T("입력 범위 : 1 ~ %d"), m_files.size());
+
+	int r = CWin32InputBox::InputBox(_T("이미지 인덱스 이동"), str, buf, 128, CWin32InputBox::NORMAL);
+	if (r == IDCANCEL)
+		return;
+
+	int index = _ttoi(buf);
+	if (index <= 0 || index > m_files.size())
+	{
+		str.Format(_T("1 ~ %d 사이의 값을 입력하세요."), m_files.size());
+		AfxMessageBox(str, MB_ICONEXCLAMATION);
+		OnMenuGoto();
+		return;
+	}
+
+	display_image(index - 1, true);
 }
 
 void CASeeDlg::OnMenuRefresh()
@@ -613,27 +678,32 @@ void CASeeDlg::OnMenuRefresh()
 
 void CASeeDlg::OnMenuRotateLeft()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_imgDlg.rotate(Gdiplus::Rotate270FlipNone);
 }
 
 void CASeeDlg::OnMenuRotateRight()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_imgDlg.rotate(Gdiplus::Rotate90FlipNone);
 }
 
 void CASeeDlg::OnMenuMirror()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_imgDlg.rotate(Gdiplus::RotateNoneFlipX);
 }
 
 void CASeeDlg::OnMenuFlip()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	m_imgDlg.rotate(Gdiplus::RotateNoneFlipY);
 }
 
 void CASeeDlg::OnMenuSaveAs()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CFileDialog dlg(false, 0, m_files[m_index], OFN_HIDEREADONLY /*| OFN_EXPLOPER */ | OFN_OVERWRITEPROMPT);
+	if (dlg.DoModal() == IDCANCEL)
+		return;
+
+	CString sfile = dlg.GetPathName();
+	m_imgDlg.m_img.save(sfile);
 }
 
 void CASeeDlg::OnMenuSlideShow()
@@ -651,13 +721,6 @@ void CASeeDlg::OnMenuSlideShowRepeat()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }
 
-void CASeeDlg::OnMenuShowFilename()
-{
-	//m_imgDlg.set_show_filename(!m_imgDlg.get_show_filename());
-	m_show_info = !m_show_info;
-	Invalidate();
-}
-
 void CASeeDlg::OnMenuShowPixel()
 {
 	m_imgDlg.set_show_pixel(!m_imgDlg.get_show_pixel());
@@ -665,7 +728,7 @@ void CASeeDlg::OnMenuShowPixel()
 
 void CASeeDlg::OnMenuWallpaper()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	set_wallpaper(m_files[m_index]);
 }
 
 void CASeeDlg::OnMenuCopyToClipboard()
@@ -681,7 +744,19 @@ void CASeeDlg::OnMenuCopyToClipboard()
 
 void CASeeDlg::OnMenuDelete()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	if (m_imgDlg.get_image_roi().IsEmptyArea() == false)
+	{
+		m_imgDlg.set_image_roi();
+		return;
+	}
+
+	if (m_files.size() == 0)
+		return;
+
+	delete_file(m_files[m_index], true);
+
+	//현재 이미지 파일을 지우면 해당 폴더를 다시 스캔한다.
+	reload_image();
 }
 
 void CASeeDlg::OnMenuClose()
@@ -696,7 +771,22 @@ void CASeeDlg::OnMenuSelect()
 
 void CASeeDlg::OnMenuSmooth()
 {
-	m_imgDlg.set_smooth_interpolation(!m_imgDlg.get_smooth_interpolation());
+	m_imgDlg.set_smooth_interpolation(CSCImageDlg::interpolation_none);
+}
+
+void CASeeDlg::OnMenuSmoothBilinear()
+{
+	m_imgDlg.set_smooth_interpolation(CSCImageDlg::interpolation_bilinear);
+}
+
+void CASeeDlg::OnMenuSmoothBicubic()
+{
+	m_imgDlg.set_smooth_interpolation(CSCImageDlg::interpolation_bicubic);
+}
+
+void CASeeDlg::OnMenuSmoothLanczos()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }
 
 void CASeeDlg::OnMenuShowRoiInfo()
@@ -847,6 +937,9 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 			case '5':
 				OnMenuZoomStretch();
 				return true;
+			case VK_TAB :
+				OnMenuShowInfo();
+				break;
 		}
 	}
 	else if (pMsg->message == WM_SYSKEYDOWN)
@@ -867,21 +960,14 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 			case VK_DOWN:
 				OnMenuFlip();
 				break;
-			case '0':
-				m_interplationMode = Gdiplus::InterpolationModeDefault;
-				Invalidate();
-				break;
 			case '1':
-				m_interplationMode = Gdiplus::InterpolationModeNearestNeighbor;
-				Invalidate();
+				m_imgDlg.set_smooth_interpolation(CSCImageDlg::interpolation_none);
 				break;
 			case '2':
-				m_interplationMode = Gdiplus::InterpolationModeHighQualityBilinear;
-				Invalidate();
+				m_imgDlg.set_smooth_interpolation(CSCImageDlg::interpolation_bilinear);
 				break;
 			case '3':
-				m_interplationMode = Gdiplus::InterpolationModeHighQualityBicubic;
-				Invalidate();
+				m_imgDlg.set_smooth_interpolation(CSCImageDlg::interpolation_bicubic);
 				break;
 			}
 	}
@@ -912,4 +998,11 @@ void CASeeDlg::start_slide_show(int start)
 	{
 		KillTimer(timer_slide_show);
 	}
+}
+
+void CASeeDlg::OnMenuShowInfo()
+{
+	bool show = !m_imgDlg.get_show_info();
+	m_imgDlg.set_show_info(show);
+	theApp.WriteProfileInt(_T("setting"), _T("show info"), show);
 }

@@ -59,8 +59,6 @@ protected:
 	bool			m_button_pressed;
 	void			draw_system_buttons(CDC& dc);
 
-	Gdiplus::InterpolationMode m_interplationMode = Gdiplus::InterpolationModeHighQualityBicubic;
-
 //슬라이드 쇼 관련
 	bool			m_slide_show;
 	bool			m_slide_show_repeat;
@@ -116,7 +114,6 @@ public:
 	afx_msg void OnMenuSlideShow();
 	afx_msg void OnMenuSlideShowInterval();
 	afx_msg void OnMenuSlideShowRepeat();
-	afx_msg void OnMenuShowFilename();
 	afx_msg void OnMenuShowPixel();
 	afx_msg void OnMenuWallpaper();
 	afx_msg void OnMenuCopyToClipboard();
@@ -127,4 +124,8 @@ public:
 	afx_msg void OnMenuShowRoiInfo();
 	afx_msg void OnMenuInputRoi();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnMenuShowInfo();
+	afx_msg void OnMenuSmoothBilinear();
+	afx_msg void OnMenuSmoothBicubic();
+	afx_msg void OnMenuSmoothLanczos();
 };

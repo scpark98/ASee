@@ -27,6 +27,10 @@
 #define ID_MENU_OPEN_FOLDER             32780
 #define ID_MENU_ROI                     32780
 #define ID_MENU_INPUT_ROI               32781
+#define ID_MENU_SHOW_INFO               32782
+#define ID_MENU_32783                   32783
+#define ID_MENU_OPEN                    32784
+#define ID_MENU_32785                   32785
 #define ID_MENU_SHOW_FILENAME           32786
 #define ID_MENU_SHOW_PIXEL              32787
 #define ID_MENU_ZOOM_120                32791
@@ -49,13 +53,17 @@
 #define ID_MENU_SELECT_FOLDER           32833
 #define ID_MENU_VIEW_TOGGLE             32835
 #define ID_MENU_SHOW_ROI_INFO           32836
+#define ID_MENU_SMOOTH_BILINEAR         32837
+#define ID_MENU_SMOOTH_BICUBIC          32838
+#define ID_MENU_SMOOTH_LANCZOS          32839
+
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        133
-#define _APS_NEXT_COMMAND_VALUE         32782
+#define _APS_NEXT_COMMAND_VALUE         32839
 #define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

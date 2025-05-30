@@ -66,6 +66,9 @@
     <ClInclude Include="..\Common\data_structure\SCParagraph\SCParagraph.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\messagebox\Win32InputBox\Win32InputBox.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ASee.cpp">
@@ -102,6 +105,9 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\data_structure\SCParagraph\SCParagraph.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\messagebox\Win32InputBox\Win32InputBox.cpp">
       <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
