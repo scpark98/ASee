@@ -113,6 +113,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_SMOOTH_BILINEAR, &CASeeDlg::OnMenuSmoothBilinear)
 	ON_COMMAND(ID_MENU_SMOOTH_BICUBIC, &CASeeDlg::OnMenuSmoothBicubic)
 	ON_COMMAND(ID_MENU_SMOOTH_LANCZOS, &CASeeDlg::OnMenuSmoothLanczos)
+	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 
@@ -148,6 +149,9 @@ BOOL CASeeDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
+	m_titleDlg.Create(IDD_TITLE, this);
+	m_titleDlg.set_titlebar_movable(false);
+
 	m_imgDlg.create(this);
 	m_imgDlg.set_show_info(theApp.GetProfileInt(_T("setting"), _T("show info"), false));
 	m_imgDlg.set_show_pixel(theApp.GetProfileInt(_T("setting"), _T("show pixel"), false));
@@ -251,7 +255,7 @@ void CASeeDlg::OnPaint()
 	}
 	else
 	{
-		//CASeeDlg::OnPaint()에서 특별히 하는 일이 없어도 CDialogEx::OnPaint(); 코드를 생략해선 안된다.
+		//CASeeDlg::OnPaint()에서 특별히 하는 일이 없어도 기본으로 생성된 코드인 CDialogEx::OnPaint(); 코드를 생략해선 안된다.
 		//생략할 경우 maximize, restore시에 제대로 이벤트가 발생하지 않는다.
 		CDialogEx::OnPaint();
 	}
@@ -302,12 +306,15 @@ void CASeeDlg::OnSize(UINT nType, int cx, int cy)
 	CDialogEx::OnSize(nType, cx, cy);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
-	if (m_imgDlg.m_hWnd == NULL)
+	if (m_imgDlg.m_hWnd == NULL || m_titleDlg.m_hWnd == NULL)
 		return;
 
 	CRect rc;
 	GetClientRect(rc);
 	m_imgDlg.MoveWindow(rc);
+
+	rc.bottom = rc.top + m_titleDlg.get_title_height();
+	m_titleDlg.MoveWindow(rc);
 }
 
 void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
@@ -315,9 +322,18 @@ void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
 	CDialogEx::OnWindowPosChanged(lpwndpos);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
-	//CRect rc;
-	//GetClientRect(rc);
-	//m_imgDlg.MoveWindow(rc);
+	if (m_imgDlg.m_hWnd == NULL || m_titleDlg.m_hWnd == NULL)
+		return;
+
+	CRect rc;
+	GetClientRect(rc);
+	m_imgDlg.MoveWindow(rc);
+
+	CRect rw;
+	GetWindowRect(rw);
+	rw.bottom = rw.top + m_titleDlg.get_title_height();
+	m_titleDlg.MoveWindow(rw);
+	ClientToScreen(rw);
 
 	SaveWindowPosition(&theApp, this);
 }
@@ -491,7 +507,10 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	pMenu->CheckMenuItem(ID_MENU_SHOW_INFO, (m_imgDlg.get_show_info() ? MF_CHECKED : MF_UNCHECKED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_PIXEL, (m_imgDlg.get_show_pixel() ? MF_CHECKED : MF_UNCHECKED));
 
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH, (m_imgDlg.get_smooth_interpolation() ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH, (m_imgDlg.get_smooth_interpolation() != CSCImageDlg::interpolation_none ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BILINEAR, (m_imgDlg.get_smooth_interpolation() == CSCImageDlg::interpolation_bilinear ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BICUBIC, (m_imgDlg.get_smooth_interpolation() == CSCImageDlg::interpolation_bicubic ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH_LANCZOS, (m_imgDlg.get_smooth_interpolation() == CSCImageDlg::interpolation_lanczos ? MF_CHECKED : MF_UNCHECKED));
 
 	pMenu->EnableMenuItem(ID_MENU_SHOW_ROI_INFO, (m_imgDlg.get_image_roi().IsEmptyArea() ? MF_DISABLED : MF_ENABLED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_ROI_INFO, (m_imgDlg.get_show_roi_info() ? MF_CHECKED : MF_UNCHECKED));
@@ -971,6 +990,14 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				break;
 			}
 	}
+	else if (pMsg->message == WM_LBUTTONDBLCLK)
+	{
+		TRACE(_T("WM_LBUTTONDBLCLK\n"));
+	}
+	else if (pMsg->message == WM_MOUSEMOVE)
+	{
+		TRACE(_T("WM_MOUSEMOVE\n"));
+	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
@@ -1005,4 +1032,46 @@ void CASeeDlg::OnMenuShowInfo()
 	bool show = !m_imgDlg.get_show_info();
 	m_imgDlg.set_show_info(show);
 	theApp.WriteProfileInt(_T("setting"), _T("show info"), show);
+}
+
+void CASeeDlg::draw_system_buttons(CDC& dc)
+{
+	if (m_button_hover_index >= 0 && m_button_hover_index < 3)
+		dc.FillSolidRect(m_rSysButton[m_button_hover_index], (m_button_hover_index == 2 ? RGB(255, 0, 0) : (m_button_pressed ? RGB(0, 122, 204) : GRAY(96))));
+
+	//draw minimize
+	draw_line(&dc, m_rSysButton[0].left + 20, m_rSysButton[0].bottom - 10,
+		m_rSysButton[0].right - 20, m_rSysButton[0].bottom - 10, gGRAY(192), 1);
+
+	//draw restore
+	CRect r = make_center_rect(m_rSysButton[1].CenterPoint().x, m_rSysButton[1].CenterPoint().y, 14, 14);
+	r.OffsetRect(2, -2);
+	draw_rectangle(&dc, r, gGRAY(192), NULL_BRUSH, 1);
+	r.OffsetRect(-4, 4);
+	draw_rectangle(&dc, r, gGRAY(192), (m_button_hover_index == 1 ? (m_button_pressed ? gRGB(0, 122, 204) : gGRAY(96)) : gGRAY(96)), 1);
+
+	//draw quit
+	int size = m_rSysButton[2].Height() / 4;
+	r = m_rSysButton[2];
+	CPoint cp = r.CenterPoint();
+	//r.DeflateRect(4, 4);
+	draw_line(&dc, cp.x - size, cp.y - size, cp.x + size, cp.y + size, gGRAY(192), 1);
+	draw_line(&dc, cp.x - size, cp.y + size, cp.x + size, cp.y - size, gGRAY(192), 1);
+
+	//for (int i = 0; i < 3; i++)
+	//	DrawRectangle(&dc, m_rSysButton[i], red);
+}
+
+void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	if (IsZoomed())
+	{
+		if (/*m_titleDlg.IsWindowVisible() == false && */point.y < 20)
+			m_titleDlg.ShowWindow(SW_SHOW);
+		else
+			m_titleDlg.ShowWindow(SW_HIDE);
+	}
+
+	CDialogEx::OnMouseMove(nFlags, point);
 }

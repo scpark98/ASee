@@ -10,6 +10,8 @@
 #include "../Common/CDialog/SCImageDlg/SCImageDlg.h"
 #include "../Common/CDialog/SCShapeDlg/SCShapeDlg.h"
 
+#include "TitleDlg.h"
+
 // CASeeDlg 대화 상자
 class CASeeDlg : public CDialogEx
 {
@@ -36,6 +38,8 @@ protected:
 
 	std::deque<CString> m_files;
 	int m_index;
+
+	CTitleDlg		m_titleDlg;
 
 	CSCImageDlg		m_imgDlg;
 	void			display_image(int index, bool scan_folder = false);
@@ -128,4 +132,5 @@ public:
 	afx_msg void OnMenuSmoothBilinear();
 	afx_msg void OnMenuSmoothBicubic();
 	afx_msg void OnMenuSmoothLanczos();
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };

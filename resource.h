@@ -1,22 +1,23 @@
-Ôªø//{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ÏóêÏÑú ÏÉùÏÑ±Ìïú Ìè¨Ìï® ÌååÏùºÏûÖÎãàÎã§.
-// ASee.rcÏóêÏÑú ÏÇ¨Ïö©ÎêòÍ≥† ÏûàÏäµÎãàÎã§.
+//{{NO_DEPENDENCIES}}
+// Microsoft Visual C++ø°º≠ ª˝º∫«— ∆˜«‘ ∆ƒ¿œ¿‘¥œ¥Ÿ.
+// ASee.rcø°º≠ ªÁøÎµ«∞Ì ¿÷Ω¿¥œ¥Ÿ.
 //
-#define IDM_ABOUTBOX                    0x0010
+#define IDM_ABOUTBOX                    0x10
+#define IDR_MENU_CONTEXT                17
+#define IDD_ROI_INPUT                   18
 #define IDD_ABOUTBOX                    100
 #define IDS_ABOUTBOX                    101
 #define IDD_ASEE_DIALOG                 102
 #define IDR_MAINFRAME                   128
-#define IDR_MENU_CONTEXT                131
-#define IDD_ROI_INPUT                   131
+#define IDD_DIALOG1                     131
+#define IDD_TITLE                       131
 #define IDC_EDIT_CX                     1000
 #define IDC_SPIN_CX                     1001
 #define IDC_EDIT_CY                     1002
 #define IDC_SPIN_CX2                    1003
-#define IDC_SPIN_CY                     1003
+#define IDC_SPIN_CY                     1004
 #define ID_MENU_ROTATE_LEFT             32771
 #define ID_MENU_ALWAYS_ON_TOP           32772
-#define ID_MENU_INTERPOLATE             32772
 #define ID_MENU_SMOOTH                  32773
 #define ID_MENU_ZOOM_IN                 32774
 #define ID_MENU_ZOOM_ORIGIN             32775
@@ -24,8 +25,7 @@
 #define ID_MENU_REFRESH                 32777
 #define ID_MENU_CLOSE                   32778
 #define ID_MENU_SELECT                  32779
-#define ID_MENU_OPEN_FOLDER             32780
-#define ID_MENU_ROI                     32780
+#define ID_MENU_INTERPOLATE             32780
 #define ID_MENU_INPUT_ROI               32781
 #define ID_MENU_SHOW_INFO               32782
 #define ID_MENU_32783                   32783
@@ -33,6 +33,8 @@
 #define ID_MENU_32785                   32785
 #define ID_MENU_SHOW_FILENAME           32786
 #define ID_MENU_SHOW_PIXEL              32787
+#define ID_MENU_OPEN_FOLDER             32788
+#define ID_MENU_ROI                     32789
 #define ID_MENU_ZOOM_120                32791
 #define ID_MENU_ZOOM_150                32792
 #define ID_MENU_ZOOM_200                32793
@@ -57,14 +59,13 @@
 #define ID_MENU_SMOOTH_BICUBIC          32838
 #define ID_MENU_SMOOTH_LANCZOS          32839
 
-
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        133
-#define _APS_NEXT_COMMAND_VALUE         32839
-#define _APS_NEXT_CONTROL_VALUE         1002
-#define _APS_NEXT_SYMED_VALUE           101
+#define _APS_NEXT_COMMAND_VALUE         32840
+#define _APS_NEXT_CONTROL_VALUE         1005
+#define _APS_NEXT_SYMED_VALUE           1105
 #endif
 #endif
