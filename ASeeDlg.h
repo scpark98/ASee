@@ -23,21 +23,36 @@ public:
 #endif
 
 protected:
+	enum TIMER_ID
+	{
+		timer_search_scan_folder = 0,
+		timer_refresh_navi,
+		timer_scroll,
+		timer_slide_show,
+		timer_cursor_pos,
+		timer_rect_info_changed,
+		timer_hide_filename,
+	};
+
 	std::deque<CString> m_files;
 	int m_index;
 
 	CSCImageDlg		m_imgDlg;
 	void			display_image(int index, bool scan_folder = false);
-	//현재 파일을 비롯해서 폴더를 다시 검사한다.
+
+	//파일명, 크기정보 등 표시
+	//bool			m_show_info = false;
+
+//현재 파일을 비롯해서 폴더를 다시 검사한다.
 	void			reload_image();
 	
 	void			update_title();
 	void			execute_video();
 
-	//단일 인스턴스 허용시 쉘에서 넘어온 파라미터 처리
+//단일 인스턴스 허용시 쉘에서 넘어온 파라미터 처리
 	LRESULT			OnMessageShellCommandParameter(WPARAM, LPARAM);
 
-	//타이틀바 및 시스템 버튼
+//타이틀바 및 시스템 버튼
 	CRect			m_rTitle;
 	CRect			m_rSysButton[3];
 	int				m_button_hover_index = -1;
@@ -46,6 +61,13 @@ protected:
 
 	Gdiplus::InterpolationMode m_interplationMode = Gdiplus::InterpolationModeHighQualityBicubic;
 
+//슬라이드 쇼 관련
+	bool			m_slide_show;
+	bool			m_slide_show_repeat;
+	//단위 = 초
+	int				m_slide_show_interval;
+	//start : 1(start), 0(stop), -1(toggle)
+	void			start_slide_show(int start);
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 지원입니다.
@@ -104,4 +126,5 @@ public:
 	afx_msg void OnMenuSmooth();
 	afx_msg void OnMenuShowRoiInfo();
 	afx_msg void OnMenuInputRoi();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

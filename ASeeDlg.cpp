@@ -193,6 +193,7 @@ BOOL CASeeDlg::OnInitDialog()
 
 	DragAcceptFiles();
 
+	/* for test 좌표변환 시 소실되는 값 확인용
 	CRect displayed(0, 0, 789, 675);
 	Gdiplus::RectF scr(123, 235, 413, 523), img;
 
@@ -201,6 +202,7 @@ BOOL CASeeDlg::OnInitDialog()
 		get_real_coord_from_screen_coord(displayed, 431, scr, &img);
 		get_screen_coord_from_real_coord(displayed, 431, img, &scr);
 	}
+	*/
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -243,7 +245,9 @@ void CASeeDlg::OnPaint()
 	}
 	else
 	{
-		CDialogEx::OnPaint();
+		//CDialogEx::OnPaint();
+		//CPaintDC dc(this);
+		//dc.FillSolidRect(CRect(0, 0, 20, 20), red);
 	}
 }
 
@@ -411,6 +415,22 @@ void CASeeDlg::update_title()
 	SetWindowText(str);
 }
 
+void CASeeDlg::execute_video()
+{
+	CString sfile = get_part(m_files[m_index], fn_title);
+	sfile.Replace(_T("_Snapshot"), _T(""));
+
+	while (GetFileTypeFromExtension(sfile) == FILE_TYPE_VIDEO)
+		sfile = get_part(sfile, fn_title);
+	sfile += _T("*");
+
+	std::deque<CString> dqFiles;
+	dqFiles = find_all_files(get_part(m_files[m_index], fn_folder), sfile, FILE_EXTENSION_VIDEO, _T(""), false);
+
+	if (dqFiles.size())
+		SHELL_OPEN(dqFiles[0]);
+}
+
 //현재 파일을 비롯해서 폴더를 다시 검사한다.
 void CASeeDlg::reload_image()
 {
@@ -523,7 +543,12 @@ void CASeeDlg::OnMenuAlwaysOnTop()
 
 void CASeeDlg::OnMenuOpenFolder()
 {
-	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	CString folder;
+
+	if (m_files.size() == 0)
+		ShellExecute(NULL, _T("open"), _T("explorer"), get_exe_directory(), NULL, SW_SHOW);
+	else
+		ShellExecute(NULL, _T("open"), _T("explorer"), _T("/select,") + m_files[m_index], NULL, SW_SHOW);
 }
 
 void CASeeDlg::OnMenuZoomIn()
@@ -628,7 +653,9 @@ void CASeeDlg::OnMenuSlideShowRepeat()
 
 void CASeeDlg::OnMenuShowFilename()
 {
-	m_imgDlg.set_show_filename(!m_imgDlg.get_show_filename());
+	//m_imgDlg.set_show_filename(!m_imgDlg.get_show_filename());
+	m_show_info = !m_show_info;
+	Invalidate();
 }
 
 void CASeeDlg::OnMenuShowPixel()
@@ -692,4 +719,197 @@ void CASeeDlg::OnMenuInputRoi()
 	roi.Width = dlg.m_roi_sz.cx;
 	roi.Height = dlg.m_roi_sz.cy;
 	m_imgDlg.set_image_roi(roi);
+}
+
+BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		CRect rc;
+		GetClientRect(rc);
+
+		TRACE(_T("%s : %d\n"), __function__, pMsg->wParam);
+		switch (pMsg->wParam)
+		{
+			case VK_ESCAPE:
+				OnBnClickedCancel();
+				return true;
+			case VK_RETURN:
+				if (IsCtrlPressed())
+				{
+					if (IsShiftPressed())
+					{
+						execute_video();
+					}
+				}
+				else
+				{
+					OnBnClickedOk();
+				}
+				return true;
+			case VK_F5:
+				reload_image();
+				return true;
+			case VK_DELETE:
+				OnMenuDelete();
+				return true;
+
+			case 'F':
+				if (IsCtrlPressed())
+				{
+					OnMenuSelectFolder();
+				}
+				return true;
+			case 'O':
+				if (IsCtrlPressed())
+					OnMenuOpenFolder();
+				return true;
+			case VK_HOME:
+				start_slide_show(0);
+				OnMenuGotoHome();
+				return true;
+			case VK_END:
+				start_slide_show(0);
+				OnMenuGotoEnd();
+				return true;
+			case VK_UP:
+				start_slide_show(0);
+
+				if (m_imgDlg.get_fit2ctrl() || RectInRect(rc, m_imgDlg.get_displayed_rect()))
+				{
+					display_image(-2);
+				}
+				else
+				{
+					m_imgDlg.set_offset(0, -m_imgDlg.get_offset_size());
+					Invalidate();
+					TRACE(_T("offset : %d, %d\n"), m_imgDlg.get_offset().x, m_imgDlg.get_offset().y);
+				}
+				return true;
+			case VK_PRIOR:
+				start_slide_show(0);
+				display_image(-2);
+				return true;
+			case VK_DOWN:
+				start_slide_show(0);
+				if (m_imgDlg.get_fit2ctrl() || RectInRect(rc, m_imgDlg.get_displayed_rect()))
+				{
+					display_image(-1);
+				}
+				else
+				{
+					m_imgDlg.set_offset(0, m_imgDlg.get_offset_size());
+					Invalidate();
+					TRACE(_T("offset : %d, %d\n"), m_imgDlg.get_offset().x, m_imgDlg.get_offset().y);
+				}
+				return true;
+			case VK_NEXT:
+				start_slide_show(0);
+				display_image(-1);
+				return true;
+			case VK_LEFT:
+				start_slide_show(0);
+				if (m_imgDlg.get_fit2ctrl())
+				{
+					display_image(-2);
+				}
+				else
+				{
+					m_imgDlg.set_offset(-m_imgDlg.get_offset_size(), 0);
+					Invalidate();
+				}
+				return true;
+			case VK_RIGHT:
+				start_slide_show(0);
+				if (m_imgDlg.get_fit2ctrl())
+				{
+					display_image(-1);
+				}
+				else
+				{
+					m_imgDlg.set_offset(m_imgDlg.get_offset_size(), 0);
+					Invalidate();
+				}
+				return true;
+			case '1':
+				OnMenuZoomOrigin();
+				return true;
+			case '2':
+				OnMenuZoom120();
+				return true;
+			case '3':
+				OnMenuZoom150();
+				return true;
+			case '4':
+				OnMenuZoom200();
+				return true;
+			case '5':
+				OnMenuZoomStretch();
+				return true;
+		}
+	}
+	else if (pMsg->message == WM_SYSKEYDOWN)
+	{
+		switch (pMsg->wParam)
+		{
+			case VK_SPACE:
+				break;
+			case VK_LEFT:
+				OnMenuRotateLeft();
+				break;
+			case VK_RIGHT:
+				OnMenuRotateRight();
+				break;
+			case VK_UP:
+				OnMenuMirror();
+				break;
+			case VK_DOWN:
+				OnMenuFlip();
+				break;
+			case '0':
+				m_interplationMode = Gdiplus::InterpolationModeDefault;
+				Invalidate();
+				break;
+			case '1':
+				m_interplationMode = Gdiplus::InterpolationModeNearestNeighbor;
+				Invalidate();
+				break;
+			case '2':
+				m_interplationMode = Gdiplus::InterpolationModeHighQualityBilinear;
+				Invalidate();
+				break;
+			case '3':
+				m_interplationMode = Gdiplus::InterpolationModeHighQualityBicubic;
+				Invalidate();
+				break;
+			}
+	}
+
+	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+//start : 1(start), 0(stop), -1(toggle)
+void CASeeDlg::start_slide_show(int start)
+{
+	if (start == -1)
+		m_slide_show = !m_slide_show;
+	else
+		m_slide_show = start;
+
+	if (m_slide_show)
+	{
+		if (m_slide_show_interval < 0)
+		{
+			SetTimer(timer_slide_show, -m_slide_show_interval, NULL);
+		}
+		else
+		{
+			SetTimer(timer_slide_show, m_slide_show_interval * 1000, NULL);
+		}
+	}
+	else
+	{
+		KillTimer(timer_slide_show);
+	}
 }

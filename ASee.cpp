@@ -78,7 +78,7 @@ BOOL CASeeApp::InitInstance()
 		{
 			::ShowWindow(hWnd, SW_RESTORE);
 		}
-		SetForegroundWindow(hWnd);
+		SetForegroundWindowForce(hWnd);
 		SetActiveWindow(hWnd);
 		m_hMutex = NULL;
 
