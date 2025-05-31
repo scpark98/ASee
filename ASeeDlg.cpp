@@ -313,7 +313,7 @@ void CASeeDlg::OnSize(UINT nType, int cx, int cy)
 	GetClientRect(rc);
 	m_imgDlg.MoveWindow(rc);
 
-	rc.bottom = rc.top + m_titleDlg.get_title_height();
+	rc.bottom = rc.top + m_titleDlg.get_titlebar_height();
 	m_titleDlg.MoveWindow(rc);
 }
 
@@ -331,7 +331,7 @@ void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
 
 	CRect rw;
 	GetWindowRect(rw);
-	rw.bottom = rw.top + m_titleDlg.get_title_height();
+	rw.bottom = rw.top + m_titleDlg.get_titlebar_height();
 	m_titleDlg.MoveWindow(rw);
 	ClientToScreen(rw);
 
@@ -374,7 +374,10 @@ void CASeeDlg::OnDropFiles(HDROP hDropInfo)
 void CASeeDlg::display_image(int index, bool scan_folder)
 {
 	if (m_files.size() == 0)
+	{
+		update_title();
 		return;
+	}
 
 	//m_static_img.show_filename(true);
 
@@ -405,19 +408,6 @@ void CASeeDlg::display_image(int index, bool scan_folder)
 
 	m_imgDlg.load(m_files[m_index]);
 
-	if (m_imgDlg.m_img.is_valid())
-	{
-		//if (m_static_img.m_show_pixel)
-			//m_static_img.m_img.get_raw_data();
-
-		//투명색이 포함된 이미지일 경우는 배경에 grid pattern을 표시한 후 그림을 그려줘야 한다.
-		if (m_imgDlg.m_img.channel == 4)
-		{
-			//m_static_img.m_img_grid.release();
-			//m_img_grid.create(m_img.width, m_img.height, Gdiplus::PixelFormat)
-		}
-	}
-
 	Invalidate();
 
 	if (scan_folder)
@@ -435,10 +425,13 @@ void CASeeDlg::display_image(int index, bool scan_folder)
 
 void CASeeDlg::update_title()
 {
-	CString str;
+	CString str = _T("ASee");
 
-	str.Format(_T("ASee - %s (%d/%d)"), m_files[m_index], m_index + 1, m_files.size());
+	if (m_index >= 0 && m_index < m_files.size())
+		str.Format(_T("ASee - %s (%d/%d)"), get_part(m_files[m_index], fn_name), m_index + 1, m_files.size());
+
 	SetWindowText(str);
+	m_titleDlg.update_title(str);
 }
 
 void CASeeDlg::execute_video()
@@ -1067,7 +1060,7 @@ void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	if (IsZoomed())
 	{
-		if (/*m_titleDlg.IsWindowVisible() == false && */point.y < 20)
+		if (/*m_titleDlg.IsWindowVisible() == false && */point.y < m_titleDlg.get_titlebar_height())
 			m_titleDlg.ShowWindow(SW_SHOW);
 		else
 			m_titleDlg.ShowWindow(SW_HIDE);

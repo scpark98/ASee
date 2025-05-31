@@ -40,6 +40,7 @@ protected:
 	int m_index;
 
 	CTitleDlg		m_titleDlg;
+	void			update_title();
 
 	CSCImageDlg		m_imgDlg;
 	void			display_image(int index, bool scan_folder = false);
@@ -50,7 +51,6 @@ protected:
 //현재 파일을 비롯해서 폴더를 다시 검사한다.
 	void			reload_image();
 	
-	void			update_title();
 	void			execute_video();
 
 //단일 인스턴스 허용시 쉘에서 넘어온 파라미터 처리

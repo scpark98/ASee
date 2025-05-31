@@ -13,6 +13,8 @@ public:
 	CTitleDlg(CWnd* pParent = nullptr);   // 표준 생성자입니다.
 	virtual ~CTitleDlg();
 
+	void		update_title(CString title);
+
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_TITLE };
@@ -27,4 +29,5 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedCancel();
+	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 };
