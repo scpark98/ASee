@@ -527,7 +527,7 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	}
 
 	if (recent_folder_exist)
-		pMenu->InsertMenu(4, MF_BYPOSITION | MF_POPUP, (UINT_PTR)pRecentFoldersMenu->GetSafeHmenu(), _T("최근 접근 폴더"));
+		pMenu->InsertMenu(3, MF_BYPOSITION | MF_POPUP, (UINT_PTR)pRecentFoldersMenu->GetSafeHmenu(), _T("최근 접근 폴더"));
 
 	pMenu->CheckMenuItem(ID_MENU_ALWAYS_ON_TOP, (theApp.GetProfileInt(_T("setting"), _T("always on top"), false) ? MF_CHECKED : MF_UNCHECKED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_INFO, (m_imgDlg.get_show_info() ? MF_CHECKED : MF_UNCHECKED));
@@ -564,7 +564,7 @@ void CASeeDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 	CSize sz;
 	bool is_auto_hide = get_taskbar_state(ABS_AUTOHIDE, &sz);
 
-	lpMMI->ptMaxSize.y -= (is_auto_hide ? 12 : sz.cy);
+	lpMMI->ptMaxSize.y -= (is_auto_hide ? 4 : sz.cy);
 
 	CDialogEx::OnGetMinMaxInfo(lpMMI);
 }
