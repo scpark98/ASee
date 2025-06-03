@@ -36,6 +36,14 @@ protected:
 		timer_hide_filename,
 	};
 
+	enum RECENT_FOLDERS_POPUP_MENU
+	{
+		menu_recent_folders_start = 8000,
+		menu_recent_folders_end = 8100,
+	};
+	void			on_menu_recent_folders(UINT nID);
+
+
 	std::deque<CString> m_files;
 	int m_index;
 
@@ -133,4 +141,6 @@ public:
 	afx_msg void OnMenuSmoothBicubic();
 	afx_msg void OnMenuSmoothLanczos();
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnMButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnMenuRecentFoldersClear();
 };

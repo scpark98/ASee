@@ -114,6 +114,9 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_SMOOTH_BICUBIC, &CASeeDlg::OnMenuSmoothBicubic)
 	ON_COMMAND(ID_MENU_SMOOTH_LANCZOS, &CASeeDlg::OnMenuSmoothLanczos)
 	ON_WM_MOUSEMOVE()
+	ON_WM_MBUTTONDOWN()
+	ON_COMMAND_RANGE(menu_recent_folders_start, menu_recent_folders_end, on_menu_recent_folders)
+	ON_COMMAND(ID_MENU_RECENT_FOLDERS_CLEAR, &CASeeDlg::OnMenuRecentFoldersClear)
 END_MESSAGE_MAP()
 
 
@@ -226,6 +229,15 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	}
 	else
 	{
+		if (nID == SC_MAXIMIZE)
+		{
+			ModifyStyle(WS_CAPTION, 0);
+		}
+		else if (nID == SC_RESTORE)
+		{
+			ModifyStyle(0, WS_CAPTION | WS_THICKFRAME);
+		}
+
 		CDialogEx::OnSysCommand(nID, lParam);
 	}
 }
@@ -275,19 +287,13 @@ void CASeeDlg::OnBnClickedOk()
 
 	if (!IsZoomed())
 	{
-		ShowWindow(SW_HIDE);
+		//ShowWindow(SW_HIDE);
 		ModifyStyle(WS_CAPTION | WS_THICKFRAME, 0);
-		//SetWindowPos(nullptr, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER);
-		//DefWindowProc(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 		ShowWindow(SW_MAXIMIZE);
 	}
 	else
 	{
-		ModifyStyle(0, WS_CAPTION | WS_THICKFRAME);// | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME);
-		//SetWindowPos(nullptr, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER);
-		//DefWindowProc(WM_SYSCOMMAND, SC_RESTORE, 0);
-		//SetWindowLongPtr(m_hWnd, GWL_STYLE, WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME);
-		//show_filename(false);
+		ModifyStyle(0, WS_CAPTION | WS_THICKFRAME);
 		ShowWindow(SW_RESTORE);
 	}
 }
@@ -408,7 +414,7 @@ void CASeeDlg::display_image(int index, bool scan_folder)
 
 	m_imgDlg.load(m_files[m_index]);
 
-	Invalidate();
+	//Invalidate();
 
 	if (scan_folder)
 	{
@@ -421,15 +427,22 @@ void CASeeDlg::display_image(int index, bool scan_folder)
 	}
 
 	update_title();
+
+	add_registry(&theApp, _T("setting\\recent folders"), get_part(m_files[m_index], fn_folder));
 }
 
 void CASeeDlg::update_title()
 {
 	CString str = _T("ASee");
+	CString alt_info;
 
 	if (m_index >= 0 && m_index < m_files.size())
+	{
 		str.Format(_T("ASee - %s (%d/%d)"), get_part(m_files[m_index], fn_name), m_index + 1, m_files.size());
+		alt_info.Format(_T(" (%d/%d)"), m_index + 1, m_files.size());
+	}
 
+	m_imgDlg.set_alt_info(alt_info);
 	SetWindowText(str);
 	m_titleDlg.update_title(str);
 }
@@ -491,10 +504,30 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 {
 	CMenu menu;
 	CMenu* pMenu;
+	CMenu* pRecentFoldersMenu;
 	CString str;
+	CString recent_folder;
+	bool recent_folder_exist = false;
 
 	menu.LoadMenu(IDR_MENU_CONTEXT);
 	pMenu = menu.GetSubMenu(0);
+	pRecentFoldersMenu = menu.GetSubMenu(1);
+
+	int recent_folders_count = theApp.GetProfileInt(_T("setting\\recent folders"), _T("count"), 0);
+	for (int i = 0; i < recent_folders_count; i++)
+	{
+		str.Format(_T(" (&%d)"), i + 1);
+		recent_folder = theApp.GetProfileString(_T("setting\\recent folders"), i2S(i), _T(""));
+		if (!recent_folder.IsEmpty())
+		{
+			recent_folder_exist = true;
+			//pRecentFoldersMenu->AppendMenu(MF_STRING, menu_recent_folders_start + i, recent_folder + str);
+			pRecentFoldersMenu->InsertMenu(i, MF_BYPOSITION | MF_STRING, menu_recent_folders_start + i, recent_folder + str);
+		}
+	}
+
+	if (recent_folder_exist)
+		pMenu->InsertMenu(4, MF_BYPOSITION | MF_POPUP, (UINT_PTR)pRecentFoldersMenu->GetSafeHmenu(), _T("최근 접근 폴더"));
 
 	pMenu->CheckMenuItem(ID_MENU_ALWAYS_ON_TOP, (theApp.GetProfileInt(_T("setting"), _T("always on top"), false) ? MF_CHECKED : MF_UNCHECKED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_INFO, (m_imgDlg.get_show_info() ? MF_CHECKED : MF_UNCHECKED));
@@ -531,7 +564,7 @@ void CASeeDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 	CSize sz;
 	bool is_auto_hide = get_taskbar_state(ABS_AUTOHIDE, &sz);
 
-	lpMMI->ptMaxSize.y -= (is_auto_hide ? 2 : sz.cy);
+	lpMMI->ptMaxSize.y -= (is_auto_hide ? 12 : sz.cy);
 
 	CDialogEx::OnGetMinMaxInfo(lpMMI);
 }
@@ -646,7 +679,7 @@ void CASeeDlg::OnMenuSelectFolder()
 
 	if (m_files.size())
 	{
-		display_image(0, true);
+		display_image(0);
 	}
 	else
 	{
@@ -831,7 +864,7 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 		CRect rc;
 		GetClientRect(rc);
 
-		TRACE(_T("%s : %d\n"), __function__, pMsg->wParam);
+		//TRACE(_T("%s : %d\n"), __function__, pMsg->wParam);
 		switch (pMsg->wParam)
 		{
 			case VK_ESCAPE:
@@ -974,13 +1007,13 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				break;
 			case '1':
 				m_imgDlg.set_smooth_interpolation(CSCImageDlg::interpolation_none);
-				break;
+				return TRUE;
 			case '2':
 				m_imgDlg.set_smooth_interpolation(CSCImageDlg::interpolation_bilinear);
-				break;
+				return TRUE;
 			case '3':
 				m_imgDlg.set_smooth_interpolation(CSCImageDlg::interpolation_bicubic);
-				break;
+				return TRUE;
 			}
 	}
 	else if (pMsg->message == WM_LBUTTONDBLCLK)
@@ -990,6 +1023,11 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 	else if (pMsg->message == WM_MOUSEMOVE)
 	{
 		TRACE(_T("WM_MOUSEMOVE\n"));
+	}
+	else if (pMsg->message == WM_MBUTTONDOWN)
+	{
+		TRACE(_T("WM_MBUTTONDOWN\n"));
+		OnBnClickedOk();
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
@@ -1060,11 +1098,39 @@ void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	if (IsZoomed())
 	{
-		if (/*m_titleDlg.IsWindowVisible() == false && */point.y < m_titleDlg.get_titlebar_height())
+		if (m_titleDlg.IsWindowVisible() == false && point.y < m_titleDlg.get_titlebar_height())
 			m_titleDlg.ShowWindow(SW_SHOW);
 		else
 			m_titleDlg.ShowWindow(SW_HIDE);
 	}
 
 	CDialogEx::OnMouseMove(nFlags, point);
+}
+
+void CASeeDlg::OnMButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+	OnBnClickedOk();
+	CDialogEx::OnMButtonDown(nFlags, point);
+}
+
+void CASeeDlg::on_menu_recent_folders(UINT nID)
+{
+	int index = nID - menu_recent_folders_start;
+
+	CString recent_folder = theApp.GetProfileString(_T("setting\\recent folders"), i2S(index), _T(""));
+	if (recent_folder.IsEmpty())
+		return;
+
+	m_files.clear();
+
+	m_files = find_all_files(recent_folder, _T("*"), FILE_EXTENSION_IMAGE, _T(""), false);
+
+	if (m_files.size())
+		display_image(0);
+}
+
+void CASeeDlg::OnMenuRecentFoldersClear()
+{
+	theApp.WriteProfileInt(_T("setting\\recent folders"), _T("count"), 0);
 }

@@ -45,8 +45,9 @@ BOOL CTitleDlg::OnInitDialog()
 	set_color_theme(CSCColorTheme::color_theme_dark_gray);
 	set_system_buttons(SC_MINIMIZE, SC_MAXIMIZE, SC_CLOSE);
 	//set_title_font_bold();
-	set_titlebar_font_size(14);
-	set_titlebar_height(32);
+	set_titlebar_font_size(12);
+	set_titlebar_height(48);
+	set_titlebar_icon(IDR_MAINFRAME, 24, 24);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
@@ -65,6 +66,7 @@ void CTitleDlg::OnBnClickedOk()
 
 void CTitleDlg::OnBnClickedCancel()
 {
+	::PostMessage(GetParent()->GetSafeHwnd(), WM_SYSCOMMAND, SC_CLOSE, 0);
 }
 
 void CTitleDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -76,6 +78,8 @@ void CTitleDlg::OnSysCommand(UINT nID, LPARAM lParam)
 			::PostMessage(GetParent()->GetSafeHwnd(), WM_SYSCOMMAND, SC_RESTORE, lParam);
 		else
 			::PostMessage(GetParent()->GetSafeHwnd(), WM_SYSCOMMAND, SC_MAXIMIZE, lParam);
+
+		ShowWindow(SW_HIDE);
 	}
 	else
 	{
@@ -85,5 +89,5 @@ void CTitleDlg::OnSysCommand(UINT nID, LPARAM lParam)
 
 void CTitleDlg::update_title(CString title)
 {
-	SetWindowText(_T("  ") + title);
+	SetWindowText(title);
 }

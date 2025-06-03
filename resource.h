@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++에서 생성한 포함 파일입니다.
-// ASee.rc에서 사용되고 있습니다.
+// Microsoft Visual C++ generated include file.
+// Used by ASee.rc
 //
 #define IDM_ABOUTBOX                    0x10
 #define IDR_MENU_CONTEXT                17
@@ -58,13 +58,15 @@
 #define ID_MENU_SMOOTH_BILINEAR         32837
 #define ID_MENU_SMOOTH_BICUBIC          32838
 #define ID_MENU_SMOOTH_LANCZOS          32839
+#define ID_RECENT_32840                 32840
+#define ID_MENU_RECENT_FOLDERS_CLEAR    32841
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        133
-#define _APS_NEXT_COMMAND_VALUE         32840
+#define _APS_NEXT_COMMAND_VALUE         32842
 #define _APS_NEXT_CONTROL_VALUE         1005
 #define _APS_NEXT_SYMED_VALUE           1105
 #endif
