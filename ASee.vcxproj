@@ -306,6 +306,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\ASee.rc2" />
+    <None Include="res\images\dropper.cur" />
+    <None Include="res\images\dropper_blue.cur" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\ASee.ico" />

@@ -48,7 +48,8 @@ protected:
 	int m_index;
 
 	CTitleDlg		m_titleDlg;
-	void			update_title();
+	//title이 ""이면 현재 표시되는 이미지의 파일명으로 변경한다. 클립보드로부터 붙여 넣은 이미지의 경우는 "paste from clipboard"로 표시한다.
+	void			update_title(CString title = _T(""));
 
 	CSCImageDlg		m_imgDlg;
 	void			display_image(int index, bool scan_folder = false);

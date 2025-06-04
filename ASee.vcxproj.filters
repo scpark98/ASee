@@ -144,6 +144,12 @@
     <None Include="res\ASee.rc2">
       <Filter>리소스 파일</Filter>
     </None>
+    <None Include="res\images\dropper.cur">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="res\images\dropper_blue.cur">
+      <Filter>리소스 파일</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\ASee.ico">

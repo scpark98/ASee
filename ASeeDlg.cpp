@@ -160,6 +160,7 @@ BOOL CASeeDlg::OnInitDialog()
 	m_imgDlg.set_show_pixel(theApp.GetProfileInt(_T("setting"), _T("show pixel"), false));
 	bool fit = theApp.GetProfileInt(_T("setting"), _T("fit to ctrl"), true);
 	m_imgDlg.fit2ctrl(fit);
+	m_imgDlg.set_dropper_cursor(IDC_CURSOR_DROPPER);
 
 	if (!fit)
 		m_imgDlg.zoom(GetProfileDouble(&theApp, _T("setting"), _T("zoom"), 1.0));
@@ -431,15 +432,22 @@ void CASeeDlg::display_image(int index, bool scan_folder)
 	add_registry(&theApp, _T("setting\\recent folders"), get_part(m_files[m_index], fn_folder));
 }
 
-void CASeeDlg::update_title()
+void CASeeDlg::update_title(CString title)
 {
 	CString str = _T("ASee");
 	CString alt_info;
 
-	if (m_index >= 0 && m_index < m_files.size())
+	if (title.IsEmpty())
 	{
-		str.Format(_T("ASee - %s (%d/%d)"), get_part(m_files[m_index], fn_name), m_index + 1, m_files.size());
-		alt_info.Format(_T(" (%d/%d)"), m_index + 1, m_files.size());
+		if (m_index >= 0 && m_index < m_files.size())
+		{
+			str.Format(_T("ASee - %s (%d/%d)"), get_part(m_files[m_index], fn_name), m_index + 1, m_files.size());
+			alt_info.Format(_T(" (%d/%d)"), m_index + 1, m_files.size());
+		}
+	}
+	else
+	{
+		str.Format(_T("ASee - %s"), title);
 	}
 
 	m_imgDlg.set_alt_info(alt_info);
@@ -900,6 +908,18 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				if (IsCtrlPressed())
 					OnMenuOpenFolder();
 				return true;
+			case 'V' :
+				if (IsCtrlPressed())
+				{
+					if (m_imgDlg.m_img.paste_from_clipboard())
+					{
+						m_imgDlg.set_filename(_T("image from clipboard"));
+						m_imgDlg.set_alt_info(_T(""));
+						m_imgDlg.Invalidate();
+						update_title(_T("image from clipboard"));
+					}
+				}
+				break;
 			case VK_HOME:
 				start_slide_show(0);
 				OnMenuGotoHome();
