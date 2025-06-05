@@ -106,10 +106,10 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_DELETE, &CASeeDlg::OnMenuDelete)
 	ON_COMMAND(ID_MENU_CLOSE, &CASeeDlg::OnMenuClose)
 	ON_COMMAND(ID_MENU_SELECT, &CASeeDlg::OnMenuSelect)
-	ON_COMMAND(ID_MENU_SMOOTH, &CASeeDlg::OnMenuSmooth)
 	ON_COMMAND(ID_MENU_SHOW_ROI_INFO, &CASeeDlg::OnMenuShowRoiInfo)
 	ON_COMMAND(ID_MENU_INPUT_ROI, &CASeeDlg::OnMenuInputRoi)
 	ON_COMMAND(ID_MENU_SHOW_INFO, &CASeeDlg::OnMenuShowInfo)
+	ON_COMMAND(ID_MENU_SMOOTH_NONE, &CASeeDlg::OnMenuSmoothNone)
 	ON_COMMAND(ID_MENU_SMOOTH_BILINEAR, &CASeeDlg::OnMenuSmoothBilinear)
 	ON_COMMAND(ID_MENU_SMOOTH_BICUBIC, &CASeeDlg::OnMenuSmoothBicubic)
 	ON_COMMAND(ID_MENU_SMOOTH_LANCZOS, &CASeeDlg::OnMenuSmoothLanczos)
@@ -161,6 +161,7 @@ BOOL CASeeDlg::OnInitDialog()
 	bool fit = theApp.GetProfileInt(_T("setting"), _T("fit to ctrl"), true);
 	m_imgDlg.fit2ctrl(fit);
 	m_imgDlg.set_dropper_cursor(IDC_CURSOR_DROPPER);
+	m_imgDlg.set_smooth_interpolation(theApp.GetProfileInt(_T("setting"), _T("smooth interpolation"), CGdiplusBitmap::interpolation_bicubic));
 
 	if (!fit)
 		m_imgDlg.zoom(GetProfileDouble(&theApp, _T("setting"), _T("zoom"), 1.0));
@@ -304,6 +305,8 @@ void CASeeDlg::OnBnClickedCancel()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	if (m_files.size() && m_index >= 0)
 		theApp.WriteProfileString(_T("setting"), _T("recent file"), m_files[m_index]);
+
+	theApp.WriteProfileInt(_T("setting"), _T("smooth interpolation"), m_imgDlg.get_smooth_interpolation());
 
 	CDialogEx::OnCancel();
 }
@@ -541,10 +544,10 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	pMenu->CheckMenuItem(ID_MENU_SHOW_INFO, (m_imgDlg.get_show_info() ? MF_CHECKED : MF_UNCHECKED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_PIXEL, (m_imgDlg.get_show_pixel() ? MF_CHECKED : MF_UNCHECKED));
 
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH, (m_imgDlg.get_smooth_interpolation() != CSCImageDlg::interpolation_none ? MF_CHECKED : MF_UNCHECKED));
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BILINEAR, (m_imgDlg.get_smooth_interpolation() == CSCImageDlg::interpolation_bilinear ? MF_CHECKED : MF_UNCHECKED));
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BICUBIC, (m_imgDlg.get_smooth_interpolation() == CSCImageDlg::interpolation_bicubic ? MF_CHECKED : MF_UNCHECKED));
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH_LANCZOS, (m_imgDlg.get_smooth_interpolation() == CSCImageDlg::interpolation_lanczos ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH_NONE, (m_imgDlg.get_smooth_interpolation() == CGdiplusBitmap::interpolation_none ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BILINEAR, (m_imgDlg.get_smooth_interpolation() == CGdiplusBitmap::interpolation_bilinear ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BICUBIC, (m_imgDlg.get_smooth_interpolation() == CGdiplusBitmap::interpolation_bicubic ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH_LANCZOS, (m_imgDlg.get_smooth_interpolation() == CGdiplusBitmap::interpolation_lanczos ? MF_CHECKED : MF_UNCHECKED));
 
 	pMenu->EnableMenuItem(ID_MENU_SHOW_ROI_INFO, (m_imgDlg.get_image_roi().IsEmptyArea() ? MF_DISABLED : MF_ENABLED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_ROI_INFO, (m_imgDlg.get_show_roi_info() ? MF_CHECKED : MF_UNCHECKED));
@@ -822,19 +825,20 @@ void CASeeDlg::OnMenuSelect()
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }
 
-void CASeeDlg::OnMenuSmooth()
+
+void CASeeDlg::OnMenuSmoothNone()
 {
-	m_imgDlg.set_smooth_interpolation(CSCImageDlg::interpolation_none);
+	m_imgDlg.set_smooth_interpolation(CGdiplusBitmap::interpolation_none);
 }
 
 void CASeeDlg::OnMenuSmoothBilinear()
 {
-	m_imgDlg.set_smooth_interpolation(CSCImageDlg::interpolation_bilinear);
+	m_imgDlg.set_smooth_interpolation(CGdiplusBitmap::interpolation_bilinear);
 }
 
 void CASeeDlg::OnMenuSmoothBicubic()
 {
-	m_imgDlg.set_smooth_interpolation(CSCImageDlg::interpolation_bicubic);
+	m_imgDlg.set_smooth_interpolation(CGdiplusBitmap::interpolation_bicubic);
 }
 
 void CASeeDlg::OnMenuSmoothLanczos()
@@ -1026,13 +1030,13 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				OnMenuFlip();
 				break;
 			case '1':
-				m_imgDlg.set_smooth_interpolation(CSCImageDlg::interpolation_none);
+				m_imgDlg.set_smooth_interpolation(CGdiplusBitmap::interpolation_none);
 				return TRUE;
 			case '2':
-				m_imgDlg.set_smooth_interpolation(CSCImageDlg::interpolation_bilinear);
+				m_imgDlg.set_smooth_interpolation(CGdiplusBitmap::interpolation_bilinear);
 				return TRUE;
 			case '3':
-				m_imgDlg.set_smooth_interpolation(CSCImageDlg::interpolation_bicubic);
+				m_imgDlg.set_smooth_interpolation(CGdiplusBitmap::interpolation_bicubic);
 				return TRUE;
 			}
 	}

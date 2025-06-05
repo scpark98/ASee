@@ -12,7 +12,6 @@
 #define IDD_DIALOG1                     131
 #define IDD_TITLE                       131
 #define IDC_CURSOR_DROPPER_BLACK        133
-#define IDC_CURSOR_DROPPER_BLUE         134
 #define IDC_CURSOR_DROPPER              134
 #define IDC_EDIT_CX                     1000
 #define IDC_SPIN_CX                     1001
@@ -63,13 +62,15 @@
 #define ID_MENU_SMOOTH_LANCZOS          32839
 #define ID_RECENT_32840                 32840
 #define ID_MENU_RECENT_FOLDERS_CLEAR    32841
+#define ID_32842                        32842
+#define ID_MENU_SMOOTH_NONE             32843
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        135
-#define _APS_NEXT_COMMAND_VALUE         32842
+#define _APS_NEXT_COMMAND_VALUE         32844
 #define _APS_NEXT_CONTROL_VALUE         1005
 #define _APS_NEXT_SYMED_VALUE           1105
 #endif

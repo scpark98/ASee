@@ -81,6 +81,9 @@
     <ClInclude Include="TitleDlg.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ASee.cpp">
@@ -133,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="TitleDlg.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -133,11 +133,11 @@ public:
 	afx_msg void OnMenuDelete();
 	afx_msg void OnMenuClose();
 	afx_msg void OnMenuSelect();
-	afx_msg void OnMenuSmooth();
 	afx_msg void OnMenuShowRoiInfo();
 	afx_msg void OnMenuInputRoi();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnMenuShowInfo();
+	afx_msg void OnMenuSmoothNone();
 	afx_msg void OnMenuSmoothBilinear();
 	afx_msg void OnMenuSmoothBicubic();
 	afx_msg void OnMenuSmoothLanczos();
