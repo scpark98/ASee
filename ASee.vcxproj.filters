@@ -16,6 +16,9 @@
     <Filter Include="Common">
       <UniqueIdentifier>{236aa3df-bccb-4824-85ee-a50fbab3bd1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\DirectoryChanges">
+      <UniqueIdentifier>{512059e8-1dbd-429d-9da5-6cdea2b43898}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ASee.h">
@@ -84,6 +87,12 @@
     <ClInclude Include="..\Common\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\file_system\DirectoryChanges\DelayedDirectoryChangeHandler.h">
+      <Filter>Common\DirectoryChanges</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\file_system\DirectoryChanges\DirectoryChanges.h">
+      <Filter>Common\DirectoryChanges</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ASee.cpp">
@@ -140,6 +149,12 @@
     <ClCompile Include="..\Common\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\file_system\DirectoryChanges\DirectoryChanges.cpp">
+      <Filter>Common\DirectoryChanges</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\file_system\DirectoryChanges\DelayedDirectoryChangeHandler.cpp">
+      <Filter>Common\DirectoryChanges</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ASee.rc">
@@ -164,5 +179,19 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="res\sound\dick.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="res\sound\ding_high.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="res\sound\ding_low.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="res\sound\diring.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
   </ItemGroup>
 </Project>

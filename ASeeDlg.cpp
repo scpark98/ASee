@@ -11,6 +11,10 @@
 #include "RoiInputDlg.h"
 #include "../Common/messagebox/Win32InputBox/Win32InputBox.h"
 
+#include <mmsystem.h>
+#pragma comment(lib,"winmm.lib")
+
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -117,6 +121,8 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_WM_MBUTTONDOWN()
 	ON_COMMAND_RANGE(menu_recent_folders_start, menu_recent_folders_end, on_menu_recent_folders)
 	ON_COMMAND(ID_MENU_RECENT_FOLDERS_CLEAR, &CASeeDlg::OnMenuRecentFoldersClear)
+	ON_REGISTERED_MESSAGE(Message_CASeeApp, &CASeeDlg::on_message_CASeeApp)
+	ON_REGISTERED_MESSAGE(Message_CDirectoryChangeWatcher, &CASeeDlg::on_message_CDirectoryChangeWatcher)
 END_MESSAGE_MAP()
 
 
@@ -165,6 +171,11 @@ BOOL CASeeDlg::OnInitDialog()
 
 	if (!fit)
 		m_imgDlg.zoom(GetProfileDouble(&theApp, _T("setting"), _T("zoom"), 1.0));
+
+
+	m_message.set_text(this, _T(""), 52, Gdiplus::FontStyleRegular);
+
+
 
 	EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, 0);
 
@@ -395,7 +406,7 @@ void CASeeDlg::display_image(int index, bool scan_folder)
 	{
 		if (m_index >= m_files.size() - 1)
 		{
-			//m_notice.set_notice(_T("맨 마지막 이미지"));
+			show_message(_T("맨 마지막 이미지"));
 			return;
 		}
 		m_index++;
@@ -404,7 +415,7 @@ void CASeeDlg::display_image(int index, bool scan_folder)
 	{
 		if (m_index == 0)
 		{
-			//m_notice.set_notice(_T("맨 처음 이미지"));
+			show_message(_T("맨 처음 이미지"));
 			return;
 		}
 		m_index--;
@@ -433,6 +444,9 @@ void CASeeDlg::display_image(int index, bool scan_folder)
 	update_title();
 
 	add_registry(&theApp, _T("setting\\recent folders"), get_part(m_files[m_index], fn_folder));
+
+	//m_dir_watcher.UnwatchAllDirectories();
+	//DWORD dw = m_dir_watcher.WatchDirectory(get_part(m_files[m_index], fn_folder), m_hWnd, FALSE);
 }
 
 void CASeeDlg::update_title(CString title)
@@ -586,7 +600,7 @@ BOOL CASeeDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 
 	//Ctrl키를 누르고 wheel을 돌리면 확대/축소되는 기능은 이미 SCImageDlg에 구현되어 있다.
 	//메인에서는 그냥 wheel을 돌리면 이전/다음 이미지 표시 기능으로 동작한다.
-	TRACE(_T("%d OnMouseWheel\n"), GetTickCount());
+	//TRACE(_T("%d OnMouseWheel\n"), GetTickCount());
 
 	if (IsCtrlPressed())
 	{
@@ -1157,4 +1171,52 @@ void CASeeDlg::on_menu_recent_folders(UINT nID)
 void CASeeDlg::OnMenuRecentFoldersClear()
 {
 	theApp.WriteProfileInt(_T("setting\\recent folders"), _T("count"), 0);
+}
+
+LRESULT CASeeDlg::on_message_CDirectoryChangeWatcher(WPARAM wParam, LPARAM lParam)
+{
+	//FILE_ACTION_ADDED(1), FILE_ACTION_REMOVED(2), FILE_ACTION_RENAMED_OLD_NAME(4)
+	CDirectoryChangeWatcherMessage* msg = (CDirectoryChangeWatcherMessage*)wParam;
+	TRACE(_T("action = %d, filename0 = %s, filename1 = %s\n"), msg->action, msg->filename0, msg->filename1);
+	OnMenuRefresh();
+	return 0;
+}
+
+LRESULT CASeeDlg::on_message_CASeeApp(WPARAM wParam, LPARAM lParam)
+{
+	if (wParam == 0)
+	{
+		CString sfile = theApp.GetProfileString(_T("setting"), _T("shell parameter"), _T(""));
+
+		if (sfile.IsEmpty())
+			return 1;
+
+		m_files.clear();
+		m_files.push_back(sfile);
+		theApp.WriteProfileString(_T("setting"), _T("shell parameter"), _T(""));
+
+		display_image(0, true);
+	}
+	//else if (wParam == SC_RESTORE)
+	//{
+	//	//SendMessage(WM_SYSCOMMAND, SC_RESTORE);
+	//	SetForegroundWindow();
+	//}
+
+	return 0;
+}
+
+void CASeeDlg::show_message(CString message)
+{
+	//if (m_message.IsWindowVisible())
+	//	return;
+
+	::PlaySound(MAKEINTRESOURCE(IDR_WAVE_DICK), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
+
+	CSCShapeDlgTextSetting* setting = m_message.get_text_setting();
+	setting->text = message;
+	m_message.set_text(setting);
+	m_message.CenterWindow();
+	//m_message.ShowWindow(SW_SHOW);
+	m_message.fade_in(1, 500, true);
 }

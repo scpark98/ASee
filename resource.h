@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++에서 생성한 포함 파일입니다.
-// ASee.rc에서 사용되고 있습니다.
+// Microsoft Visual C++ generated include file.
+// Used by ASee.rc
 //
 #define IDM_ABOUTBOX                    0x10
 #define IDR_MENU_CONTEXT                17
@@ -13,6 +13,10 @@
 #define IDD_TITLE                       131
 #define IDC_CURSOR_DROPPER_BLACK        133
 #define IDC_CURSOR_DROPPER              134
+#define IDR_WAVE_DICK                   135
+#define IDR_WAVE_DING_HIGH              136
+#define IDR_WAVE_DING_LOW               137
+#define IDR_WAVE_DIRING                 139
 #define IDC_EDIT_CX                     1000
 #define IDC_SPIN_CX                     1001
 #define IDC_EDIT_CY                     1002
@@ -69,7 +73,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        135
+#define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         32844
 #define _APS_NEXT_CONTROL_VALUE         1005
 #define _APS_NEXT_SYMED_VALUE           1105

@@ -72,12 +72,21 @@ BOOL CASeeApp::InitInstance()
 		//윈도우 탐색기의 타이틀도 이 프로젝트의 이름으로 표시되는 윈도우 버전이 있다.
 		//따라서 이를 구분하기 위해 공백을 추가한다.
 		hWnd = get_hwnd_by_exe_file(get_exe_filename(false));
-		//hWnd = ::FindWindow(NULL, _T("ASee "));
+		//hWnd = ::FindWindow(_T("CASeeApp"), _T("ASee "));
 
+		//CString str;
+		//str.Format(_T("%p"), hWnd);
+		//AfxMessageBox(str);
+
+		//IsIconic()을 빼면 Gdi+ Window라는 이상한 창이 뜨는 현상이 있고
 		if (IsIconic(hWnd))
 		{
+			//최소화 버튼을 눌러서 최소화 시킨 경우는 왜 restore가 안될까...
+			//작업표시줄에서 토글로 최소화 시킨 경우는 잘 동작한다.
 			::ShowWindow(hWnd, SW_RESTORE);
+			//::SendMessage(hWnd, Message_CASeeApp, SC_RESTORE, 0);
 		}
+
 		SetForegroundWindowForce(hWnd);
 		SetActiveWindow(hWnd);
 		m_hMutex = NULL;

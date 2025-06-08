@@ -9,6 +9,8 @@
 #include "../Common/GdiplusBitmap.h"
 #include "../Common/CDialog/SCImageDlg/SCImageDlg.h"
 #include "../Common/CDialog/SCShapeDlg/SCShapeDlg.h"
+#include "../Common/file_system/DirectoryChanges/DirectoryChanges.h"
+#include "../Common/file_system/DirectoryChanges/DelayedDirectoryChangeHandler.h"
 
 #include "TitleDlg.h"
 
@@ -43,6 +45,10 @@ protected:
 	};
 	void			on_menu_recent_folders(UINT nID);
 
+	LRESULT			on_message_CASeeApp(WPARAM wParam, LPARAM lParam);
+
+	CDirectoryChangeWatcher	m_dir_watcher;
+	LRESULT			on_message_CDirectoryChangeWatcher(WPARAM wParam, LPARAM lParam);
 
 	std::deque<CString> m_files;
 	int m_index;
@@ -53,6 +59,9 @@ protected:
 
 	CSCImageDlg		m_imgDlg;
 	void			display_image(int index, bool scan_folder = false);
+
+	CSCShapeDlg		m_message;
+	void			show_message(CString message);
 
 	//파일명, 크기정보 등 표시
 	//bool			m_show_info = false;
