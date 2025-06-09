@@ -929,13 +929,8 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 			case 'V' :
 				if (IsCtrlPressed())
 				{
-					if (m_imgDlg.m_img.paste_from_clipboard())
-					{
-						m_imgDlg.set_filename(_T("image from clipboard"));
-						m_imgDlg.set_alt_info(_T(""));
-						m_imgDlg.Invalidate();
+					if (m_imgDlg.paste_from_clipboard())
 						update_title(_T("image from clipboard"));
-					}
 				}
 				break;
 			case VK_HOME:
