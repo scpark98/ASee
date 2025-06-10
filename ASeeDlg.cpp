@@ -173,7 +173,7 @@ BOOL CASeeDlg::OnInitDialog()
 		m_imgDlg.zoom(GetProfileDouble(&theApp, _T("setting"), _T("zoom"), 1.0));
 
 
-	m_message.set_text(this, _T(""), 20, Gdiplus::FontStyleBold);
+	m_message.set_text(this, _T(""), 32, Gdiplus::FontStyleBold);
 	m_message.set_stroke_color(Gdiplus::Color::Black);
 
 	EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, 0);
