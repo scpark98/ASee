@@ -640,6 +640,7 @@ void CASeeDlg::OnMenuZoomIn()
 void CASeeDlg::OnMenuZoomOrigin()
 {
 	m_imgDlg.zoom(0);
+	show_message(_T("원본 크기로 보기"));
 }
 
 void CASeeDlg::OnMenuZoom120()
@@ -660,6 +661,7 @@ void CASeeDlg::OnMenuZoom200()
 void CASeeDlg::OnMenuZoomStretch()
 {
 	m_imgDlg.fit2ctrl(true);
+	show_message(_T("창 크기에 맞게 확대/축소"));
 }
 
 void CASeeDlg::OnMenuZoomInput()
@@ -999,6 +1001,12 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 					Invalidate();
 				}
 				return true;
+			case VK_DIVIDE:
+				OnMenuZoomOrigin();
+				return TRUE;
+			case VK_MULTIPLY:
+				OnMenuZoomStretch();
+				return TRUE;
 			case '1':
 				OnMenuZoomOrigin();
 				return true;

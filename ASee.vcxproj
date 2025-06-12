@@ -23,7 +23,7 @@
     <ProjectGuid>{EBF29ED7-32BE-5440-C80C-4BCD05A2B3AA}</ProjectGuid>
     <Keyword>MFCProj</Keyword>
     <RootNamespace>ASee</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
