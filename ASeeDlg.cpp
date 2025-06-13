@@ -173,7 +173,7 @@ BOOL CASeeDlg::OnInitDialog()
 		m_imgDlg.zoom(GetProfileDouble(&theApp, _T("setting"), _T("zoom"), 1.0));
 
 
-	m_message.set_text(this, _T(""), 32, Gdiplus::FontStyleBold, 4.0f, 2.4f);
+	m_message.set_text(this, _T(""), 40, Gdiplus::FontStyleBold, 4.0f, 2.4f);
 	m_message.set_stroke_color(Gdiplus::Color::Black);
 
 	EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, 0);
@@ -1220,5 +1220,5 @@ void CASeeDlg::show_message(CString message)
 	m_message.set_text(setting);
 	m_message.CenterWindow();
 	//m_message.ShowWindow(SW_SHOW);
-	m_message.fade_in(1, 500, true);
+	m_message.fade_in(1, 1000, true);
 }
