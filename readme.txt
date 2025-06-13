@@ -1,5 +1,7 @@
 [수정할 내용]
 - indexed 8bpp와 같은 이미지일 경우 팔레트로 색상을 추출해야 한다.
+- webp 지원
+
 
 [수정된 내용]
 - animated gif일 경우 프레임 정보 및 slider 표시 필요.
@@ -27,7 +29,7 @@
   - 그릴때는 left, right 또는 top, bottom이 바뀌는 경우도 있으므로 여기서 nomalize_rect() 호출.
   - m_screen_roi를 m_image_roi로 변환하여 저장.
   - invalidate() 호출.
-
+    
 * OnPaint() :
   - m_lbutton_down이면 m_screen_roi를 그린다.
   - m_lbutton_down이 아니고 m_image_roi가 유효하면
