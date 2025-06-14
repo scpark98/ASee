@@ -48,6 +48,7 @@ BOOL CTitleDlg::OnInitDialog()
 	set_titlebar_font_size(12);
 	set_titlebar_height(48);
 	set_titlebar_icon(IDR_MAINFRAME, 24, 24);
+	set_draw_border(false);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
