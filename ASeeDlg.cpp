@@ -1215,8 +1215,14 @@ void CASeeDlg::show_message(CString message)
 
 	::PlaySound(MAKEINTRESOURCE(IDR_WAVE_DICK), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
 
+	//메시지 폰트 크기는 height에 비례하는 크기로 자동 조정되어야 한다.
+	CRect rc;
+	GetClientRect(rc);
+
 	CSCShapeDlgTextSetting* setting = m_message.get_text_setting();
 	setting->text = message;
+	setting->lf.size = MIN(rc.Height() / 16.18, 44.0f);
+	TRACE(_T("size = %f\n"), setting->lf.size);
 	m_message.set_text(setting);
 	m_message.CenterWindow();
 	//m_message.ShowWindow(SW_SHOW);
