@@ -122,7 +122,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND_RANGE(menu_recent_folders_start, menu_recent_folders_end, on_menu_recent_folders)
 	ON_COMMAND(ID_MENU_RECENT_FOLDERS_CLEAR, &CASeeDlg::OnMenuRecentFoldersClear)
 	ON_REGISTERED_MESSAGE(Message_CASeeApp, &CASeeDlg::on_message_CASeeApp)
-	ON_REGISTERED_MESSAGE(Message_CDirectoryChangeWatcher, &CASeeDlg::on_message_CDirectoryChangeWatcher)
+	ON_REGISTERED_MESSAGE(Message_CSCDirWatcher, &CASeeDlg::on_message_CSCDirWatcher)
 END_MESSAGE_MAP()
 
 
@@ -215,6 +215,8 @@ BOOL CASeeDlg::OnInitDialog()
 			display_image(0, true);
 		}
 	}
+
+	m_dir_watcher.init(this);
 
 	DragAcceptFiles();
 
@@ -444,8 +446,8 @@ void CASeeDlg::display_image(int index, bool scan_folder)
 
 	add_registry(&theApp, _T("setting\\recent folders"), get_part(m_files[m_index], fn_folder));
 
-	//m_dir_watcher.UnwatchAllDirectories();
-	//DWORD dw = m_dir_watcher.WatchDirectory(get_part(m_files[m_index], fn_folder), m_hWnd, FALSE);
+	m_dir_watcher.stop_all();
+	m_dir_watcher.add(get_part(m_files[m_index], fn_folder), false);
 }
 
 void CASeeDlg::update_title(CString title)
@@ -589,6 +591,9 @@ void CASeeDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
 	bool is_auto_hide = get_taskbar_state(ABS_AUTOHIDE, &sz);
 
 	lpMMI->ptMaxSize.y -= (is_auto_hide ? 4 : sz.cy);
+
+	lpMMI->ptMinTrackSize.x = 60;
+	lpMMI->ptMinTrackSize.y = 48;
 
 	CDialogEx::OnGetMinMaxInfo(lpMMI);
 }
@@ -1175,11 +1180,11 @@ void CASeeDlg::OnMenuRecentFoldersClear()
 	theApp.WriteProfileInt(_T("setting\\recent folders"), _T("count"), 0);
 }
 
-LRESULT CASeeDlg::on_message_CDirectoryChangeWatcher(WPARAM wParam, LPARAM lParam)
+LRESULT CASeeDlg::on_message_CSCDirWatcher(WPARAM wParam, LPARAM lParam)
 {
 	//FILE_ACTION_ADDED(1), FILE_ACTION_REMOVED(2), FILE_ACTION_RENAMED_OLD_NAME(4)
-	CDirectoryChangeWatcherMessage* msg = (CDirectoryChangeWatcherMessage*)wParam;
-	TRACE(_T("action = %d, filename0 = %s, filename1 = %s\n"), msg->action, msg->filename0, msg->filename1);
+	CSCDirWatcherMessage* msg = reinterpret_cast<CSCDirWatcherMessage*>(wParam);
+	TRACE(_T("action: %d, path0: %s, path1: %s\n"), msg->action, msg->path0, msg->path1);
 	OnMenuRefresh();
 	return 0;
 }
@@ -1199,11 +1204,6 @@ LRESULT CASeeDlg::on_message_CASeeApp(WPARAM wParam, LPARAM lParam)
 
 		display_image(0, true);
 	}
-	//else if (wParam == SC_RESTORE)
-	//{
-	//	//SendMessage(WM_SYSCOMMAND, SC_RESTORE);
-	//	SetForegroundWindow();
-	//}
 
 	return 0;
 }

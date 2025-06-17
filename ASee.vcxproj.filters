@@ -16,7 +16,7 @@
     <Filter Include="Common">
       <UniqueIdentifier>{236aa3df-bccb-4824-85ee-a50fbab3bd1d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\DirectoryChanges">
+    <Filter Include="Common\SCDirWatcher">
       <UniqueIdentifier>{512059e8-1dbd-429d-9da5-6cdea2b43898}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -87,11 +87,17 @@
     <ClInclude Include="..\Common\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\file_system\DirectoryChanges\DelayedDirectoryChangeHandler.h">
-      <Filter>Common\DirectoryChanges</Filter>
+    <ClInclude Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChangesPrivate.h">
+      <Filter>Common\SCDirWatcher</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\file_system\DirectoryChanges\DirectoryChanges.h">
-      <Filter>Common\DirectoryChanges</Filter>
+    <ClInclude Include="..\Common\file_system\SCDirWatcher\SCDirWatcher.h">
+      <Filter>Common\SCDirWatcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\file_system\SCDirWatcher\ThreadSafeQueue.h">
+      <Filter>Common\SCDirWatcher</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChanges.h">
+      <Filter>Common\SCDirWatcher</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -149,11 +155,14 @@
     <ClCompile Include="..\Common\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\file_system\DirectoryChanges\DirectoryChanges.cpp">
-      <Filter>Common\DirectoryChanges</Filter>
+    <ClCompile Include="..\Common\file_system\SCDirWatcher\SCDirWatcher.cpp">
+      <Filter>Common\SCDirWatcher</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\file_system\DirectoryChanges\DelayedDirectoryChangeHandler.cpp">
-      <Filter>Common\DirectoryChanges</Filter>
+    <ClCompile Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChanges.cpp">
+      <Filter>Common\SCDirWatcher</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChangesPrivate.cpp">
+      <Filter>Common\SCDirWatcher</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

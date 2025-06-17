@@ -9,8 +9,7 @@
 #include "../Common/GdiplusBitmap.h"
 #include "../Common/CDialog/SCImageDlg/SCImageDlg.h"
 #include "../Common/CDialog/SCShapeDlg/SCShapeDlg.h"
-#include "../Common/file_system/DirectoryChanges/DirectoryChanges.h"
-#include "../Common/file_system/DirectoryChanges/DelayedDirectoryChangeHandler.h"
+#include "../Common/file_system/SCDirWatcher/SCDirWatcher.h"
 
 #include "TitleDlg.h"
 
@@ -47,8 +46,8 @@ protected:
 
 	LRESULT			on_message_CASeeApp(WPARAM wParam, LPARAM lParam);
 
-	CDirectoryChangeWatcher	m_dir_watcher;
-	LRESULT			on_message_CDirectoryChangeWatcher(WPARAM wParam, LPARAM lParam);
+	CSCDirWatcher	m_dir_watcher;
+	LRESULT			on_message_CSCDirWatcher(WPARAM wParam, LPARAM lParam);
 
 	std::deque<CString> m_files;
 	int m_index;
