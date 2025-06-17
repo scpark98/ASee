@@ -43,7 +43,7 @@ BOOL CTitleDlg::OnInitDialog()
 	// TODO:  여기에 추가 초기화 작업을 추가합니다.
 	//m_theme.cr_back = Gdiplus::Color::White;
 	set_color_theme(CSCColorTheme::color_theme_dark_gray);
-	set_system_buttons(SC_MINIMIZE, SC_MAXIMIZE, SC_CLOSE);
+	set_system_buttons(this, SC_MINIMIZE, SC_MAXIMIZE, SC_CLOSE);
 	//set_title_font_bold();
 	set_titlebar_font_size(12);
 	set_titlebar_height(48);
