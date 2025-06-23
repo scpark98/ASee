@@ -446,7 +446,7 @@ void CASeeDlg::display_image(int index, bool scan_folder)
 
 	add_registry(&theApp, _T("setting\\recent folders"), get_part(m_files[m_index], fn_folder));
 
-	m_dir_watcher.stop_all();
+	m_dir_watcher.stop();
 	m_dir_watcher.add(get_part(m_files[m_index], fn_folder), false);
 }
 
