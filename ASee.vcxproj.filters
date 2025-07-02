@@ -99,6 +99,9 @@
     <ClInclude Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChanges.h">
       <Filter>Common\SCDirWatcher</Filter>
     </ClInclude>
+    <ClInclude Include="ZigzagColorDlg.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ASee.cpp">
@@ -163,6 +166,9 @@
     </ClCompile>
     <ClCompile Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChangesPrivate.cpp">
       <Filter>Common\SCDirWatcher</Filter>
+    </ClCompile>
+    <ClCompile Include="ZigzagColorDlg.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

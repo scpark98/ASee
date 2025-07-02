@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by ASee.rc
+// Microsoft Visual C++에서 생성한 포함 파일입니다.
+// ASee.rc에서 사용되고 있습니다.
 //
 #define IDM_ABOUTBOX                    0x10
 #define IDR_MENU_CONTEXT                17
@@ -17,11 +17,19 @@
 #define IDR_WAVE_DING_HIGH              136
 #define IDR_WAVE_DING_LOW               137
 #define IDR_WAVE_DIRING                 139
+#define IDD_ZIGZAG_COLOR                141
 #define IDC_EDIT_CX                     1000
 #define IDC_SPIN_CX                     1001
 #define IDC_EDIT_CY                     1002
 #define IDC_SPIN_CX2                    1003
 #define IDC_SPIN_CY                     1004
+#define IDC_BUTTON_BACK_COLOR           1005
+#define IDC_BUTTON_FORE_COLOR           1006
+#define IDC_RADIO_DEFAULT               1007
+#define IDC_RADIO_WHITE                 1008
+#define IDC_RADIO_BLACK                 1009
+#define IDC_RADIO_BLACK2                1010
+#define IDC_RADIO_CUSTOM                1010
 #define ID_MENU_ROTATE_LEFT             32771
 #define ID_MENU_ALWAYS_ON_TOP           32772
 #define ID_MENU_SMOOTH                  32773
@@ -68,14 +76,16 @@
 #define ID_MENU_RECENT_FOLDERS_CLEAR    32841
 #define ID_32842                        32842
 #define ID_MENU_SMOOTH_NONE             32843
+#define ID_MENU_32844                   32844
+#define ID_MENU_TRANSPARENT_BACK        32845
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        141
-#define _APS_NEXT_COMMAND_VALUE         32844
-#define _APS_NEXT_CONTROL_VALUE         1005
+#define _APS_NEXT_RESOURCE_VALUE        144
+#define _APS_NEXT_COMMAND_VALUE         32846
+#define _APS_NEXT_CONTROL_VALUE         1008
 #define _APS_NEXT_SYMED_VALUE           1105
 #endif
 #endif

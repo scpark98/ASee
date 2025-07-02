@@ -225,6 +225,7 @@
     <ClInclude Include="RoiInputDlg.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TitleDlg.h" />
+    <ClInclude Include="ZigzagColorDlg.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Common\AutoFont.cpp">
@@ -333,6 +334,7 @@
     </ClCompile>
     <ClCompile Include="RoiInputDlg.cpp" />
     <ClCompile Include="TitleDlg.cpp" />
+    <ClCompile Include="ZigzagColorDlg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ASee.rc" />

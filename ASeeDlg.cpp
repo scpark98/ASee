@@ -9,6 +9,7 @@
 #include "afxdialogex.h"
 
 #include "RoiInputDlg.h"
+#include "ZigzagColorDlg.h"
 #include "../Common/messagebox/Win32InputBox/Win32InputBox.h"
 
 #include <mmsystem.h>
@@ -123,6 +124,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_RECENT_FOLDERS_CLEAR, &CASeeDlg::OnMenuRecentFoldersClear)
 	ON_REGISTERED_MESSAGE(Message_CASeeApp, &CASeeDlg::on_message_CASeeApp)
 	ON_REGISTERED_MESSAGE(Message_CSCDirWatcher, &CASeeDlg::on_message_CSCDirWatcher)
+	ON_COMMAND(ID_MENU_TRANSPARENT_BACK, &CASeeDlg::OnMenuTransparentBack)
 END_MESSAGE_MAP()
 
 
@@ -219,6 +221,8 @@ BOOL CASeeDlg::OnInitDialog()
 	m_dir_watcher.init(this);
 
 	DragAcceptFiles();
+
+	m_zigzagColorDlg.Create(IDD_ZIGZAG_COLOR, this);
 
 	/* for test 좌표변환 시 소실되는 값 확인용
 	CRect displayed(0, 0, 789, 675);
@@ -896,6 +900,11 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 		CRect rc;
 		GetClientRect(rc);
 
+		bool is_ctrl_pressed = IsCtrlPressed();
+		double interval = (IsCtrlPressed() ? 5.0 : 1.0);
+
+		Gdiplus::RectF roi = m_imgDlg.get_image_roi();
+
 		//TRACE(_T("%s : %d\n"), __function__, pMsg->wParam);
 		switch (pMsg->wParam)
 		{
@@ -915,6 +924,24 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 					OnBnClickedOk();
 				}
 				return true;
+			case VK_ADD:
+				if (IsShiftPressed() && !roi.IsEmptyArea())
+				{
+					roi.Inflate(Gdiplus::PointF(interval, interval));
+					m_imgDlg.set_image_roi(roi);
+					return TRUE;
+				}
+				m_imgDlg.zoom(1);
+				return TRUE;
+			case VK_SUBTRACT:
+				if (IsShiftPressed() && !roi.IsEmptyArea())
+				{
+					roi.Inflate(Gdiplus::PointF(-interval, -interval));
+					m_imgDlg.set_image_roi(roi);
+					return TRUE;
+				}
+				m_imgDlg.zoom(-1);
+				return TRUE;
 			case VK_F5:
 				reload_image();
 				return true;
@@ -922,6 +949,22 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				OnMenuDelete();
 				return true;
 
+			case 'Q' :
+				m_imgDlg.m_img.reset_adjust();
+				show_adjust_message(adjust_reset);
+				return true;
+			case 'W' :
+				show_adjust_message(adjust_bright, m_imgDlg.m_img.increase_bright(-2));
+				return true;
+			case 'E' :
+				show_adjust_message(adjust_bright, m_imgDlg.m_img.increase_bright(2));
+				return true;
+			case 'R':
+				show_adjust_message(adjust_contrast, m_imgDlg.m_img.increase_contrast(-2));
+				return true;
+			case 'T':
+				show_adjust_message(adjust_contrast, m_imgDlg.m_img.increase_contrast(2));
+				return true;
 			case 'F':
 				if (IsCtrlPressed())
 				{
@@ -1182,10 +1225,15 @@ void CASeeDlg::OnMenuRecentFoldersClear()
 
 LRESULT CASeeDlg::on_message_CSCDirWatcher(WPARAM wParam, LPARAM lParam)
 {
-	//FILE_ACTION_ADDED(1), FILE_ACTION_REMOVED(2), FILE_ACTION_RENAMED_OLD_NAME(4)
+	//FILE_ACTION_ADDED(1), FILE_ACTION_REMOVED(2), FILE_ACTION_MODIFIED(3), FILE_ACTION_RENAMED_OLD_NAME(4), FILE_ACTION_RENAMED_NEW_NAME(5)
 	CSCDirWatcherMessage* msg = reinterpret_cast<CSCDirWatcherMessage*>(wParam);
 	TRACE(_T("action: %d, path0: %s, path1: %s\n"), msg->action, msg->path0, msg->path1);
-	OnMenuRefresh();
+
+	//다른 파일의 추가 삭제는 인덱스가 변하므로 refresh하지만
+	//파일 변경, 이름 변경은 현재 이미지가 아니면 매번 refresh 시키지 않는다.
+	if (msg->action < FILE_ACTION_MODIFIED || msg->path0 == m_imgDlg.get_filename())
+		OnMenuRefresh();
+
 	return 0;
 }
 
@@ -1210,9 +1258,6 @@ LRESULT CASeeDlg::on_message_CASeeApp(WPARAM wParam, LPARAM lParam)
 
 void CASeeDlg::show_message(CString message)
 {
-	if (m_message.is_fadeinout_ing())
-		return;
-
 	::PlaySound(MAKEINTRESOURCE(IDR_WAVE_DICK), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
 
 	//메시지 폰트 크기는 height에 비례하는 크기로 자동 조정되어야 한다.
@@ -1223,9 +1268,49 @@ void CASeeDlg::show_message(CString message)
 	setting->text = message;
 	setting->lf.size = rc.Height() / 16.18f;
 	Clamp(setting->lf.size, 16.f, 44.0f);
-	TRACE(_T("size = %f\n"), setting->lf.size);
+
 	m_message.set_text(setting);
 	m_message.CenterWindow();
-	//m_message.ShowWindow(SW_SHOW);
-	m_message.fade_in(1, 1000, true);
+	m_message.fade_in(0, 1000, true);
+}
+
+void CASeeDlg::show_adjust_message(int type, int percentage, bool invalidate)
+{
+	if (invalidate)
+		m_imgDlg.Invalidate();
+
+	CString str;
+
+	switch (type)
+	{
+		case adjust_reset :
+			str = _T("영상 속성 초기화");
+			break;
+		case adjust_bright :
+			str.Format(_T("밝기 : %d%%"), percentage);
+			break;
+		case adjust_contrast:
+			str.Format(_T("대비 : %d%%"), percentage);
+			break;
+	}
+
+	show_message(str);
+}
+
+void CASeeDlg::OnMenuTransparentBack()
+{
+	m_zigzagColorDlg.set_back_color(CGdiplusBitmap::m_cr_zigzag_back.ToCOLORREF());
+	m_zigzagColorDlg.set_fore_color(CGdiplusBitmap::m_cr_zigzag_fore.ToCOLORREF());
+	m_zigzagColorDlg.CenterWindow();
+	m_zigzagColorDlg.ShowWindow(SW_SHOW);
+}
+
+void CASeeDlg::set_zigzag_color(COLORREF cr_back, COLORREF cr_fore)
+{
+	Gdiplus::Color gcr_back;
+	Gdiplus::Color gcr_fore;
+
+	gcr_back.SetFromCOLORREF(cr_back);
+	gcr_fore.SetFromCOLORREF(cr_fore);
+	m_imgDlg.set_zigzag_color(gcr_back, gcr_fore);
 }

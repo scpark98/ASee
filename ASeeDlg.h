@@ -12,6 +12,7 @@
 #include "../Common/file_system/SCDirWatcher/SCDirWatcher.h"
 
 #include "TitleDlg.h"
+#include "ZigzagColorDlg.h"
 
 // CASeeDlg 대화 상자
 class CASeeDlg : public CDialogEx
@@ -19,6 +20,10 @@ class CASeeDlg : public CDialogEx
 // 생성입니다.
 public:
 	CASeeDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
+
+	CZigzagColorDlg		m_zigzagColorDlg;
+
+	void				set_zigzag_color(COLORREF cr_back, COLORREF cr_fore);
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -61,6 +66,14 @@ protected:
 
 	CSCShapeDlg		m_message;
 	void			show_message(CString message);
+
+	enum ENUM_ADJUST_TYPE
+	{
+		adjust_reset = 0,
+		adjust_bright,
+		adjust_contrast,
+	};
+	void			show_adjust_message(int type, int percentage = 100, bool invalidate = true);
 
 	//파일명, 크기정보 등 표시
 	//bool			m_show_info = false;
@@ -152,4 +165,5 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnMButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnMenuRecentFoldersClear();
+	afx_msg void OnMenuTransparentBack();
 };

@@ -1,7 +1,9 @@
 [수정할 내용]
 - indexed 8bpp와 같은 이미지일 경우 팔레트로 색상을 추출해야 한다.
 - webp 지원
-
+- roi resize, move시에 픽셀단위로 이동되도록.
+- show/hide grid line
+- 32bit png clipboard copy
 
 [수정된 내용]
 - 윈도우탐색기 등에서 파일 생성, 삭제, 이름변경 등의 변화가 있을 경우 다시 로드하도록 수정. (CSCDirWatcher 사용)
