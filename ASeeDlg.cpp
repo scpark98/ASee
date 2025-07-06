@@ -993,7 +993,7 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 			case VK_UP:
 				start_slide_show(0);
 
-				if (m_imgDlg.get_fit2ctrl() || RectInRect(rc, m_imgDlg.get_displayed_rect()))
+				if (m_imgDlg.get_fit2ctrl() || rect_in_rect(rc, m_imgDlg.get_displayed_rect()))
 				{
 					display_image(-2);
 				}
@@ -1010,7 +1010,7 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				return true;
 			case VK_DOWN:
 				start_slide_show(0);
-				if (m_imgDlg.get_fit2ctrl() || RectInRect(rc, m_imgDlg.get_displayed_rect()))
+				if (m_imgDlg.get_fit2ctrl() || rect_in_rect(rc, m_imgDlg.get_displayed_rect()))
 				{
 					display_image(-1);
 				}
@@ -1266,8 +1266,8 @@ void CASeeDlg::show_message(CString message)
 
 	CSCShapeDlgTextSetting* setting = m_message.get_text_setting();
 	setting->text = message;
-	setting->lf.size = rc.Height() / 16.18f;
-	Clamp(setting->lf.size, 16.f, 44.0f);
+	setting->text_prop.size = rc.Height() / 16.18f;
+	Clamp(setting->text_prop.size, 16.f, 44.0f);
 
 	m_message.set_text(setting);
 	m_message.CenterWindow();
