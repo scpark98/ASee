@@ -5,11 +5,12 @@
 #pragma once
 
 #include <deque>
-#include "../Common/Functions.h"
-#include "../Common/GdiplusBitmap.h"
-#include "../Common/CDialog/SCImageDlg/SCImageDlg.h"
-#include "../Common/CDialog/SCShapeDlg/SCShapeDlg.h"
-#include "../Common/file_system/SCDirWatcher/SCDirWatcher.h"
+#include "Functions.h"
+#include "GdiplusBitmap.h"
+#include "CDialog/SCImageDlg/SCImageDlg.h"
+#include "CDialog/SCShapeDlg/SCShapeDlg.h"
+#include "ThumbCtrl/SCThumbCtrl.h"
+#include "file_system/SCDirWatcher/SCDirWatcher.h"
 
 #include "TitleDlg.h"
 #include "ZigzagColorDlg.h"
@@ -29,6 +30,7 @@ public:
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_ASEE_DIALOG };
 #endif
+
 
 protected:
 	enum TIMER_ID

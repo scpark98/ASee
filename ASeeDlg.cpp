@@ -432,8 +432,10 @@ void CASeeDlg::display_image(int index, bool scan_folder)
 
 	//m_notice.ShowWindow(SW_HIDE);
 
-	m_imgDlg.load(m_files[m_index]);
-
+	CString folder = get_part(m_files[m_index], fn_folder);
+	CString recent_folder = theApp.GetProfileString(_T("setting"), _T("recent folder"), _T(""));
+	m_imgDlg.load(m_files[m_index], folder != recent_folder);
+	theApp.WriteProfileString(_T("setting"), _T("recent folder"), folder);
 	//Invalidate();
 
 	if (scan_folder)
@@ -448,7 +450,7 @@ void CASeeDlg::display_image(int index, bool scan_folder)
 
 	update_title();
 
-	add_registry(&theApp, _T("setting\\recent folders"), get_part(m_files[m_index], fn_folder));
+	add_registry(&theApp, _T("setting\\recent folders"), folder);
 
 	m_dir_watcher.stop();
 	m_dir_watcher.add(get_part(m_files[m_index], fn_folder), false);
