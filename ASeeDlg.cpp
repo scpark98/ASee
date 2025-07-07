@@ -124,6 +124,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_RECENT_FOLDERS_CLEAR, &CASeeDlg::OnMenuRecentFoldersClear)
 	ON_REGISTERED_MESSAGE(Message_CASeeApp, &CASeeDlg::on_message_CASeeApp)
 	ON_REGISTERED_MESSAGE(Message_CSCDirWatcher, &CASeeDlg::on_message_CSCDirWatcher)
+	ON_REGISTERED_MESSAGE(Message_CSCImageDlg, &CASeeDlg::on_message_CSCImageDlg)
 	ON_COMMAND(ID_MENU_TRANSPARENT_BACK, &CASeeDlg::OnMenuTransparentBack)
 END_MESSAGE_MAP()
 
@@ -1315,4 +1316,17 @@ void CASeeDlg::set_zigzag_color(COLORREF cr_back, COLORREF cr_fore)
 	gcr_back.SetFromCOLORREF(cr_back);
 	gcr_fore.SetFromCOLORREF(cr_fore);
 	m_imgDlg.set_zigzag_color(gcr_back, gcr_fore);
+}
+
+LRESULT CASeeDlg::on_message_CSCImageDlg(WPARAM wParam, LPARAM lParam)
+{
+	auto msg = (CSCImageDlgMessage*)(wParam);
+
+	if (msg->msg == CSCImageDlg::message_image_loaded)
+	{
+		CString sfile = *(CString*)lParam;
+		update_title(get_part(sfile, fn_name));
+	}
+
+	return 0;
 }

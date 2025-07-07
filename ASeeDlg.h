@@ -56,6 +56,8 @@ protected:
 	CSCDirWatcher	m_dir_watcher;
 	LRESULT			on_message_CSCDirWatcher(WPARAM wParam, LPARAM lParam);
 
+	LRESULT			on_message_CSCImageDlg(WPARAM wParam, LPARAM lParam);
+
 	std::deque<CString> m_files;
 	int m_index;
 
