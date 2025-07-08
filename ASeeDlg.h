@@ -170,4 +170,5 @@ public:
 	afx_msg void OnMButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnMenuRecentFoldersClear();
 	afx_msg void OnMenuTransparentBack();
+	afx_msg void OnMenuProperty();
 };

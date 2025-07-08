@@ -101,12 +101,14 @@ void CZigzagColorDlg::OnBnClickedCancel()
 void CZigzagColorDlg::OnBnClickedButtonBackColor()
 {
 	m_cr_back = m_button_back_color.GetColor();
+	theApp.WriteProfileInt(_T("setting"), _T("zigzag cr_back"), m_cr_back);
 	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_zigzag_color(m_cr_back, m_cr_fore);
 }
 
 void CZigzagColorDlg::OnBnClickedButtonForeColor()
 {
 	m_cr_fore = m_button_fore_color.GetColor();
+	theApp.WriteProfileInt(_T("setting"), _T("zigzag cr_fore"), m_cr_fore);
 	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_zigzag_color(m_cr_back, m_cr_fore);
 }
 
@@ -168,10 +170,15 @@ void CZigzagColorDlg::OnBnClickedRadioBlack()
 
 void CZigzagColorDlg::OnBnClickedRadioCustom()
 {
-	m_cr_back = m_button_back_color.GetColor();
-	m_cr_fore = m_button_fore_color.GetColor();
+	//custom을 누르면 registry에 저장된 색상으로 변경한다.
+	m_cr_back = theApp.GetProfileInt(_T("setting"), _T("zigzag cr_back"), CGdiplusBitmap::m_cr_zigzag_back.ToCOLORREF());
+	m_cr_fore = theApp.GetProfileInt(_T("setting"), _T("zigzag cr_fore"), CGdiplusBitmap::m_cr_zigzag_fore.ToCOLORREF());
+
+	m_button_back_color.SetColor(m_cr_back);
+	m_button_fore_color.SetColor(m_cr_fore);
 	m_button_back_color.EnableWindow(true);
 	m_button_fore_color.EnableWindow(true);
+
 	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_zigzag_color(m_cr_back, m_cr_fore);
 	theApp.WriteProfileInt(_T("setting"), _T("zigzag option"), 3);
 }

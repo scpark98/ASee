@@ -28,7 +28,6 @@
 #define IDC_RADIO_DEFAULT               1007
 #define IDC_RADIO_WHITE                 1008
 #define IDC_RADIO_BLACK                 1009
-#define IDC_RADIO_BLACK2                1010
 #define IDC_RADIO_CUSTOM                1010
 #define ID_MENU_ROTATE_LEFT             32771
 #define ID_MENU_ALWAYS_ON_TOP           32772
@@ -78,13 +77,15 @@
 #define ID_MENU_SMOOTH_NONE             32843
 #define ID_MENU_32844                   32844
 #define ID_MENU_TRANSPARENT_BACK        32845
+#define ID_MENU_32846                   32846
+#define ID_MENU_PROPERTY                32847
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        144
-#define _APS_NEXT_COMMAND_VALUE         32846
+#define _APS_NEXT_COMMAND_VALUE         32848
 #define _APS_NEXT_CONTROL_VALUE         1008
 #define _APS_NEXT_SYMED_VALUE           1105
 #endif

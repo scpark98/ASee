@@ -126,6 +126,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_REGISTERED_MESSAGE(Message_CSCDirWatcher, &CASeeDlg::on_message_CSCDirWatcher)
 	ON_REGISTERED_MESSAGE(Message_CSCImageDlg, &CASeeDlg::on_message_CSCImageDlg)
 	ON_COMMAND(ID_MENU_TRANSPARENT_BACK, &CASeeDlg::OnMenuTransparentBack)
+	ON_COMMAND(ID_MENU_PROPERTY, &CASeeDlg::OnMenuProperty)
 END_MESSAGE_MAP()
 
 
@@ -381,9 +382,9 @@ void CASeeDlg::OnDropFiles(HDROP hDropInfo)
 
 	m_files.clear();
 
-	if (IsFolder(sfile))
+	if (PathIsDirectory(sfile))
 	{
-		m_files = find_all_files(get_part(sfile, fn_folder), _T("*"), FILE_EXTENSION_IMAGE, _T(""), false);
+		m_files = find_all_files(sfile, _T("*"), FILE_EXTENSION_IMAGE, _T(""), false);
 		if (m_files.size() > 0)
 			display_image(0, false);
 	}
@@ -437,7 +438,7 @@ void CASeeDlg::display_image(int index, bool scan_folder)
 	CString recent_folder = theApp.GetProfileString(_T("setting"), _T("recent folder"), _T(""));
 	m_imgDlg.load(m_files[m_index], folder != recent_folder);
 	theApp.WriteProfileString(_T("setting"), _T("recent folder"), folder);
-	//Invalidate();
+	Invalidate();
 
 	if (scan_folder)
 	{
@@ -900,6 +901,9 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
 	if (pMsg->message == WM_KEYDOWN)
 	{
+		if (m_imgDlg.m_thumb.is_editing())
+			return false;
+
 		CRect rc;
 		GetClientRect(rc);
 
@@ -951,7 +955,6 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 			case VK_DELETE:
 				OnMenuDelete();
 				return true;
-
 			case 'Q' :
 				m_imgDlg.m_img.reset_adjust();
 				show_adjust_message(adjust_reset);
@@ -973,11 +976,11 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				{
 					OnMenuSelectFolder();
 				}
-				return true;
+				return false;
 			case 'O':
 				if (IsCtrlPressed())
 					OnMenuOpenFolder();
-				return true;
+				return false;
 			case 'V' :
 				if (IsCtrlPressed())
 				{
@@ -1327,6 +1330,15 @@ LRESULT CASeeDlg::on_message_CSCImageDlg(WPARAM wParam, LPARAM lParam)
 		CString sfile = *(CString*)lParam;
 		update_title(get_part(sfile, fn_name));
 	}
+	else if (msg->msg == CSCImageDlg::message_load_image)
+	{
+		display_image(msg->index);
+	}
 
 	return 0;
+}
+
+void CASeeDlg::OnMenuProperty()
+{
+	show_property_window(std::deque<CString> { m_files[m_index] });
 }
