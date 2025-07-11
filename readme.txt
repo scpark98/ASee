@@ -1,11 +1,24 @@
 [수정할 내용]
+- minimize일 때 shell 실행 시 restore 안됨
+  작업표시줄에서 minimize 할 때(정상 동작)와 앱에서 minimize 할 때(반응 없음) hWnd를 찾는/못찾는 차이 발생.
+
+- notice 창을 fade 중에도 바로 숨기는 코드 추가
+- thumb context 메뉴에서 theme 선택
+- recalc_tile_rect()에서 우측 여백이 남을 경우 tile_gap.cx를 늘려주고 다시 계산한다.
+
+- roi move, resize시에 픽셀단위로 이동.
+
 - indexed 8bpp와 같은 이미지일 경우 팔레트로 색상을 추출해야 한다.
 - webp 지원
 - roi resize, move시에 픽셀단위로 이동되도록.
 - show/hide grid line
 - 32bit png clipboard copy
 
+
 [수정된 내용]
+- thumb view에서 drag 시 스크롤. cur.cy - old.cy만큼 m_scroll_pos 보정
+- paste하면 image view로 자동 전환
+- 1 line일 경우는 edit의 bottom을 r.bottom과 동일하게 조정
 - 윈도우탐색기 등에서 파일 생성, 삭제, 이름변경 등의 변화가 있을 경우 다시 로드하도록 수정. (CSCDirWatcher 사용)
 - animated gif일 경우 프레임 정보 및 slider 표시 필요.
 

@@ -53,8 +53,10 @@ BOOL CASeeApp::InitInstance()
 {
 	SetRegistryKey(_T("Legends Software"));
 
+	//AfxMessageBox(i2S(__argc));
 	if (__argc > 1)
 	{
+		//AfxMessageBox(__targv[1]);
 		WriteProfileString(_T("setting"), _T("shell parameter"), __targv[1]);
 	}
 
@@ -71,28 +73,42 @@ BOOL CASeeApp::InitInstance()
 		//참고로 공백을 붙이는 이유는 만약 윈도우 탐색기에서 현재 프로젝트 폴더를 열었다면
 		//윈도우 탐색기의 타이틀도 이 프로젝트의 이름으로 표시되는 윈도우 버전이 있다.
 		//따라서 이를 구분하기 위해 공백을 추가한다.
-		hWnd = get_hwnd_by_exe_file(get_exe_filename(false));
-		//hWnd = ::FindWindow(_T("CASeeApp"), _T("ASee "));
-
+		// 
+		//20250710 get_hwnd_by_exe_file() 힘수를 이용해서 이 실행파일명의 윈도우 핸들을 얻어오고자 했으나
+		//나중 실행된 ASee.exe는 배제시켰지만 또 다른 문제가 발생함.
+		//minimize 버튼을 누른 경우와 작업표시줄에서 토글하여 minimize한 경우 다른 결과가 리턴된다.
+		//먼저 실행된 ASee.exe의 핸들을 얻어야하는데 Gdi+ Window를 얻어오는 오류가 발생하여
+		//caption으로 찾도록 수정함. 단, 이 역시도 나중 실행되는 ASee.exe를 얻어올 수 있으므로
+		//visible인 ASee.exe의 핸들을 얻어오도록 수정함.
+		//hWnd = get_hwnd_by_exe_file(get_exe_filename(false), GetCurrentProcessId());
+		//hWnd = ::FindWindow(_T("CASeeApp"), _T("ASee - "));
+		hWnd = FindWindowByCaption(_T("ASee - "))->m_hWnd;
+		//msgbox(_T("hWnd = %p"), hWnd);
 		//CString str;
 		//str.Format(_T("%p"), hWnd);
 		//AfxMessageBox(str);
 
 		//IsIconic()을 빼면 Gdi+ Window라는 이상한 창이 뜨는 현상이 있고
-		if (IsIconic(hWnd))
+		//SetForegroundWindow(hWnd);
+		//SetActiveWindow(hWnd);
+
+		if (true)//::IsIconic(hWnd))
 		{
+			//msgbox(_T("before SendMessage, Message_CASeeApp = %d"), Message_CASeeApp);
 			//최소화 버튼을 눌러서 최소화 시킨 경우는 왜 restore가 안될까...
 			//작업표시줄에서 토글로 최소화 시킨 경우는 잘 동작한다.
-			::ShowWindow(hWnd, SW_RESTORE);
-			//::SendMessage(hWnd, Message_CASeeApp, SC_RESTORE, 0);
+			//::ShowWindow(hWnd, SW_RESTORE);
+			::SendMessage(hWnd, Message_CASeeApp, 0, 0);
+			//msgbox(_T("after SendMessage, Message_CASeeApp = %d"), Message_CASeeApp);
+		}
+		else
+		{
+			msgbox(_T("not iconic"));
+			::SendMessage(hWnd, Message_CASeeApp, 0, 0);
+			msgbox(_T("after SendMessage, Message_CASeeApp = %d"), Message_CASeeApp);
 		}
 
-		SetForegroundWindowForce(hWnd);
-		SetActiveWindow(hWnd);
 		m_hMutex = NULL;
-
-		//for (i = 0; i < dqFiles.size(); i++)
-		::SendMessage(hWnd, Message_CASeeApp, 0, 0);
 
 		return false;
 	}

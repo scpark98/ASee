@@ -395,6 +395,12 @@ void CASeeDlg::OnDropFiles(HDROP hDropInfo)
 			display_image(0, true);
 	}
 
+	if (m_files.size() == 0)
+	{
+		m_imgDlg.release();
+		update_title();
+	}
+
 	CDialogEx::OnDropFiles(hDropInfo);
 }
 
@@ -469,6 +475,12 @@ void CASeeDlg::update_title(CString title)
 		{
 			str.Format(_T("ASee - %s (%d/%d)"), get_part(m_files[m_index], fn_name), m_index + 1, m_files.size());
 			alt_info.Format(_T(" (%d/%d)"), m_index + 1, m_files.size());
+		}
+		else if (m_files.size() == 0)
+		{
+			m_index = -1;
+			str.Format(_T("ASee - no image"), title);
+			alt_info.Empty();
 		}
 	}
 	else
@@ -1245,8 +1257,14 @@ LRESULT CASeeDlg::on_message_CSCDirWatcher(WPARAM wParam, LPARAM lParam)
 
 LRESULT CASeeDlg::on_message_CASeeApp(WPARAM wParam, LPARAM lParam)
 {
-	if (wParam == 0)
+	//if (wParam == SC_RESTORE)
 	{
+		//AfxMessageBox(_T("on_message_CASeeApp"));
+		//if (IsIconic())
+			ShowWindow(SW_RESTORE);
+
+		SetForegroundWindowForce(m_hWnd);
+
 		CString sfile = theApp.GetProfileString(_T("setting"), _T("shell parameter"), _T(""));
 
 		if (sfile.IsEmpty())
