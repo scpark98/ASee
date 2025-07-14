@@ -1,12 +1,8 @@
 [수정할 내용]
-- minimize일 때 shell 실행 시 restore 안됨
-  작업표시줄에서 minimize 할 때(정상 동작)와 앱에서 minimize 할 때(반응 없음) hWnd를 찾는/못찾는 차이 발생.
-
+- Ctrl+Enter 전체 모니터 크기로 확대
 - notice 창을 fade 중에도 바로 숨기는 코드 추가
 - thumb context 메뉴에서 theme 선택
 - recalc_tile_rect()에서 우측 여백이 남을 경우 tile_gap.cx를 늘려주고 다시 계산한다.
-
-- roi move, resize시에 픽셀단위로 이동.
 
 - indexed 8bpp와 같은 이미지일 경우 팔레트로 색상을 추출해야 한다.
 - webp 지원
@@ -16,6 +12,13 @@
 
 
 [수정된 내용]
+- minimize일 때 shell 실행 시 restore 안됨
+  작업표시줄에서 minimize 할 때(정상 동작)와 앱에서 minimize 할 때(반응 없음) hWnd를 찾는/못찾는 차이 발생.
+  minimize 버튼을 누른 경우와 작업표시줄에서 토글하여 minimize한 경우 다른 결과가 리턴된다.
+  먼저 실행된 ASee.exe의 핸들을 얻어야하는데 Gdi+ Window를 얻어오는 오류가 발생하여
+  caption으로 찾도록 수정함. 단, 이 역시도 나중 실행되는 ASee.exe를 얻어올 수 있으므로
+  visible인 ASee.exe의 핸들을 얻어오도록 수정함.
+- roi move, resize시에 픽셀단위로 이동.
 - thumb view에서 drag 시 스크롤. cur.cy - old.cy만큼 m_scroll_pos 보정
 - paste하면 image view로 자동 전환
 - 1 line일 경우는 edit의 bottom을 r.bottom과 동일하게 조정

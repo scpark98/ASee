@@ -937,6 +937,11 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 					{
 						execute_video();
 					}
+					else
+					{
+						CRect entire = get_monitor_rect();
+						MoveWindow(entire);
+					}
 				}
 				else
 				{
