@@ -35,13 +35,6 @@ public:
 protected:
 	enum TIMER_ID
 	{
-		timer_search_scan_folder = 0,
-		timer_refresh_navi,
-		timer_scroll,
-		timer_slide_show,
-		timer_cursor_pos,
-		timer_rect_info_changed,
-		timer_hide_filename,
 	};
 
 	enum RECENT_FOLDERS_POPUP_MENU
@@ -58,15 +51,12 @@ protected:
 
 	LRESULT			on_message_CSCImageDlg(WPARAM wParam, LPARAM lParam);
 
-	std::deque<CString> m_files;
-	int m_index;
 
 	CTitleDlg		m_titleDlg;
 	//title이 ""이면 현재 표시되는 이미지의 파일명으로 변경한다. 클립보드로부터 붙여 넣은 이미지의 경우는 "paste from clipboard"로 표시한다.
 	void			update_title(CString title = _T(""));
 
 	CSCImageDlg		m_imgDlg;
-	void			display_image(int index, bool scan_folder = false);
 
 	CSCShapeDlg		m_message;
 	void			show_message(CString message);
@@ -82,8 +72,6 @@ protected:
 	//파일명, 크기정보 등 표시
 	//bool			m_show_info = false;
 
-//현재 파일을 비롯해서 폴더를 다시 검사한다.
-	void			reload_image();
 	
 	void			execute_video();
 
@@ -97,13 +85,7 @@ protected:
 	bool			m_button_pressed;
 	void			draw_system_buttons(CDC& dc);
 
-//슬라이드 쇼 관련
-	bool			m_slide_show;
-	bool			m_slide_show_repeat;
-	//단위 = 초
-	int				m_slide_show_interval;
-	//start : 1(start), 0(stop), -1(toggle)
-	void			start_slide_show(int start);
+
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 지원입니다.
@@ -171,4 +153,5 @@ public:
 	afx_msg void OnMenuRecentFoldersClear();
 	afx_msg void OnMenuTransparentBack();
 	afx_msg void OnMenuProperty();
+	afx_msg void OnMenuViewToggle();
 };

@@ -1,6 +1,11 @@
+
+[버퍼방식 디스플레이]
+- 현재 메인에서 파일목록, 디스플레이를 담당하고 있으나 이를 CSCImageDlg로 넘김.
+- CSCImageDlg에서는 cur 전후 n개의 이미지를 메모리에 미리 버퍼링하도록 수정
+
+
 [수정할 내용]
 - Ctrl+Enter 전체 모니터 크기로 확대
-- notice 창을 fade 중에도 바로 숨기는 코드 추가
 - thumb context 메뉴에서 theme 선택
 - recalc_tile_rect()에서 우측 여백이 남을 경우 tile_gap.cx를 늘려주고 다시 계산한다.
 
@@ -12,6 +17,7 @@
 
 
 [수정된 내용]
+- notice 창을 fade 중에도 바로 숨기는 코드 추가
 - minimize일 때 shell 실행 시 restore 안됨
   작업표시줄에서 minimize 할 때(정상 동작)와 앱에서 minimize 할 때(반응 없음) hWnd를 찾는/못찾는 차이 발생.
   minimize 버튼을 누른 경우와 작업표시줄에서 토글하여 minimize한 경우 다른 결과가 리턴된다.

@@ -127,6 +127,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_REGISTERED_MESSAGE(Message_CSCImageDlg, &CASeeDlg::on_message_CSCImageDlg)
 	ON_COMMAND(ID_MENU_TRANSPARENT_BACK, &CASeeDlg::OnMenuTransparentBack)
 	ON_COMMAND(ID_MENU_PROPERTY, &CASeeDlg::OnMenuProperty)
+	ON_COMMAND(ID_MENU_VIEW_TOGGLE, &CASeeDlg::OnMenuViewToggle)
 END_MESSAGE_MAP()
 
 
@@ -174,7 +175,7 @@ BOOL CASeeDlg::OnInitDialog()
 	m_imgDlg.set_smooth_interpolation(theApp.GetProfileInt(_T("setting"), _T("smooth interpolation"), CGdiplusBitmap::interpolation_bicubic));
 
 	if (!fit)
-		m_imgDlg.zoom(GetProfileDouble(&theApp, _T("setting"), _T("zoom"), 1.0));
+		m_imgDlg.zoom(get_profile_value(&theApp, _T("setting"), _T("zoom"), 1.0));
 
 
 	m_message.set_text(this, _T(""), 40, Gdiplus::FontStyleBold, 4.0f, 2.4f);
@@ -199,25 +200,25 @@ BOOL CASeeDlg::OnInitDialog()
 
 	CString sfile = theApp.GetProfileString(_T("setting"), _T("shell parameter"), _T(""));
 
-	if (sfile.IsEmpty() == false && GetFileTypeFromFilename(sfile) == FILE_TYPE_IMAGE)
+	//탐색기 등에서 직접 이미지 파일을 연 경우
+	if (!sfile.IsEmpty() && GetFileTypeFromFilename(sfile) == FILE_TYPE_IMAGE)
 	{
-		m_files.push_back(sfile);
-		display_image(0, true);
+		m_imgDlg.display_image(sfile, true);
 		theApp.WriteProfileString(_T("setting"), _T("shell parameter"), _T(""));
 	}
+	//프로그램을 그냥 실행시킨 경우라면 최근 열었던 이미지를 열어준다.
 	else
 	{
-		sfile = theApp.GetProfileString(_T("setting"), _T("recent file"), _T(""));
-		if (PathFileExists(sfile) && sfile.IsEmpty() == false && GetFileTypeFromFilename(sfile) == FILE_TYPE_IMAGE)
+		sfile = theApp.GetProfileString(_T("setting\\CSCImageDlg"), _T("recent file"), _T(""));
+		if (PathFileExists(sfile) && !sfile.IsEmpty() && GetFileTypeFromFilename(sfile) == FILE_TYPE_IMAGE)
 		{
-			m_files.push_back(sfile);
-			display_image(0, true);
+			m_imgDlg.display_image(sfile, true);
 		}
-		else if (!sfile.IsEmpty())
-		{
-			m_files = find_all_files(get_part(sfile, fn_folder), _T("*"), FILE_EXTENSION_IMAGE, _T(""), false);
-			display_image(0, true);
-		}
+		//else if (!sfile.IsEmpty())
+		//{
+		//	m_files = find_all_files(get_part(sfile, fn_folder), _T("*"), FILE_EXTENSION_IMAGE, _T(""), false);
+		//	display_image(0, true);
+		//}
 	}
 
 	m_dir_watcher.init(this);
@@ -321,10 +322,8 @@ void CASeeDlg::OnBnClickedOk()
 void CASeeDlg::OnBnClickedCancel()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	if (m_files.size() && m_index >= 0)
-		theApp.WriteProfileString(_T("setting"), _T("recent file"), m_files[m_index]);
-
-	theApp.WriteProfileInt(_T("setting"), _T("smooth interpolation"), m_imgDlg.get_smooth_interpolation());
+	//if (m_files.size() && m_index >= 0)
+	//	theApp.WriteProfileString(_T("setting"), _T("recent file"), m_files[m_index]);
 
 	CDialogEx::OnCancel();
 }
@@ -380,6 +379,8 @@ void CASeeDlg::OnDropFiles(HDROP hDropInfo)
 
 	DragQueryFile(hDropInfo, 0, sfile, MAX_PATH);
 
+	m_imgDlg.display_image(sfile, true);
+	/*
 	m_files.clear();
 
 	if (PathIsDirectory(sfile))
@@ -400,68 +401,9 @@ void CASeeDlg::OnDropFiles(HDROP hDropInfo)
 		m_imgDlg.release();
 		update_title();
 	}
+	*/
 
 	CDialogEx::OnDropFiles(hDropInfo);
-}
-
-//index : -1(next), -2(previous)
-void CASeeDlg::display_image(int index, bool scan_folder)
-{
-	if (m_files.size() == 0)
-	{
-		update_title();
-		return;
-	}
-
-	//m_static_img.show_filename(true);
-
-	if (index == -1)
-	{
-		if (m_index >= m_files.size() - 1)
-		{
-			show_message(_T("맨 마지막 이미지"));
-			return;
-		}
-		m_index++;
-	}
-	else if (index == -2)
-	{
-		if (m_index == 0)
-		{
-			show_message(_T("맨 처음 이미지"));
-			return;
-		}
-		m_index--;
-	}
-	else
-	{
-		m_index = index;
-	}
-
-	//m_notice.ShowWindow(SW_HIDE);
-
-	CString folder = get_part(m_files[m_index], fn_folder);
-	CString recent_folder = theApp.GetProfileString(_T("setting"), _T("recent folder"), _T(""));
-	m_imgDlg.load(m_files[m_index], folder != recent_folder);
-	theApp.WriteProfileString(_T("setting"), _T("recent folder"), folder);
-	Invalidate();
-
-	if (scan_folder)
-	{
-		CString cur_file = m_files[m_index];
-
-		m_files.clear();
-
-		m_files = find_all_files(get_part(cur_file, fn_folder), _T("*"), FILE_EXTENSION_IMAGE, _T(""), false, true);
-		m_index = find_index(m_files, cur_file);
-	}
-
-	update_title();
-
-	add_registry(&theApp, _T("setting\\recent folders"), folder);
-
-	m_dir_watcher.stop();
-	m_dir_watcher.add(get_part(m_files[m_index], fn_folder), false);
 }
 
 void CASeeDlg::update_title(CString title)
@@ -469,6 +411,7 @@ void CASeeDlg::update_title(CString title)
 	CString str = _T("ASee");
 	CString alt_info;
 
+	/*
 	if (title.IsEmpty())
 	{
 		if (m_index >= 0 && m_index < m_files.size())
@@ -487,6 +430,7 @@ void CASeeDlg::update_title(CString title)
 	{
 		str.Format(_T("ASee - %s"), title);
 	}
+	*/
 
 	m_imgDlg.set_alt_info(alt_info);
 	SetWindowText(str);
@@ -495,7 +439,7 @@ void CASeeDlg::update_title(CString title)
 
 void CASeeDlg::execute_video()
 {
-	CString sfile = get_part(m_files[m_index], fn_title);
+	CString sfile = get_part(m_imgDlg.get_filepath(), fn_title);
 	sfile.Replace(_T("_Snapshot"), _T(""));
 
 	while (GetFileTypeFromExtension(sfile) == FILE_TYPE_VIDEO)
@@ -503,47 +447,10 @@ void CASeeDlg::execute_video()
 	sfile += _T("*");
 
 	std::deque<CString> dqFiles;
-	dqFiles = find_all_files(get_part(m_files[m_index], fn_folder), sfile, FILE_EXTENSION_VIDEO, _T(""), false);
+	dqFiles = find_all_files(get_part(m_imgDlg.get_filepath(), fn_folder), sfile, FILE_EXTENSION_VIDEO, _T(""), false);
 
 	if (dqFiles.size())
 		SHELL_OPEN(dqFiles[0]);
-}
-
-//현재 파일을 비롯해서 폴더를 다시 검사한다.
-void CASeeDlg::reload_image()
-{
-	//현재 파일의 인덱스와 파일명을 기억해두고
-	int old_index = m_index;
-	CString sfile = m_files[m_index];
-
-	m_imgDlg.m_img.release();
-	m_files.clear();
-
-	//현재 폴더의 이미지 파일들을 다시 검색하고
-	m_files = find_all_files(get_part(sfile, fn_folder), _T("*"), FILE_EXTENSION_IMAGE, _T(""), false);
-
-	//검색된 파일들에서 현재 이미지의 인덱스를 찾고
-	int index = find_dqstring(m_files, sfile);
-
-	if (m_files.size() == 0)
-	{
-		Invalidate();
-		return;
-	}
-
-	if (index < 0)
-	{
-		if (old_index >= 0 && old_index < m_files.size())
-			index = old_index;
-		else
-			index = 0;
-	}
-	else if (index >= m_files.size())
-	{
-		index = m_files.size() - 1;
-	}
-
-	display_image(index, false);
 }
 
 void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
@@ -633,7 +540,7 @@ BOOL CASeeDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	}
 	else
 	{
-		display_image((zDelta < 0 ? -1 : -2));
+		m_imgDlg.display_image((zDelta < 0 ? -1 : -2));
 	}
 
 	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
@@ -651,10 +558,10 @@ void CASeeDlg::OnMenuOpenFolder()
 {
 	CString folder;
 
-	if (m_files.size() == 0)
+	if (m_imgDlg.image_count() == 0)
 		ShellExecute(NULL, _T("open"), _T("explorer"), get_exe_directory(), NULL, SW_SHOW);
 	else
-		ShellExecute(NULL, _T("open"), _T("explorer"), _T("/select,") + m_files[m_index], NULL, SW_SHOW);
+		ShellExecute(NULL, _T("open"), _T("explorer"), _T("/select,") + m_imgDlg.get_filepath(), NULL, SW_SHOW);
 }
 
 void CASeeDlg::OnMenuZoomIn()
@@ -696,26 +603,20 @@ void CASeeDlg::OnMenuZoomInput()
 
 void CASeeDlg::OnMenuGotoHome()
 {
-	if (m_files.size() == 0)
-		return;
-
-	display_image(0);
+	m_imgDlg.display_image(0);
 }
 
 void CASeeDlg::OnMenuGotoEnd()
 {
-	if (m_files.size() == 0)
-		return;
-
-	display_image(m_files.size() - 1);
+	m_imgDlg.display_image(m_imgDlg.image_count() - 1);
 }
 
 void CASeeDlg::OnMenuSelectFolder()
 {
 	CString sSelected;
 
-	if (m_files.size())
-		sSelected = get_part(m_files[m_index], fn_folder);
+	if (m_imgDlg.image_count())
+		sSelected = get_part(m_imgDlg.get_filepath(), fn_folder);
 	else
 		sSelected = theApp.GetProfileString(_T("setting"), _T("recent folder"), _T(""));
 
@@ -724,52 +625,38 @@ void CASeeDlg::OnMenuSelectFolder()
 
 	theApp.WriteProfileString(_T("setting"), _T("recent folder"), sSelected);
 
-	m_files.clear();
-
-	m_files = find_all_files(sSelected, _T("*"), FILE_EXTENSION_IMAGE, _T(""), false);
-
-	if (m_files.size())
-	{
-		display_image(0);
-	}
-	else
-	{
-		//m_notice.set_notice(_T("선택된 폴더에는 이미지 파일이 없습니다."));
-	}
+	m_imgDlg.display_image(sSelected, true);
 }
 
 void CASeeDlg::OnMenuGoto()
 {
-	if (m_files.size() < 2)
-		return;
-
 	TCHAR buf[128] = { 0 };
 	CString str;
 
-	if (m_index >= 0)
-		_stprintf_s(buf, countof(buf), _T("%d"), m_index + 1);
+	if (m_imgDlg.get_cur_index() >= 0)
+		_stprintf_s(buf, countof(buf), _T("%d"), m_imgDlg.get_cur_index() + 1);
 
-	str.Format(_T("입력 범위 : 1 ~ %d"), m_files.size());
+	str.Format(_T("입력 범위 : 1 ~ %d"), m_imgDlg.image_count());
 
 	int r = CWin32InputBox::InputBox(_T("이미지 인덱스 이동"), str, buf, 128, CWin32InputBox::NORMAL);
 	if (r == IDCANCEL)
 		return;
 
 	int index = _ttoi(buf);
-	if (index <= 0 || index > m_files.size())
+	if (index <= 0 || index > m_imgDlg.image_count())
 	{
-		str.Format(_T("1 ~ %d 사이의 값을 입력하세요."), m_files.size());
+		str.Format(_T("1 ~ %d 사이의 값을 입력하세요."), m_imgDlg.image_count());
 		AfxMessageBox(str, MB_ICONEXCLAMATION);
 		OnMenuGoto();
 		return;
 	}
 
-	display_image(index - 1, true);
+	m_imgDlg.display_image(index - 1, true);
 }
 
 void CASeeDlg::OnMenuRefresh()
 {
-	reload_image();
+	m_imgDlg.reload_image();
 }
 
 void CASeeDlg::OnMenuRotateLeft()
@@ -794,12 +681,12 @@ void CASeeDlg::OnMenuFlip()
 
 void CASeeDlg::OnMenuSaveAs()
 {
-	CFileDialog dlg(false, 0, m_files[m_index], OFN_HIDEREADONLY /*| OFN_EXPLOPER */ | OFN_OVERWRITEPROMPT);
+	CFileDialog dlg(false, 0, m_imgDlg.get_filepath(), OFN_HIDEREADONLY /*| OFN_EXPLOPER */ | OFN_OVERWRITEPROMPT);
 	if (dlg.DoModal() == IDCANCEL)
 		return;
 
 	CString sfile = dlg.GetPathName();
-	m_imgDlg.m_img.save(sfile);
+	m_imgDlg.save(sfile);
 }
 
 void CASeeDlg::OnMenuSlideShow()
@@ -824,18 +711,12 @@ void CASeeDlg::OnMenuShowPixel()
 
 void CASeeDlg::OnMenuWallpaper()
 {
-	set_wallpaper(m_files[m_index]);
+	set_wallpaper(m_imgDlg.get_filepath());
 }
 
 void CASeeDlg::OnMenuCopyToClipboard()
 {
-	if (m_imgDlg.m_img.is_empty())
-		return;
-
-	m_imgDlg.m_img.copy_to_clipbard();
-	MessageBeep(0);
-
-	//m_notice.set_notice(_T("클립보드로 복사됨"));
+	show_message(m_imgDlg.copy_to_clipbard() ? _T("클립보드로 복사됨") : _T("클립보드 복사 실패"));
 }
 
 void CASeeDlg::OnMenuDelete()
@@ -846,13 +727,10 @@ void CASeeDlg::OnMenuDelete()
 		return;
 	}
 
-	if (m_files.size() == 0)
-		return;
-
-	delete_file(m_files[m_index], true);
+	delete_file(m_imgDlg.get_filepath(), true);
 
 	//현재 이미지 파일을 지우면 해당 폴더를 다시 스캔한다.
-	reload_image();
+	m_imgDlg.reload_image();
 }
 
 void CASeeDlg::OnMenuClose()
@@ -895,7 +773,7 @@ void CASeeDlg::OnMenuInputRoi()
 {
 	CRoiInputDlg dlg(this);
 
-	CSize sz = m_imgDlg.m_img.size();
+	CSize sz = m_imgDlg.get_img_size();
 	Gdiplus::RectF roi = m_imgDlg.get_image_roi();
 
 	dlg.init(sz.cx, sz.cy, roi.Width, roi.Height);
@@ -967,26 +845,26 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				m_imgDlg.zoom(-1);
 				return TRUE;
 			case VK_F5:
-				reload_image();
+				m_imgDlg.reload_image();
 				return true;
 			case VK_DELETE:
 				OnMenuDelete();
 				return true;
 			case 'Q' :
-				m_imgDlg.m_img.reset_adjust();
+				//m_imgDlg.m_img.reset_adjust();
 				show_adjust_message(adjust_reset);
 				return true;
 			case 'W' :
-				show_adjust_message(adjust_bright, m_imgDlg.m_img.increase_bright(-2));
+				//show_adjust_message(adjust_bright, m_imgDlg.m_img.increase_bright(-2));
 				return true;
 			case 'E' :
-				show_adjust_message(adjust_bright, m_imgDlg.m_img.increase_bright(2));
+				//show_adjust_message(adjust_bright, m_imgDlg.m_img.increase_bright(2));
 				return true;
 			case 'R':
-				show_adjust_message(adjust_contrast, m_imgDlg.m_img.increase_contrast(-2));
+				//show_adjust_message(adjust_contrast, m_imgDlg.m_img.increase_contrast(-2));
 				return true;
 			case 'T':
-				show_adjust_message(adjust_contrast, m_imgDlg.m_img.increase_contrast(2));
+				//show_adjust_message(adjust_contrast, m_imgDlg.m_img.increase_contrast(2));
 				return true;
 			case 'F':
 				if (IsCtrlPressed())
@@ -1006,19 +884,19 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				}
 				break;
 			case VK_HOME:
-				start_slide_show(0);
+				m_imgDlg.start_slide_show(0);
 				OnMenuGotoHome();
 				return true;
 			case VK_END:
-				start_slide_show(0);
+				m_imgDlg.start_slide_show(0);
 				OnMenuGotoEnd();
 				return true;
 			case VK_UP:
-				start_slide_show(0);
+				m_imgDlg.start_slide_show(0);
 
 				if (m_imgDlg.get_fit2ctrl() || rect_in_rect(rc, m_imgDlg.get_displayed_rect()))
 				{
-					display_image(-2);
+					m_imgDlg.display_image(-2);
 				}
 				else
 				{
@@ -1028,14 +906,14 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				}
 				return true;
 			case VK_PRIOR:
-				start_slide_show(0);
-				display_image(-2);
+				m_imgDlg.start_slide_show(0);
+				m_imgDlg.display_image(-2);
 				return true;
 			case VK_DOWN:
-				start_slide_show(0);
+				m_imgDlg.start_slide_show(0);
 				if (m_imgDlg.get_fit2ctrl() || rect_in_rect(rc, m_imgDlg.get_displayed_rect()))
 				{
-					display_image(-1);
+					m_imgDlg.display_image(-1);
 				}
 				else
 				{
@@ -1045,14 +923,14 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				}
 				return true;
 			case VK_NEXT:
-				start_slide_show(0);
-				display_image(-1);
+				m_imgDlg.start_slide_show(0);
+				m_imgDlg.display_image(-1);
 				return true;
 			case VK_LEFT:
-				start_slide_show(0);
+				m_imgDlg.start_slide_show(0);
 				if (m_imgDlg.get_fit2ctrl())
 				{
-					display_image(-2);
+					m_imgDlg.display_image(-2);
 				}
 				else
 				{
@@ -1061,10 +939,10 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				}
 				return true;
 			case VK_RIGHT:
-				start_slide_show(0);
+				m_imgDlg.start_slide_show(0);
 				if (m_imgDlg.get_fit2ctrl())
 				{
-					display_image(-1);
+					m_imgDlg.display_image(-1);
 				}
 				else
 				{
@@ -1144,31 +1022,6 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
 
-//start : 1(start), 0(stop), -1(toggle)
-void CASeeDlg::start_slide_show(int start)
-{
-	if (start == -1)
-		m_slide_show = !m_slide_show;
-	else
-		m_slide_show = start;
-
-	if (m_slide_show)
-	{
-		if (m_slide_show_interval < 0)
-		{
-			SetTimer(timer_slide_show, -m_slide_show_interval, NULL);
-		}
-		else
-		{
-			SetTimer(timer_slide_show, m_slide_show_interval * 1000, NULL);
-		}
-	}
-	else
-	{
-		KillTimer(timer_slide_show);
-	}
-}
-
 void CASeeDlg::OnMenuShowInfo()
 {
 	bool show = !m_imgDlg.get_show_info();
@@ -1230,15 +1083,7 @@ void CASeeDlg::on_menu_recent_folders(UINT nID)
 	int index = nID - menu_recent_folders_start;
 
 	CString recent_folder = theApp.GetProfileString(_T("setting\\recent folders"), i2S(index), _T(""));
-	if (recent_folder.IsEmpty())
-		return;
-
-	m_files.clear();
-
-	m_files = find_all_files(recent_folder, _T("*"), FILE_EXTENSION_IMAGE, _T(""), false);
-
-	if (m_files.size())
-		display_image(0);
+	m_imgDlg.display_image(recent_folder);
 }
 
 void CASeeDlg::OnMenuRecentFoldersClear()
@@ -1254,7 +1099,7 @@ LRESULT CASeeDlg::on_message_CSCDirWatcher(WPARAM wParam, LPARAM lParam)
 
 	//다른 파일의 추가 삭제는 인덱스가 변하므로 refresh하지만
 	//파일 변경, 이름 변경은 현재 이미지가 아니면 매번 refresh 시키지 않는다.
-	if (msg->action < FILE_ACTION_MODIFIED || msg->path0 == m_imgDlg.get_filename())
+	if (msg->action < FILE_ACTION_MODIFIED || msg->path0 == m_imgDlg.get_filepath())
 		OnMenuRefresh();
 
 	return 0;
@@ -1275,11 +1120,8 @@ LRESULT CASeeDlg::on_message_CASeeApp(WPARAM wParam, LPARAM lParam)
 		if (sfile.IsEmpty())
 			return 1;
 
-		m_files.clear();
-		m_files.push_back(sfile);
 		theApp.WriteProfileString(_T("setting"), _T("shell parameter"), _T(""));
-
-		display_image(0, true);
+		m_imgDlg.display_image(sfile, true);
 	}
 
 	return 0;
@@ -1289,7 +1131,7 @@ void CASeeDlg::show_message(CString message)
 {
 	::PlaySound(MAKEINTRESOURCE(IDR_WAVE_DICK), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
 
-	//메시지 폰트 크기는 height에 비례하는 크기로 자동 조정되어야 한다.
+	//메시지 폰트 크기는 rc height에 비례하는 크기로 자동 조정되어야 한다.
 	CRect rc;
 	GetClientRect(rc);
 
@@ -1355,7 +1197,7 @@ LRESULT CASeeDlg::on_message_CSCImageDlg(WPARAM wParam, LPARAM lParam)
 	}
 	else if (msg->msg == CSCImageDlg::message_load_image)
 	{
-		display_image(msg->index);
+		m_imgDlg.display_image(msg->index);
 	}
 
 	return 0;
@@ -1363,5 +1205,10 @@ LRESULT CASeeDlg::on_message_CSCImageDlg(WPARAM wParam, LPARAM lParam)
 
 void CASeeDlg::OnMenuProperty()
 {
-	show_property_window(std::deque<CString> { m_files[m_index] });
+	show_property_window(std::deque<CString> { m_imgDlg.get_filepath() });
+}
+
+void CASeeDlg::OnMenuViewToggle()
+{
+	m_imgDlg.set_view_mode();
 }
