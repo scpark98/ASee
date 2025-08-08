@@ -1,15 +1,15 @@
 
-[버퍼방식 디스플레이]
+[버퍼방식 디스플레이 변경 완료]
 - 현재 메인에서 파일목록, 디스플레이를 담당하고 있으나 이를 CSCImageDlg로 넘김.
-- CSCImageDlg에서는 cur 전후 n개의 이미지를 메모리에 미리 버퍼링하도록 수정
-
+- CSCImageDlg에서는 forward라면 cur+n, backward라면 cur-n개까지의 이미지를 메모리에 미리 버퍼링하도록 수정
+- 기존 DirWatcher가 정상 동작했으나 이 구조변경으로 인해 잠시 보류한다.
 
 [수정할 내용]
+- 
 - Ctrl+Enter 전체 모니터 크기로 확대
 - thumb context 메뉴에서 theme 선택
 - recalc_tile_rect()에서 우측 여백이 남을 경우 tile_gap.cx를 늘려주고 다시 계산한다.
 
-- indexed 8bpp와 같은 이미지일 경우 팔레트로 색상을 추출해야 한다.
 - webp 지원
 - roi resize, move시에 픽셀단위로 이동되도록.
 - show/hide grid line
@@ -17,6 +17,9 @@
 
 
 [수정된 내용]
+- 확대 후 방향키에 의한 scroll 기능 수정.
+- indexed 8bpp일 경우 색상이 잘못 표시되었는데 이는 load()에서 copied_open을 해서 발생한 문제였음.
+- indexed 8bpp일 경우 width가 4의 배수가 아니면 pal_index를 잘못가져오던 오류 수정.
 - notice 창을 fade 중에도 바로 숨기는 코드 추가
 - minimize일 때 shell 실행 시 restore 안됨
   작업표시줄에서 minimize 할 때(정상 동작)와 앱에서 minimize 할 때(반응 없음) hWnd를 찾는/못찾는 차이 발생.
