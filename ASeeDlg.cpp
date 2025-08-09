@@ -428,15 +428,19 @@ void CASeeDlg::update_title(CString title)
 
 void CASeeDlg::execute_video()
 {
-	CString sfile = get_part(m_imgDlg.get_filename(), fn_title);
+	CString sfile = m_imgDlg.get_filename();
+	CString stitle = get_part(sfile, fn_title);
+	CString ext = get_part(stitle, fn_ext);
 	sfile.Replace(_T("_Snapshot"), _T(""));
 
-	while (GetFileTypeFromExtension(sfile) == FILE_TYPE_VIDEO)
-		sfile = get_part(sfile, fn_title);
-	sfile += _T("*");
+	CString folder = get_part(sfile, fn_folder);
+
+	//movie.avi.jpg의 타이틀이 movie.avi이므로 타이틀에 포함된 동영상 확장자까지 모두 제거해줘야 한다.
+	if (GetFileTypeFromExtension(ext) == FILE_TYPE_VIDEO)
+		stitle = get_part(stitle, fn_title);
 
 	std::deque<CString> dqFiles;
-	dqFiles = find_all_files(get_part(m_imgDlg.get_filename(), fn_folder), sfile, FILE_EXTENSION_VIDEO, _T(""), false);
+	dqFiles = find_all_files(folder, stitle + _T("*"), FILE_EXTENSION_VIDEO, _T(""), false);
 
 	if (dqFiles.size())
 		SHELL_OPEN(dqFiles[0]);
