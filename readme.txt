@@ -6,11 +6,11 @@
 
 [수정할 내용]
 - 
-- Ctrl+Enter 전체 모니터 크기로 확대
+- Ctrl+Enter 전체 모니터 크기로 확대?
 - thumb context 메뉴에서 theme 선택
 - recalc_tile_rect()에서 우측 여백이 남을 경우 tile_gap.cx를 늘려주고 다시 계산한다.
 
-- webp 지원
+- avif, webp, bpg 지원
 - roi resize, move시에 픽셀단위로 이동되도록.
 - show/hide grid line
 - 32bit png clipboard copy
