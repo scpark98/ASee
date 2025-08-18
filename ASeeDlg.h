@@ -5,12 +5,12 @@
 #pragma once
 
 #include <deque>
-#include "Functions.h"
-#include "GdiplusBitmap.h"
-#include "CDialog/SCImageDlg/SCImageDlg.h"
-#include "CDialog/SCShapeDlg/SCShapeDlg.h"
-#include "ThumbCtrl/SCThumbCtrl.h"
-#include "file_system/SCDirWatcher/SCDirWatcher.h"
+#include "Common/Functions.h"
+//#include "Common/SCGdiplusBitmap.h"
+#include "Common/CDialog/SCImageDlg/SCImageDlg.h"
+#include "Common/CDialog/SCShapeDlg/SCShapeDlg.h"
+#include "Common/ThumbCtrl/SCThumbCtrl.h"
+#include "Common/file_system/SCDirWatcher/SCDirWatcher.h"
 
 #include "TitleDlg.h"
 #include "ZigzagColorDlg.h"

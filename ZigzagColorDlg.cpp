@@ -54,8 +54,8 @@ BOOL CZigzagColorDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  여기에 추가 초기화 작업을 추가합니다.
-	m_cr_back = theApp.GetProfileInt(_T("setting"), _T("zigzag cr_back"), CGdiplusBitmap::m_cr_zigzag_back.ToCOLORREF());
-	m_cr_fore = theApp.GetProfileInt(_T("setting"), _T("zigzag cr_fore"), CGdiplusBitmap::m_cr_zigzag_fore.ToCOLORREF());
+	m_cr_back = theApp.GetProfileInt(_T("setting"), _T("zigzag cr_back"), CSCGdiplusBitmap::m_cr_zigzag_back.ToCOLORREF());
+	m_cr_fore = theApp.GetProfileInt(_T("setting"), _T("zigzag cr_fore"), CSCGdiplusBitmap::m_cr_zigzag_fore.ToCOLORREF());
 	m_button_back_color.SetColor(m_cr_back);
 	m_button_fore_color.SetColor(m_cr_fore);
 
@@ -171,8 +171,8 @@ void CZigzagColorDlg::OnBnClickedRadioBlack()
 void CZigzagColorDlg::OnBnClickedRadioCustom()
 {
 	//custom을 누르면 registry에 저장된 색상으로 변경한다.
-	m_cr_back = theApp.GetProfileInt(_T("setting"), _T("zigzag cr_back"), CGdiplusBitmap::m_cr_zigzag_back.ToCOLORREF());
-	m_cr_fore = theApp.GetProfileInt(_T("setting"), _T("zigzag cr_fore"), CGdiplusBitmap::m_cr_zigzag_fore.ToCOLORREF());
+	m_cr_back = theApp.GetProfileInt(_T("setting"), _T("zigzag cr_back"), CSCGdiplusBitmap::m_cr_zigzag_back.ToCOLORREF());
+	m_cr_fore = theApp.GetProfileInt(_T("setting"), _T("zigzag cr_fore"), CSCGdiplusBitmap::m_cr_zigzag_fore.ToCOLORREF());
 
 	m_button_back_color.SetColor(m_cr_back);
 	m_button_fore_color.SetColor(m_cr_fore);

@@ -78,25 +78,25 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>bin/</OutDir>
     <IntDir>$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\1.projects_c++\Common;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\1.projects_c++;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>bin/</OutDir>
     <IntDir>$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\1.projects_c++\Common;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\1.projects_c++;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>bin/</OutDir>
     <IntDir>$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\1.projects_c++\Common;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\1.projects_c++;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>bin/</OutDir>
     <IntDir>$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\1.projects_c++\Common;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\1.projects_c++;</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -219,9 +219,9 @@
     <ClInclude Include="..\Common\file_system\SCDirWatcher\SCDirWatcher.h" />
     <ClInclude Include="..\Common\file_system\SCDirWatcher\ThreadSafeQueue.h" />
     <ClInclude Include="..\Common\Functions.h" />
-    <ClInclude Include="..\Common\GdiplusBitmap.h" />
     <ClInclude Include="..\Common\MemoryDC.h" />
     <ClInclude Include="..\Common\messagebox\Win32InputBox\Win32InputBox.h" />
+    <ClInclude Include="..\Common\SCGdiplusBitmap.h" />
     <ClInclude Include="..\Common\thread\thread_manager.h" />
     <ClInclude Include="..\Common\ThumbCtrl\SCThumbCtrl.h" />
     <ClInclude Include="ASee.h" />
@@ -325,13 +325,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\GdiplusBitmap.cpp">
+    <ClCompile Include="..\Common\messagebox\Win32InputBox\Win32InputBox.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\messagebox\Win32InputBox\Win32InputBox.cpp">
+    <ClCompile Include="..\Common\SCGdiplusBitmap.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

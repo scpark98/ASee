@@ -45,9 +45,6 @@
     <ClInclude Include="..\Common\Functions.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\GdiplusBitmap.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\MemoryDC.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -111,6 +108,9 @@
     <ClInclude Include="..\Common\CEdit\SCEdit\SCEdit.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\SCGdiplusBitmap.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ASee.cpp">
@@ -126,9 +126,6 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\Functions.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\GdiplusBitmap.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\CDialog\SCImageDlg\SCImageDlg.cpp">
@@ -186,6 +183,9 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\CEdit\SCEdit\SCEdit.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\SCGdiplusBitmap.cpp">
       <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>

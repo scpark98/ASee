@@ -479,10 +479,10 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	pMenu->CheckMenuItem(ID_MENU_SHOW_INFO, (m_imgDlg.get_show_info() ? MF_CHECKED : MF_UNCHECKED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_PIXEL, (m_imgDlg.get_show_pixel() ? MF_CHECKED : MF_UNCHECKED));
 
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH_NONE, (m_imgDlg.get_smooth_interpolation() == CGdiplusBitmap::interpolation_none ? MF_CHECKED : MF_UNCHECKED));
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BILINEAR, (m_imgDlg.get_smooth_interpolation() == CGdiplusBitmap::interpolation_bilinear ? MF_CHECKED : MF_UNCHECKED));
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BICUBIC, (m_imgDlg.get_smooth_interpolation() == CGdiplusBitmap::interpolation_bicubic ? MF_CHECKED : MF_UNCHECKED));
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH_LANCZOS, (m_imgDlg.get_smooth_interpolation() == CGdiplusBitmap::interpolation_lanczos ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH_NONE, (m_imgDlg.get_smooth_interpolation() == CSCGdiplusBitmap::interpolation_none ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BILINEAR, (m_imgDlg.get_smooth_interpolation() == CSCGdiplusBitmap::interpolation_bilinear ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BICUBIC, (m_imgDlg.get_smooth_interpolation() == CSCGdiplusBitmap::interpolation_bicubic ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH_LANCZOS, (m_imgDlg.get_smooth_interpolation() == CSCGdiplusBitmap::interpolation_lanczos ? MF_CHECKED : MF_UNCHECKED));
 
 	pMenu->EnableMenuItem(ID_MENU_SHOW_ROI_INFO, (m_imgDlg.get_image_roi().IsEmptyArea() ? MF_DISABLED : MF_ENABLED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_ROI_INFO, (m_imgDlg.get_show_roi_info() ? MF_CHECKED : MF_UNCHECKED));
@@ -743,17 +743,17 @@ void CASeeDlg::OnMenuSelect()
 
 void CASeeDlg::OnMenuSmoothNone()
 {
-	m_imgDlg.set_smooth_interpolation(CGdiplusBitmap::interpolation_none);
+	m_imgDlg.set_smooth_interpolation(CSCGdiplusBitmap::interpolation_none);
 }
 
 void CASeeDlg::OnMenuSmoothBilinear()
 {
-	m_imgDlg.set_smooth_interpolation(CGdiplusBitmap::interpolation_bilinear);
+	m_imgDlg.set_smooth_interpolation(CSCGdiplusBitmap::interpolation_bilinear);
 }
 
 void CASeeDlg::OnMenuSmoothBicubic()
 {
-	m_imgDlg.set_smooth_interpolation(CGdiplusBitmap::interpolation_bicubic);
+	m_imgDlg.set_smooth_interpolation(CSCGdiplusBitmap::interpolation_bicubic);
 }
 
 void CASeeDlg::OnMenuSmoothLanczos()
@@ -986,13 +986,13 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				OnMenuFlip();
 				break;
 			case '1':
-				m_imgDlg.set_smooth_interpolation(CGdiplusBitmap::interpolation_none);
+				m_imgDlg.set_smooth_interpolation(CSCGdiplusBitmap::interpolation_none);
 				return TRUE;
 			case '2':
-				m_imgDlg.set_smooth_interpolation(CGdiplusBitmap::interpolation_bilinear);
+				m_imgDlg.set_smooth_interpolation(CSCGdiplusBitmap::interpolation_bilinear);
 				return TRUE;
 			case '3':
-				m_imgDlg.set_smooth_interpolation(CGdiplusBitmap::interpolation_bicubic);
+				m_imgDlg.set_smooth_interpolation(CSCGdiplusBitmap::interpolation_bicubic);
 				return TRUE;
 			}
 	}
@@ -1089,7 +1089,7 @@ LRESULT CASeeDlg::on_message_CSCDirWatcher(WPARAM wParam, LPARAM lParam)
 
 	//다른 파일의 추가 삭제는 인덱스가 변하므로 refresh하지만
 	//파일 변경, 이름 변경은 현재 이미지가 아니면 매번 refresh 시키지 않는다.
-	if (msg->action < FILE_ACTION_MODIFIED || msg->path0 == m_imgDlg.get_filename())
+	if (msg->action < FILE_ACTION_MODIFIED || msg->path1 == m_imgDlg.get_filename())
 		OnMenuRefresh();
 
 	return 0;
@@ -1160,8 +1160,8 @@ void CASeeDlg::show_adjust_message(int type, int percentage, bool invalidate)
 
 void CASeeDlg::OnMenuTransparentBack()
 {
-	m_zigzagColorDlg.set_back_color(CGdiplusBitmap::m_cr_zigzag_back.ToCOLORREF());
-	m_zigzagColorDlg.set_fore_color(CGdiplusBitmap::m_cr_zigzag_fore.ToCOLORREF());
+	m_zigzagColorDlg.set_back_color(CSCGdiplusBitmap::m_cr_zigzag_back.ToCOLORREF());
+	m_zigzagColorDlg.set_fore_color(CSCGdiplusBitmap::m_cr_zigzag_fore.ToCOLORREF());
 	m_zigzagColorDlg.CenterWindow();
 	m_zigzagColorDlg.ShowWindow(SW_SHOW);
 }
@@ -1183,6 +1183,8 @@ LRESULT CASeeDlg::on_message_CSCImageDlg(WPARAM wParam, LPARAM lParam)
 	if (msg->msg == CSCImageDlg::message_image_changed)
 	{
 		update_title();
+		m_dir_watcher.stop();
+		m_dir_watcher.add(get_part(m_imgDlg.get_filename(), fn_folder), false);
 	}
 	else if (msg->msg == CSCImageDlg::message_hide_message)
 	{
