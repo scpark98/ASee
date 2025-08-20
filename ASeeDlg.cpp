@@ -1089,8 +1089,11 @@ LRESULT CASeeDlg::on_message_CSCDirWatcher(WPARAM wParam, LPARAM lParam)
 
 	//다른 파일의 추가 삭제는 인덱스가 변하므로 refresh하지만
 	//파일 변경, 이름 변경은 현재 이미지가 아니면 매번 refresh 시키지 않는다.
-	if (msg->action < FILE_ACTION_MODIFIED || msg->path1 == m_imgDlg.get_filename())
+	if (msg->action != FILE_ACTION_RENAMED_OLD_NAME)// || msg->path1 == m_imgDlg.get_filename())
+	{
+		TRACE(_T("refresh images...\n"));
 		OnMenuRefresh();
+	}
 
 	return 0;
 }
@@ -1184,7 +1187,7 @@ LRESULT CASeeDlg::on_message_CSCImageDlg(WPARAM wParam, LPARAM lParam)
 	{
 		update_title();
 		m_dir_watcher.stop();
-		m_dir_watcher.add(get_part(m_imgDlg.get_filename(), fn_folder), false);
+		m_dir_watcher.add(get_part(m_imgDlg.get_filename(), fn_folder));
 	}
 	else if (msg->msg == CSCImageDlg::message_hide_message)
 	{
