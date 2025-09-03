@@ -367,28 +367,6 @@ void CASeeDlg::OnDropFiles(HDROP hDropInfo)
 	DragQueryFile(hDropInfo, 0, sfile, MAX_PATH);
 
 	m_imgDlg.display_image(sfile, true);
-	/*
-	m_files.clear();
-
-	if (PathIsDirectory(sfile))
-	{
-		m_files = find_all_files(sfile, _T("*"), FILE_EXTENSION_IMAGE, _T(""), false);
-		if (m_files.size() > 0)
-			display_image(0, false);
-	}
-	else if (GetFileTypeFromFilename(sfile) == FILE_TYPE_IMAGE)
-	{
-		m_files.push_back(sfile);
-		if (m_files.size() > 0)
-			display_image(0, true);
-	}
-
-	if (m_files.size() == 0)
-	{
-		m_imgDlg.release();
-		update_title();
-	}
-	*/
 
 	CDialogEx::OnDropFiles(hDropInfo);
 }
