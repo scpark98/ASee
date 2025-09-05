@@ -44,6 +44,14 @@ protected:
 	};
 	void			on_menu_recent_folders(UINT nID);
 
+	enum GPS_POPUP_MENU
+	{
+		menu_gps_start = 8101,
+		menu_gps_end = 8105,
+	};
+	void			on_menu_gps(UINT nID);
+
+
 	LRESULT			on_message_CASeeApp(WPARAM wParam, LPARAM lParam);
 
 	CSCDirWatcher	m_dir_watcher;

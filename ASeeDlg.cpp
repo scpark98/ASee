@@ -121,6 +121,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_WM_MOUSEMOVE()
 	ON_WM_MBUTTONDOWN()
 	ON_COMMAND_RANGE(menu_recent_folders_start, menu_recent_folders_end, on_menu_recent_folders)
+	ON_COMMAND_RANGE(menu_gps_start, menu_gps_end, on_menu_gps)
 	ON_COMMAND(ID_MENU_RECENT_FOLDERS_CLEAR, &CASeeDlg::OnMenuRecentFoldersClear)
 	ON_REGISTERED_MESSAGE(Message_CASeeApp, &CASeeDlg::on_message_CASeeApp)
 	ON_REGISTERED_MESSAGE(Message_CSCDirWatcher, &CASeeDlg::on_message_CSCDirWatcher)
@@ -429,6 +430,7 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	CMenu menu;
 	CMenu* pMenu;
 	CMenu* pRecentFoldersMenu;
+	CMenu* pGPSMenu;
 	CString str;
 	CString recent_folder;
 	bool recent_folder_exist = false;
@@ -436,6 +438,17 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	menu.LoadMenu(IDR_MENU_CONTEXT);
 	pMenu = menu.GetSubMenu(0);
 	pRecentFoldersMenu = menu.GetSubMenu(1);
+
+
+
+	if (m_imgDlg.get_gps_latitude() > 0.0 && m_imgDlg.get_gps_longitude() > 0.0)
+	{
+		pGPSMenu = new CMenu();
+		pGPSMenu->CreatePopupMenu();
+		pGPSMenu->InsertMenu(0, MF_BYPOSITION | MF_STRING, menu_gps_start + 0, _T("카카오 지도"));
+		pGPSMenu->InsertMenu(1, MF_BYPOSITION | MF_STRING, menu_gps_start + 1, _T("구글 지도"));
+		pMenu->InsertMenu(3, MF_BYPOSITION | MF_POPUP, (UINT_PTR)pGPSMenu->GetSafeHmenu(), _T("지도 보기"));
+	}
 
 	int recent_folders_count = theApp.GetProfileInt(_T("setting\\CSCImageDlg\\recent folders"), _T("count"), 0);
 	for (int i = 0; i < recent_folders_count; i++)
@@ -1192,4 +1205,17 @@ void CASeeDlg::OnMenuProperty()
 void CASeeDlg::OnMenuViewToggle()
 {
 	m_imgDlg.set_view_mode();
+}
+
+void CASeeDlg::on_menu_gps(UINT nID)
+{
+	int index = nID - menu_gps_start;
+	CString url;
+
+	if (index == 0)
+		url.Format(_T("https://map.kakao.com/?q=%f,%f"), m_imgDlg.get_gps_latitude(), m_imgDlg.get_gps_longitude());
+	else if (index == 1)
+		url.Format(_T("https://google.com/maps?q=%f,%f&z=15"), m_imgDlg.get_gps_latitude(), m_imgDlg.get_gps_longitude());
+
+	ShellExecute(m_hWnd, _T("open"), url, NULL, NULL, SW_SHOWNORMAL);
 }
