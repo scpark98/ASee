@@ -428,9 +428,9 @@ void CASeeDlg::execute_video()
 void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 {
 	CMenu menu;
-	CMenu* pMenu;
-	CMenu* pRecentFoldersMenu;
-	CMenu* pGPSMenu;
+	CMenu* pMenu = NULL;
+	CMenu* pRecentFoldersMenu = NULL;
+	CMenu* pGPSMenu = NULL;
 	CString str;
 	CString recent_folder;
 	bool recent_folder_exist = false;
@@ -440,13 +440,12 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	pRecentFoldersMenu = menu.GetSubMenu(1);
 
 
-
 	if (m_imgDlg.get_gps_latitude() > 0.0 && m_imgDlg.get_gps_longitude() > 0.0)
 	{
 		pGPSMenu = new CMenu();
 		pGPSMenu->CreatePopupMenu();
-		pGPSMenu->InsertMenu(0, MF_BYPOSITION | MF_STRING, menu_gps_start + 0, _T("카카오 지도"));
-		pGPSMenu->InsertMenu(1, MF_BYPOSITION | MF_STRING, menu_gps_start + 1, _T("구글 지도"));
+		pGPSMenu->AppendMenu(MF_STRING, menu_gps_start + 0, _T("카카오 지도"));
+		pGPSMenu->AppendMenu(MF_STRING, menu_gps_start + 1, _T("구글 지도"));
 		pMenu->InsertMenu(3, MF_BYPOSITION | MF_POPUP, (UINT_PTR)pGPSMenu->GetSafeHmenu(), _T("지도 보기"));
 	}
 
@@ -493,6 +492,9 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	//pMenu->ModifyMenu(ID_MENU_ZOOM_INPUT, MF_BYCOMMAND, ID_MENU_ZOOM_INPUT, str);
 
 	pMenu->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, point.x, point.y, this);
+
+	if (pGPSMenu)
+		delete pGPSMenu;
 }
 
 void CASeeDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
