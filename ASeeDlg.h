@@ -162,4 +162,6 @@ public:
 	afx_msg void OnMenuTransparentBack();
 	afx_msg void OnMenuProperty();
 	afx_msg void OnMenuViewToggle();
+	afx_msg void OnMenuCopyToClipboardROI();
+	afx_msg void OnMenuCopyToClipboardEXIF();
 };

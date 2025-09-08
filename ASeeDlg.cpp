@@ -129,6 +129,8 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_TRANSPARENT_BACK, &CASeeDlg::OnMenuTransparentBack)
 	ON_COMMAND(ID_MENU_PROPERTY, &CASeeDlg::OnMenuProperty)
 	ON_COMMAND(ID_MENU_VIEW_TOGGLE, &CASeeDlg::OnMenuViewToggle)
+	ON_COMMAND(ID_MENU_COPY_TO_CLIPBOARD_ROI, &CASeeDlg::OnMenuCopyToClipboardROI)
+	ON_COMMAND(ID_MENU_COPY_TO_CLIPBOARD_EXIF, &CASeeDlg::OnMenuCopyToClipboardEXIF)
 END_MESSAGE_MAP()
 
 
@@ -483,6 +485,9 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	pMenu->CheckMenuItem(ID_MENU_ZOOM_200, (m_imgDlg.get_zoom_ratio() == 2.0 ? MF_CHECKED : MF_UNCHECKED));
 	pMenu->CheckMenuItem(ID_MENU_ZOOM_STRETCH, (m_imgDlg.get_fit2ctrl() ? MF_CHECKED : MF_UNCHECKED));
 
+	pMenu->EnableMenuItem(ID_MENU_COPY_TO_CLIPBOARD_ROI, (m_imgDlg.get_image_roi().IsEmptyArea() ? MF_DISABLED : MF_ENABLED));
+
+
 	//pMenu->CheckMenuItem(ID_MENU_SLIDE_SHOW, (m_slide_show ? MF_CHECKED : MF_UNCHECKED));
 	//pMenu->CheckMenuItem(ID_MENU_SLIDE_SHOW_REPEAT, (m_slide_show_repeat ? MF_CHECKED : MF_UNCHECKED));
 
@@ -702,7 +707,20 @@ void CASeeDlg::OnMenuWallpaper()
 
 void CASeeDlg::OnMenuCopyToClipboard()
 {
-	show_message(m_imgDlg.copy_to_clipbard() ? _T("클립보드로 복사됨") : _T("클립보드 복사 실패"));
+	show_message(m_imgDlg.copy_to_clipboard(CSCImageDlg::copy_whole_image) ? _T("클립보드로 복사됨") : _T("클립보드 복사 실패"));
+}
+
+void CASeeDlg::OnMenuCopyToClipboardROI()
+{
+	if (m_imgDlg.get_image_roi().IsEmptyArea())
+		show_message(m_imgDlg.copy_to_clipboard(CSCImageDlg::copy_whole_image) ? _T("클립보드로 복사됨") : _T("클립보드 복사 실패"));
+	else
+		show_message(m_imgDlg.copy_to_clipboard(CSCImageDlg::copy_auto) ? _T("선택 영역이 클립보드로 복사됨") : _T("클립보드 복사 실패"));
+}
+
+void CASeeDlg::OnMenuCopyToClipboardEXIF()
+{
+	show_message(m_imgDlg.copy_to_clipboard(CSCImageDlg::copy_photo_exif) ? _T("사진 정보가 클립보드로 복사됨") : _T("클립보드 복사 실패"));
 }
 
 void CASeeDlg::OnMenuDelete()
@@ -866,6 +884,15 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				if (IsCtrlPressed())
 					OnMenuOpenFolder();
 				return false;
+			case 'C':
+				if (IsCtrlPressed())
+				{
+					OnMenuCopyToClipboard();
+					//if (m_imgDlg.copy_to_clipboard())
+					//	show_message(_T("클립보드로 복사됨"));
+					return TRUE;
+				}
+				break;
 			case 'V' :
 				if (IsCtrlPressed())
 				{
