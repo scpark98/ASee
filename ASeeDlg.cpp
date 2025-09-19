@@ -441,7 +441,7 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	pMenu = menu.GetSubMenu(0);
 	pRecentFoldersMenu = menu.GetSubMenu(1);
 
-
+	//gps 정보가 있다면 지도 보기 메뉴 추가
 	if (m_imgDlg.get_gps_latitude() > 0.0 && m_imgDlg.get_gps_longitude() > 0.0)
 	{
 		pGPSMenu = new CMenu();
@@ -450,7 +450,8 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 		pGPSMenu->AppendMenu(MF_STRING, menu_gps_start + 1, _T("구글 지도"));
 		pMenu->InsertMenu(3, MF_BYPOSITION | MF_POPUP, (UINT_PTR)pGPSMenu->GetSafeHmenu(), _T("지도 보기"));
 	}
-
+	
+	//최근 접근 폴더 메뉴 추가
 	int recent_folders_count = theApp.GetProfileInt(_T("setting\\CSCImageDlg\\recent folders"), _T("count"), 0);
 	for (int i = 0; i < recent_folders_count; i++)
 	{
@@ -466,6 +467,7 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 
 	if (recent_folder_exist)
 		pMenu->InsertMenu(3, MF_BYPOSITION | MF_POPUP, (UINT_PTR)pRecentFoldersMenu->GetSafeHmenu(), _T("최근 접근 폴더"));
+
 
 	pMenu->CheckMenuItem(ID_MENU_ALWAYS_ON_TOP, (theApp.GetProfileInt(_T("setting"), _T("always on top"), false) ? MF_CHECKED : MF_UNCHECKED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_INFO, (m_imgDlg.get_show_info() ? MF_CHECKED : MF_UNCHECKED));
