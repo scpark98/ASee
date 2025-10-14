@@ -61,7 +61,9 @@ BOOL CASeeApp::InitInstance()
 	}
 
 	m_hMutex = ::CreateMutex(NULL, FALSE, _T("MUTEX_OF_ASee"));
-	if (::GetLastError() == ERROR_ALREADY_EXISTS)
+
+	//ctrl키를 누른 상태에서는 다중 실행을 허용한다.
+	if ((::GetLastError() == ERROR_ALREADY_EXISTS) && !IsCtrlPressed())
 	{
 		HWND	hWnd;
 

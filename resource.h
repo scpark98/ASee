@@ -87,13 +87,14 @@
 #define ID_MENU_COPY_TO_CLIPBOARD_ROI   32853
 #define ID_MENU_COPY_TO_CLIPBOARD_EXIF  32854
 #define ID_MENU_ZOOM_OUT                32855
+#define ID_MENU_SHOW_PIXEL_POS          32856
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        144
-#define _APS_NEXT_COMMAND_VALUE         32856
+#define _APS_NEXT_COMMAND_VALUE         32857
 #define _APS_NEXT_CONTROL_VALUE         1008
 #define _APS_NEXT_SYMED_VALUE           1105
 #endif

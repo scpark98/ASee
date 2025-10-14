@@ -131,6 +131,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_VIEW_TOGGLE, &CASeeDlg::OnMenuViewToggle)
 	ON_COMMAND(ID_MENU_COPY_TO_CLIPBOARD_ROI, &CASeeDlg::OnMenuCopyToClipboardROI)
 	ON_COMMAND(ID_MENU_COPY_TO_CLIPBOARD_EXIF, &CASeeDlg::OnMenuCopyToClipboardEXIF)
+	ON_COMMAND(ID_MENU_SHOW_PIXEL_POS, &CASeeDlg::OnMenuShowPixelPos)
 END_MESSAGE_MAP()
 
 
@@ -693,6 +694,11 @@ void CASeeDlg::OnMenuSlideShowInterval()
 }
 
 void CASeeDlg::OnMenuSlideShowRepeat()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+}
+
+void CASeeDlg::OnMenuShowPixelPos()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 }
