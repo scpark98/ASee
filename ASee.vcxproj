@@ -205,6 +205,7 @@
   <ItemGroup>
     <ClInclude Include="..\Common\AutoFont.h" />
     <ClInclude Include="..\Common\CButton\SCSystemButtons\SCSystemButtons.h" />
+    <ClInclude Include="..\Common\CDialog\SCImage2dDlg\SCImage2dDlg.h" />
     <ClInclude Include="..\Common\CDialog\SCImageDlg\SCImageDlg.h" />
     <ClInclude Include="..\Common\CDialog\SCShapeDlg\SCShapeDlg.h" />
     <ClInclude Include="..\Common\CDialog\SCThemeDlg\SCThemeDlg.h" />
@@ -214,6 +215,8 @@
     <ClInclude Include="..\Common\CStatic\SCStatic\SCStatic.h" />
     <ClInclude Include="..\Common\CWnd\WndShadow\WndShadow.h" />
     <ClInclude Include="..\Common\data_structure\SCParagraph\SCParagraph.h" />
+    <ClInclude Include="..\Common\directx\CSCD2Context\SCD2Context.h" />
+    <ClInclude Include="..\Common\directx\CSCD2Image\SCD2Image.h" />
     <ClInclude Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChanges.h" />
     <ClInclude Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChangesPrivate.h" />
     <ClInclude Include="..\Common\file_system\SCDirWatcher\SCDirWatcher.h" />
@@ -242,6 +245,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Common\CButton\SCSystemButtons\SCSystemButtons.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Common\CDialog\SCImage2dDlg\SCImage2dDlg.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -296,6 +305,18 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Common\data_structure\SCParagraph\SCParagraph.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Common\directx\CSCD2Context\SCD2Context.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Common\directx\CSCD2Image\SCD2Image.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

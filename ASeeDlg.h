@@ -7,7 +7,8 @@
 #include <deque>
 #include "Common/Functions.h"
 //#include "Common/SCGdiplusBitmap.h"
-#include "Common/CDialog/SCImageDlg/SCImageDlg.h"
+//#include "Common/CDialog/SCImageDlg/SCImageDlg.h"
+#include "Common/CDialog/SCImage2dDlg/SCImage2dDlg.h"
 #include "Common/CDialog/SCShapeDlg/SCShapeDlg.h"
 #include "Common/ThumbCtrl/SCThumbCtrl.h"
 #include "Common/file_system/SCDirWatcher/SCDirWatcher.h"
@@ -57,14 +58,15 @@ protected:
 	CSCDirWatcher	m_dir_watcher;
 	LRESULT			on_message_CSCDirWatcher(WPARAM wParam, LPARAM lParam);
 
-	LRESULT			on_message_CSCImageDlg(WPARAM wParam, LPARAM lParam);
+	LRESULT			on_message_CSCImage2dDlg(WPARAM wParam, LPARAM lParam);
 
 
 	CTitleDlg		m_titleDlg;
 	//title이 ""이면 현재 표시되는 이미지의 파일명으로 변경한다. 클립보드로부터 붙여 넣은 이미지의 경우는 "paste from clipboard"로 표시한다.
 	void			update_title(CString title = _T(""));
 
-	CSCImageDlg		m_imgDlg;
+	//CSCImageDlg		m_imgDlg;
+	CSCImage2dDlg	m_imgDlg;
 
 	CSCShapeDlg		m_message;
 	void			show_message(CString message);
