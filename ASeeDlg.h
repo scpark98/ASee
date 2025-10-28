@@ -6,8 +6,6 @@
 
 #include <deque>
 #include "Common/Functions.h"
-//#include "Common/SCGdiplusBitmap.h"
-//#include "Common/CDialog/SCImageDlg/SCImageDlg.h"
 #include "Common/CDialog/SCImage2dDlg/SCImage2dDlg.h"
 #include "Common/CDialog/SCShapeDlg/SCShapeDlg.h"
 #include "Common/ThumbCtrl/SCThumbCtrl.h"
