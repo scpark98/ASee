@@ -475,10 +475,10 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	pMenu->CheckMenuItem(ID_MENU_SHOW_PIXEL, (m_imgDlg.get_show_pixel() ? MF_CHECKED : MF_UNCHECKED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_PIXEL_POS, (m_imgDlg.get_show_pixel_pos() ? MF_CHECKED : MF_UNCHECKED));
 
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH_NONE, (m_imgDlg.get_smooth_interpolation() == CSCGdiplusBitmap::interpolation_none ? MF_CHECKED : MF_UNCHECKED));
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BILINEAR, (m_imgDlg.get_smooth_interpolation() == CSCGdiplusBitmap::interpolation_bilinear ? MF_CHECKED : MF_UNCHECKED));
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BICUBIC, (m_imgDlg.get_smooth_interpolation() == CSCGdiplusBitmap::interpolation_bicubic ? MF_CHECKED : MF_UNCHECKED));
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH_LANCZOS, (m_imgDlg.get_smooth_interpolation() == CSCGdiplusBitmap::interpolation_lanczos ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH_NONE, (m_imgDlg.get_interpolation_mode() == D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BILINEAR, (m_imgDlg.get_interpolation_mode() == D2D1_BITMAP_INTERPOLATION_MODE_LINEAR ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BICUBIC, (m_imgDlg.get_interpolation_mode() == D2D1_BITMAP_INTERPOLATION_MODE_FORCE_DWORD ? MF_CHECKED : MF_UNCHECKED));
+	//pMenu->CheckMenuItem(ID_MENU_SMOOTH_LANCZOS, (m_imgDlg.get_interpolation_mode() == CSCGdiplusBitmap::interpolation_lanczos ? MF_CHECKED : MF_UNCHECKED));
 
 	pMenu->EnableMenuItem(ID_MENU_SHOW_ROI_INFO, (m_imgDlg.get_image_roi().IsEmptyArea() ? MF_DISABLED : MF_ENABLED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_ROI_INFO, (m_imgDlg.get_show_roi_info() ? MF_CHECKED : MF_UNCHECKED));
@@ -763,17 +763,17 @@ void CASeeDlg::OnMenuSelect()
 
 void CASeeDlg::OnMenuSmoothNone()
 {
-	m_imgDlg.set_smooth_interpolation(CSCGdiplusBitmap::interpolation_none);
+	m_imgDlg.set_interpolation_mode(D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
 }
 
 void CASeeDlg::OnMenuSmoothBilinear()
 {
-	m_imgDlg.set_smooth_interpolation(CSCGdiplusBitmap::interpolation_bilinear);
+	m_imgDlg.set_interpolation_mode(D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
 }
 
 void CASeeDlg::OnMenuSmoothBicubic()
 {
-	m_imgDlg.set_smooth_interpolation(CSCGdiplusBitmap::interpolation_bicubic);
+	m_imgDlg.set_interpolation_mode(D2D1_BITMAP_INTERPOLATION_MODE_FORCE_DWORD);
 }
 
 void CASeeDlg::OnMenuSmoothLanczos()
@@ -1015,13 +1015,13 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				OnMenuFlip();
 				break;
 			case '1':
-				m_imgDlg.set_smooth_interpolation(CSCGdiplusBitmap::interpolation_none);
+				m_imgDlg.set_interpolation_mode(D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
 				return TRUE;
 			case '2':
-				m_imgDlg.set_smooth_interpolation(CSCGdiplusBitmap::interpolation_bilinear);
+				m_imgDlg.set_interpolation_mode(D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
 				return TRUE;
 			case '3':
-				m_imgDlg.set_smooth_interpolation(CSCGdiplusBitmap::interpolation_bicubic);
+				m_imgDlg.set_interpolation_mode(D2D1_BITMAP_INTERPOLATION_MODE_FORCE_DWORD);
 				return TRUE;
 			}
 	}
