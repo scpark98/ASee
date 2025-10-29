@@ -819,7 +819,7 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 
 		Gdiplus::RectF roi = m_imgDlg.get_image_roi();
 
-		//TRACE(_T("%s : %d\n"), __function__, pMsg->wParam);
+		TRACE(_T("%s : %d\n"), __function__, pMsg->wParam);
 		switch (pMsg->wParam)
 		{
 			case VK_ESCAPE:
@@ -948,28 +948,31 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				m_imgDlg.start_slide_show(0);
 				m_imgDlg.display_image(-1);
 				return true;
+
+			//CSCImage2dDlg가 focus를 가진 상태에서는 CSCImage2dDlg에서 VK_LEFT를 처리한 후
+			//CASeeDlg에서 VK_LEFT에 대한 추가 처리가 이어지는데
+			//CSCShapeDlg로 알림 메시지를 띠운 후 사라진 후에는 CSCImage2dDlg가 포커스를 가지는게 아니고 CASeeDlg가 가지게 되므로
+			//CSCImage2dDlg의 VK_LEFT 처리가 되지 않는다.
+			//CSCShapeDlg 생성시 포커스를 가지지 않게 하거나, (WS_EX_NOACTIVATE을 줘봤으나 소용없고)
+			//알림 메시지를 띠울 때 CSCImage2dDlg에게 포커스를 다시 주거나 (우선 이방법으로 처리함)
+			//키처리를 무조건 메인에서 처리하도록 하는 방법이 있는데 (매번 메인에 CSCImage2dDlg::on_key(nkey);와 같은 함수 호출이 필요)
+			//일반적인 해법으로 처리해야 한다.
 			case VK_LEFT:
 				m_imgDlg.start_slide_show(0);
-				if (m_imgDlg.get_fit2ctrl())
-				{
-					m_imgDlg.display_image(-2);
-				}
-				else
-				{
-					m_imgDlg.scroll(is_ctrl_pressed ? interval * 8 : 8, 0);
-				}
-				return true;
+				//if (!m_imgDlg.get_fit2ctrl())
+				//{
+				//	m_imgDlg.scroll(is_ctrl_pressed ? interval * 8 : 8, 0);
+				//	return true;
+				//}
+				break;
 			case VK_RIGHT:
 				m_imgDlg.start_slide_show(0);
-				if (m_imgDlg.get_fit2ctrl())
-				{
-					m_imgDlg.display_image(-1);
-				}
-				else
-				{
-					m_imgDlg.scroll(is_ctrl_pressed ? interval * -8 : -8, 0);
-				}
-				return true;
+				//if (!m_imgDlg.get_fit2ctrl())
+				//{
+				//	m_imgDlg.scroll(is_ctrl_pressed ? interval * -8 : -8, 0);
+				//	return true;
+				//}
+				break;
 			case VK_DIVIDE:
 				OnMenuZoomOrigin();
 				return TRUE;
@@ -1165,6 +1168,8 @@ void CASeeDlg::show_message(CString message)
 	m_message.set_text(setting);
 	m_message.CenterWindow();
 	m_message.fade_in(0, 1000, true);
+
+	m_imgDlg.SetFocus();
 }
 
 void CASeeDlg::show_adjust_message(int type, int percentage, bool invalidate)
