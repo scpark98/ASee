@@ -132,6 +132,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_COPY_TO_CLIPBOARD_ROI, &CASeeDlg::OnMenuCopyToClipboardROI)
 	ON_COMMAND(ID_MENU_COPY_TO_CLIPBOARD_EXIF, &CASeeDlg::OnMenuCopyToClipboardEXIF)
 	ON_COMMAND(ID_MENU_SHOW_PIXEL_POS, &CASeeDlg::OnMenuShowPixelPos)
+	ON_COMMAND(ID_MENU_SMOOTH, &CASeeDlg::OnMenuSmooth)
 END_MESSAGE_MAP()
 
 
@@ -175,6 +176,7 @@ BOOL CASeeDlg::OnInitDialog()
 
 	m_message.set_text(this, _T(""), 40, Gdiplus::FontStyleBold, 4.0f, 2.4f);
 	m_message.set_stroke_color(Gdiplus::Color::Black);
+	m_message.set_alpha(128);
 	m_message.use_control(false);
 
 	EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, 0);
@@ -475,10 +477,12 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	pMenu->CheckMenuItem(ID_MENU_SHOW_PIXEL, (m_imgDlg.get_show_pixel() ? MF_CHECKED : MF_UNCHECKED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_PIXEL_POS, (m_imgDlg.get_show_pixel_pos() ? MF_CHECKED : MF_UNCHECKED));
 
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH_NONE, (m_imgDlg.get_interpolation_mode() == D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR ? MF_CHECKED : MF_UNCHECKED));
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BILINEAR, (m_imgDlg.get_interpolation_mode() == D2D1_BITMAP_INTERPOLATION_MODE_LINEAR ? MF_CHECKED : MF_UNCHECKED));
-	pMenu->CheckMenuItem(ID_MENU_SMOOTH_BICUBIC, (m_imgDlg.get_interpolation_mode() == D2D1_BITMAP_INTERPOLATION_MODE_FORCE_DWORD ? MF_CHECKED : MF_UNCHECKED));
+	//pMenu->CheckMenuItem(ID_MENU_SMOOTH_NONE, (m_imgDlg.get_interpolation_mode() == D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR ? MF_CHECKED : MF_UNCHECKED));
+	//pMenu->CheckMenuItem(ID_MENU_SMOOTH_BILINEAR, (m_imgDlg.get_interpolation_mode() == D2D1_BITMAP_INTERPOLATION_MODE_LINEAR ? MF_CHECKED : MF_UNCHECKED));
+	//pMenu->CheckMenuItem(ID_MENU_SMOOTH_BICUBIC, (m_imgDlg.get_interpolation_mode() == D2D1_BITMAP_INTERPOLATION_MODE_FORCE_DWORD ? MF_CHECKED : MF_UNCHECKED));
 	//pMenu->CheckMenuItem(ID_MENU_SMOOTH_LANCZOS, (m_imgDlg.get_interpolation_mode() == CSCGdiplusBitmap::interpolation_lanczos ? MF_CHECKED : MF_UNCHECKED));
+
+	pMenu->CheckMenuItem(ID_MENU_SMOOTH, (m_imgDlg.get_interpolation_mode() == D2D1_BITMAP_INTERPOLATION_MODE_LINEAR ? MF_CHECKED : MF_UNCHECKED));
 
 	pMenu->EnableMenuItem(ID_MENU_SHOW_ROI_INFO, (m_imgDlg.get_image_roi().IsEmptyArea() ? MF_DISABLED : MF_ENABLED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_ROI_INFO, (m_imgDlg.get_show_roi_info() ? MF_CHECKED : MF_UNCHECKED));
@@ -1023,9 +1027,9 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 			case '2':
 				m_imgDlg.set_interpolation_mode(D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
 				return TRUE;
-			case '3':
-				m_imgDlg.set_interpolation_mode(D2D1_BITMAP_INTERPOLATION_MODE_FORCE_DWORD);
-				return TRUE;
+			//case '3':
+			//	m_imgDlg.set_interpolation_mode(D2D1_BITMAP_INTERPOLATION_MODE_FORCE_DWORD);
+			//	return TRUE;
 			}
 	}
 	else if (pMsg->message == WM_LBUTTONDBLCLK)
@@ -1261,4 +1265,12 @@ void CASeeDlg::on_menu_gps(UINT nID)
 		url.Format(_T("https://google.com/maps?q=%f,%f&z=15"), m_imgDlg.get_gps_latitude(), m_imgDlg.get_gps_longitude());
 
 	ShellExecute(m_hWnd, _T("open"), url, NULL, NULL, SW_SHOWNORMAL);
+}
+
+void CASeeDlg::OnMenuSmooth()
+{
+	if (m_imgDlg.get_interpolation_mode() == D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR)
+		m_imgDlg.set_interpolation_mode(D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
+	else
+		m_imgDlg.set_interpolation_mode(D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
 }

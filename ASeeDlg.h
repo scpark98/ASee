@@ -165,4 +165,5 @@ public:
 	afx_msg void OnMenuCopyToClipboardROI();
 	afx_msg void OnMenuCopyToClipboardEXIF();
 	afx_msg void OnMenuShowPixelPos();
+	afx_msg void OnMenuSmooth();
 };

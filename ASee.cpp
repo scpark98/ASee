@@ -31,6 +31,11 @@ CASeeApp::CASeeApp()
 	// TODO: 여기에 생성 코드를 추가합니다.
 	// InitInstance에 모든 중요한 초기화 작업을 배치합니다.
 	m_hMutex = NULL;
+
+	//CoInitializeEx()를 호출하지 않거나 COINIT_MULTITHREADED로 실행할 경우 ::SHBrowseForFolder() api가 응답하지 않음.
+	//기존 프로젝트들에서는 이를 호출하지 않아도 폴더선택창이 제대로 열렸으나
+	//Direct2D를 이용하는 이 프로젝트에서는 문제가 발생했다.
+	CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
 }
 
 CASeeApp::~CASeeApp()
@@ -166,6 +171,8 @@ BOOL CASeeApp::InitInstance()
 #if !defined(_AFXDLL) && !defined(_AFX_NO_MFC_CONTROLS_IN_DIALOGS)
 	ControlBarCleanUp();
 #endif
+
+	CoUninitialize();
 
 	// 대화 상자가 닫혔으므로 응용 프로그램의 메시지 펌프를 시작하지 않고 응용 프로그램을 끝낼 수 있도록 FALSE를
 	// 반환합니다.
