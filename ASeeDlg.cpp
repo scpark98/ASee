@@ -176,7 +176,7 @@ BOOL CASeeDlg::OnInitDialog()
 
 	m_message.set_text(this, _T(""), 40, Gdiplus::FontStyleBold, 4.0f, 2.4f);
 	m_message.set_stroke_color(Gdiplus::Color::Black);
-	m_message.set_alpha(128);
+	m_message.set_alpha(192);
 	m_message.use_control(false);
 
 	EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, 0);
@@ -1067,9 +1067,9 @@ void CASeeDlg::draw_system_buttons(CDC& dc)
 	//draw restore
 	CRect r = make_center_rect(m_rSysButton[1].CenterPoint().x, m_rSysButton[1].CenterPoint().y, 14, 14);
 	r.OffsetRect(2, -2);
-	draw_rectangle(&dc, r, gGRAY(192), NULL_BRUSH, 1);
+	draw_rect(&dc, r, gGRAY(192), NULL_BRUSH, 1);
 	r.OffsetRect(-4, 4);
-	draw_rectangle(&dc, r, gGRAY(192), (m_button_hover_index == 1 ? (m_button_pressed ? gRGB(0, 122, 204) : gGRAY(96)) : gGRAY(96)), 1);
+	draw_rect(&dc, r, gGRAY(192), (m_button_hover_index == 1 ? (m_button_pressed ? gRGB(0, 122, 204) : gGRAY(96)) : gGRAY(96)), 1);
 
 	//draw quit
 	int size = m_rSysButton[2].Height() / 4;

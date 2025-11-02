@@ -62,6 +62,6 @@
 * OnPaint() :
   - m_lbutton_down이면 m_screen_roi를 그린다.
   - m_lbutton_down이 아니고 m_image_roi가 유효하면
-    m_image_roi를 m_screen_roi로 변환한 후 draw_rectangle(m_screen_roi)를 그린다.
+    m_image_roi를 m_screen_roi로 변환한 후 draw_rect(m_screen_roi)를 그린다.
     이렇게 하는 이유는 이미지가 resize되어 표시되어도 roi가 변하지 않아야 하기 때문.
   - m_screen_roi에 대한 9개의 조절 핸들을 구하고 이를 그려준다.
