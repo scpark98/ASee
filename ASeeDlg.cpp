@@ -1277,12 +1277,9 @@ void CASeeDlg::OnMenuSmooth()
 }
 
 //CSCD2Image에서 raw_data를 추출하는 방법이 없으므로 CSCGdiplusBitmap으로 임시 저장한 후
-//이를 다시 불러와서 raw_data를 추출하여 저장하도록 구현함.
+//이를 다시 불러와서 raw_data를 추출하여 저장하도록 임시 구현함.
 void CASeeDlg::OnMenuSaveToRaw()
 {
-	m_imgDlg.save(_T("d:\\temp_q0.0f.png"), 0.0f);
-	return;
-
 	CString temp;
 	CString path = m_imgDlg.get_filename(true);
 	CString folder = get_part(path, fn_folder);
