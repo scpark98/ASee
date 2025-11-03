@@ -133,6 +133,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_COPY_TO_CLIPBOARD_EXIF, &CASeeDlg::OnMenuCopyToClipboardEXIF)
 	ON_COMMAND(ID_MENU_SHOW_PIXEL_POS, &CASeeDlg::OnMenuShowPixelPos)
 	ON_COMMAND(ID_MENU_SMOOTH, &CASeeDlg::OnMenuSmooth)
+	ON_COMMAND(ID_MENU_SAVE_TO_RAW, &CASeeDlg::OnMenuSaveToRaw)
 END_MESSAGE_MAP()
 
 
@@ -685,7 +686,7 @@ void CASeeDlg::OnMenuSaveAs()
 		return;
 
 	CString sfile = dlg.GetPathName();
-	m_imgDlg.save(sfile);
+	m_imgDlg.save(sfile, 1.0f);
 }
 
 void CASeeDlg::OnMenuSlideShow()
@@ -1273,4 +1274,44 @@ void CASeeDlg::OnMenuSmooth()
 		m_imgDlg.set_interpolation_mode(D2D1_BITMAP_INTERPOLATION_MODE_LINEAR);
 	else
 		m_imgDlg.set_interpolation_mode(D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
+}
+
+//CSCD2Image에서 raw_data를 추출하는 방법이 없으므로 CSCGdiplusBitmap으로 임시 저장한 후
+//이를 다시 불러와서 raw_data를 추출하여 저장하도록 구현함.
+void CASeeDlg::OnMenuSaveToRaw()
+{
+	m_imgDlg.save(_T("d:\\temp_q0.0f.png"), 0.0f);
+	return;
+
+	CString temp;
+	CString path = m_imgDlg.get_filename(true);
+	CString folder = get_part(path, fn_folder);
+	CString new_filetitle = get_part(path, fn_title);
+	
+	//CString wh_str;
+	CString whc_str;
+	CSize sz = m_imgDlg.get_img_size();
+	//wh_str.Format(_T("_%dx%d"), sz.cx, sz.cy);
+	whc_str.Format(_T("_%dx%dx%d"), sz.cx, sz.cy, m_imgDlg.get_channel() * 8);
+
+	if (new_filetitle.Find(whc_str) < 0)
+		new_filetitle += whc_str;
+
+	temp.Format(_T("%s\\__ASee_temp_for_raw.bmp"), get_known_folder(CSIDL_APPDATA));
+	//temp.Format(_T("d:\\__ASee_temp.bmp"), get_known_folder(CSIDL_APPDATA));
+	HRESULT hr = m_imgDlg.save(temp, 1.0f);
+
+	CSCGdiplusBitmap img(temp);
+	
+	if (img.get_raw_data() == false)
+	{
+		AfxMessageBox(_T("fail to get_raw_data()"));
+		return;
+	}
+
+	if (!save2raw(folder + _T("\\") + new_filetitle + _T(".raw"), img.data, img.width * img.height * img.channel))
+	{
+		AfxMessageBox(_T("fail to save2raw()"));
+		return;
+	}
 }

@@ -89,13 +89,15 @@
 #define ID_MENU_ZOOM_OUT                32855
 #define ID_MENU_SHOW_PIXEL_POS          32856
 #define ID_MENU_32857                   32857
+#define ID_32858                        32858
+#define ID_MENU_SAVE_TO_RAW             32859
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        144
-#define _APS_NEXT_COMMAND_VALUE         32858
+#define _APS_NEXT_COMMAND_VALUE         32860
 #define _APS_NEXT_CONTROL_VALUE         1008
 #define _APS_NEXT_SYMED_VALUE           1105
 #endif
