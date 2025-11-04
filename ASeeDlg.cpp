@@ -134,6 +134,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_SHOW_PIXEL_POS, &CASeeDlg::OnMenuShowPixelPos)
 	ON_COMMAND(ID_MENU_SMOOTH, &CASeeDlg::OnMenuSmooth)
 	ON_COMMAND(ID_MENU_SAVE_TO_RAW, &CASeeDlg::OnMenuSaveToRaw)
+	ON_WM_LBUTTONDBLCLK()
 END_MESSAGE_MAP()
 
 
@@ -244,13 +245,31 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	}
 	else
 	{
-		if (nID == SC_MAXIMIZE)
+		if ((nID & 0xFFF0) == SC_MAXIMIZE)
 		{
+			//CSCSystemButtons에서는 SC_MAXIMIZE와 SC_RESTORE를 구분하지 않고 SC_MAXIMIZE로 보내므로
+			//실제 적용할 이곳에서 IsZoomed()일 경우는 SC_RESTORE를 다시 전송하면 된다.
+			if (IsZoomed())
+			{
+				PostMessage(WM_SYSCOMMAND, SC_RESTORE);
+				return;
+			}
+
 			ModifyStyle(WS_CAPTION, 0);
 		}
-		else if (nID == SC_RESTORE)
+		else if ((nID & 0xFFF0) == SC_MINIMIZE)
 		{
-			ModifyStyle(0, WS_CAPTION | WS_THICKFRAME);
+			theApp.WriteProfileInt(_T("setting"), _T("is zoomed"), IsZoomed());
+		}
+		else if ((nID & 0xFFF0) == SC_RESTORE)
+		{
+			//restore 시킬 때 전체화면에서 minimized 되었는지에 따라 ModifyStyle()로 캡션바를 없앨지를 처리해야 한다.
+			int is_zoomed = theApp.GetProfileInt(_T("setting"), _T("is zoomed"), false);
+			if (IsZoomed() || !is_zoomed)
+			{
+				m_titleDlg.ShowWindow(SW_HIDE);
+				ModifyStyle(0, WS_CAPTION | WS_THICKFRAME);
+			}
 		}
 
 		CDialogEx::OnSysCommand(nID, lParam);
@@ -1276,7 +1295,7 @@ void CASeeDlg::OnMenuSmooth()
 		m_imgDlg.set_interpolation_mode(D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR);
 }
 
-//CSCD2Image에서 raw_data를 추출하는 방법이 없으므로 CSCGdiplusBitmap으로 임시 저장한 후
+//CSCD2Image에서 raw_data를 추출하는 방법이 정식 제공되지 않으므로 CSCGdiplusBitmap으로 저장한 후
 //이를 다시 불러와서 raw_data를 추출하여 저장하도록 임시 구현함.
 void CASeeDlg::OnMenuSaveToRaw()
 {
@@ -1311,4 +1330,14 @@ void CASeeDlg::OnMenuSaveToRaw()
 		AfxMessageBox(_T("fail to save2raw()"));
 		return;
 	}
+}
+
+void CASeeDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	if (!IsZoomed())
+	{
+		trace(point);
+	}
+	CDialogEx::OnLButtonDblClk(nFlags, point);
 }

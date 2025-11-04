@@ -167,4 +167,5 @@ public:
 	afx_msg void OnMenuShowPixelPos();
 	afx_msg void OnMenuSmooth();
 	afx_msg void OnMenuSaveToRaw();
+	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 };

@@ -30,4 +30,5 @@ public:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedCancel();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
+	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 };
