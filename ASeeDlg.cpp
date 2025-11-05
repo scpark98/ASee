@@ -255,6 +255,7 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 				return;
 			}
 
+			m_titleDlg.parent_maximized(true);
 			ModifyStyle(WS_CAPTION, 0);
 		}
 		else if ((nID & 0xFFF0) == SC_MINIMIZE)
@@ -263,10 +264,16 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 		}
 		else if ((nID & 0xFFF0) == SC_RESTORE)
 		{
+			m_titleDlg.parent_maximized(false);
+
 			//restore 시킬 때 전체화면에서 minimized 되었는지에 따라 ModifyStyle()로 캡션바를 없앨지를 처리해야 한다.
 			int is_zoomed = theApp.GetProfileInt(_T("setting"), _T("is zoomed"), false);
+			//아직 CDialogEx::OnSysCommand(nID, lParam);가 호출되기 전이므로 아래 if문의 IsZoomed()는 올바른 값을 리턴하지 못한다.
+			//상태가 완전히 변경된 후 처리하려면 timer를 쓰던가 해야하는데 점점 난잡해진다.
+			//좀 더 정석적인 해결책이 필요하다.
 			if (IsZoomed() || !is_zoomed)
 			{
+				//m_titleDlg.parent_maximized(true);
 				m_titleDlg.ShowWindow(SW_HIDE);
 				ModifyStyle(0, WS_CAPTION | WS_THICKFRAME);
 			}

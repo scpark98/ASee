@@ -90,32 +90,29 @@ void CTitleDlg::update_title(CString title)
 	SetWindowText(title);
 }
 
+//CSCThemeDlg에서 타이틀바를 더블클릭하면 maximize 또는 restore 시켜야 하는데
+//그 대상은 현재 윈도우가 될 수도 있고 현재 윈도우의 parent가 될 수도 있다.
+//따라서 CSCThemeDlg에 이 핸들러를 정의할 수 없다.
+//타깃 윈도우에 SC_MAXIMIZE를 보내면 타깃 윈도우에서 상황에 맞게 maximize 또는 restore로 처리되어야 한다.
 void CTitleDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	if (m_sys_buttons.has_button(SC_MAXIMIZE) && (point.y < m_titlebar_height))
 	{
-		CWnd* parent = GetParent();
+		//실제 maximize or restore를 수행할 윈도우가 이 윈도우라면 target = this지만
+		//이 프로젝트에서는 CTitleDlg가 아니라 CASeeDlg이므로 target = GetParent()가 된다.
+		CWnd* target = GetParent();
 
 		//프로그램 아이콘을 더블클릭한 경우
 		if (point.x < 32)
 		{
-			parent->SendMessage(WM_SYSCOMMAND, SC_CLOSE);
+			target->SendMessage(WM_SYSCOMMAND, SC_CLOSE);
 			return;
 		}
 
 		//maximize, restore도 캡션바 show/hide 등의 부가적인 처리가 필요하므로
-		//이 클래스에서 직접 처리하지말고 CASeeDlg에서 처리한다.
-		if (parent->IsZoomed())
-		{
-			parent->SendMessage(WM_SYSCOMMAND, SC_RESTORE);
-		}
-		else
-		{
-			parent->SendMessage(WM_SYSCOMMAND, SW_MAXIMIZE);
-		}
-
-		//m_sys_buttons.Invalidate();
+		//이 클래스에서 직접 처리하지말고 CASeeDlg에서 처리해야 한다.
+		target->SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE);
 	}
 
 	CSCThemeDlg::OnLButtonDblClk(nFlags, point);

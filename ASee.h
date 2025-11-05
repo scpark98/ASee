@@ -10,6 +10,10 @@
 
 #include "resource.h"		// 주 기호입니다.
 
+//#define CARBON_INCLUDE_CRASH_HANDLER_MAIN
+//#define CARBON_CRASH_HANDLER_IMPLEMENTATION
+//#include "Common/system/CrashHandler/crash_handler.h"
+//#include "Common/system/CrashHandler/CrashCatch.hpp"
 
 static const UINT Message_CASeeApp = ::RegisterWindowMessage(_T("MessageString_CASeeApp"));
 

@@ -120,6 +120,12 @@
     <ClInclude Include="..\Common\directx\CSCD2Image\SCD2Image.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\system\CrashHandler\CrashHandler.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LMM_Koino_service\LMMHost\tvnserver\CrashHandler.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ASee.cpp">
@@ -204,6 +210,12 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\directx\CSCD2Image\SCD2Image.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\system\CrashHandler\CrashHandler.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LMM_Koino_service\LMMHost\tvnserver\CrashHandler.cpp">
       <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
