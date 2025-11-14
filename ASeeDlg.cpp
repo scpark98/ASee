@@ -135,6 +135,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_SMOOTH, &CASeeDlg::OnMenuSmooth)
 	ON_COMMAND(ID_MENU_SAVE_TO_RAW, &CASeeDlg::OnMenuSaveToRaw)
 	ON_WM_LBUTTONDBLCLK()
+	ON_COMMAND(ID_MENU_SHOW_MOUSE_GUIDE_LINE, &CASeeDlg::OnMenuShowMouseGuideLine)
 END_MESSAGE_MAP()
 
 
@@ -1345,4 +1346,9 @@ void CASeeDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 		trace(point);
 	}
 	CDialogEx::OnLButtonDblClk(nFlags, point);
+}
+
+void CASeeDlg::OnMenuShowMouseGuideLine()
+{
+	
 }
