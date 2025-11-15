@@ -168,5 +168,5 @@ public:
 	afx_msg void OnMenuSmooth();
 	afx_msg void OnMenuSaveToRaw();
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
-	afx_msg void OnMenuShowMouseGuideLine();
+	afx_msg void OnMenuShowCursorGuideLine();
 };

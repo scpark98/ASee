@@ -135,7 +135,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_SMOOTH, &CASeeDlg::OnMenuSmooth)
 	ON_COMMAND(ID_MENU_SAVE_TO_RAW, &CASeeDlg::OnMenuSaveToRaw)
 	ON_WM_LBUTTONDBLCLK()
-	ON_COMMAND(ID_MENU_SHOW_MOUSE_GUIDE_LINE, &CASeeDlg::OnMenuShowMouseGuideLine)
+	ON_COMMAND(ID_MENU_SHOW_CURSOR_GUIDE_LINE, &CASeeDlg::OnMenuShowCursorGuideLine)
 END_MESSAGE_MAP()
 
 
@@ -504,6 +504,7 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	pMenu->CheckMenuItem(ID_MENU_SHOW_INFO, (m_imgDlg.get_show_info() ? MF_CHECKED : MF_UNCHECKED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_PIXEL, (m_imgDlg.get_show_pixel() ? MF_CHECKED : MF_UNCHECKED));
 	pMenu->CheckMenuItem(ID_MENU_SHOW_PIXEL_POS, (m_imgDlg.get_show_pixel_pos() ? MF_CHECKED : MF_UNCHECKED));
+	pMenu->CheckMenuItem(ID_MENU_SHOW_CURSOR_GUIDE_LINE, (m_imgDlg.get_show_cursor_guide_line() ? MF_CHECKED : MF_UNCHECKED));
 
 	//pMenu->CheckMenuItem(ID_MENU_SMOOTH_NONE, (m_imgDlg.get_interpolation_mode() == D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR ? MF_CHECKED : MF_UNCHECKED));
 	//pMenu->CheckMenuItem(ID_MENU_SMOOTH_BILINEAR, (m_imgDlg.get_interpolation_mode() == D2D1_BITMAP_INTERPOLATION_MODE_LINEAR ? MF_CHECKED : MF_UNCHECKED));
@@ -1348,7 +1349,7 @@ void CASeeDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 	CDialogEx::OnLButtonDblClk(nFlags, point);
 }
 
-void CASeeDlg::OnMenuShowMouseGuideLine()
+void CASeeDlg::OnMenuShowCursorGuideLine()
 {
-	
+	m_imgDlg.set_show_cursor_guide_line(-1);
 }

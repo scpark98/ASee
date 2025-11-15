@@ -101,13 +101,14 @@
 #define ID_MENU_SAVE_TO_RAW             32859
 #define ID_MENU_32860                   32860
 #define ID_MENU_SHOW_MOUSE_GUIDE_LINE   32861
+#define ID_MENU_SHOW_CURSOR_GUIDE_LINE  32862
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        144
-#define _APS_NEXT_COMMAND_VALUE         32862
+#define _APS_NEXT_COMMAND_VALUE         32863
 #define _APS_NEXT_CONTROL_VALUE         1008
 #define _APS_NEXT_SYMED_VALUE           1105
 #endif
