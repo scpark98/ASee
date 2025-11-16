@@ -176,6 +176,7 @@ BOOL CASeeDlg::OnInitDialog()
 
 	m_imgDlg.create(this);
 	m_imgDlg.set_dropper_cursor(IDC_CURSOR_DROPPER);
+	m_imgDlg.set_cross_cursor(IDC_CURSOR_CROSS);
 
 	m_message.set_text(this, _T(""), 40, Gdiplus::FontStyleBold, 4.0f, 2.4f);
 	m_message.set_stroke_color(Gdiplus::Color::Black);

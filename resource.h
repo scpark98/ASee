@@ -18,6 +18,8 @@
 #define IDR_WAVE_DING_LOW               137
 #define IDR_WAVE_DIRING                 139
 #define IDD_ZIGZAG_COLOR                141
+#define IDC_CURSOR1                     144
+#define IDC_CURSOR_CROSS                144
 #define IDC_EDIT_CX                     1000
 #define IDC_EDIT_ROI_CX                 1000
 #define IDC_SPIN_CX                     1001
@@ -107,7 +109,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        144
+#define _APS_NEXT_RESOURCE_VALUE        145
 #define _APS_NEXT_COMMAND_VALUE         32863
 #define _APS_NEXT_CONTROL_VALUE         1008
 #define _APS_NEXT_SYMED_VALUE           1105
