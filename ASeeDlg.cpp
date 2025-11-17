@@ -1114,7 +1114,7 @@ void CASeeDlg::draw_system_buttons(CDC& dc)
 void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	if (IsZoomed() && !m_imgDlg.is_lbutton_down() && !IsShiftPressed())
+	if (IsZoomed() && !m_imgDlg.is_lbutton_down() && !IsShiftPressed() && !IsCtrlPressed())
 	{
 		if (m_titleDlg.IsWindowVisible() == false && point.y < m_titleDlg.get_titlebar_height() + 10)
 			m_titleDlg.ShowWindow(SW_SHOW);
