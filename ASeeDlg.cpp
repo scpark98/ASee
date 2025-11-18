@@ -59,17 +59,17 @@ END_MESSAGE_MAP()
 
 
 CASeeDlg::CASeeDlg(CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_ASEE_DIALOG, pParent)
+	: CSCThemeDlg(IDD_ASEE_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
 void CASeeDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CSCThemeDlg::DoDataExchange(pDX);
 }
 
-BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
+BEGIN_MESSAGE_MAP(CASeeDlg, CSCThemeDlg)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
@@ -136,6 +136,8 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_SAVE_TO_RAW, &CASeeDlg::OnMenuSaveToRaw)
 	ON_WM_LBUTTONDBLCLK()
 	ON_COMMAND(ID_MENU_SHOW_CURSOR_GUIDE_LINE, &CASeeDlg::OnMenuShowCursorGuideLine)
+	ON_WM_ACTIVATE()
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -143,7 +145,7 @@ END_MESSAGE_MAP()
 
 BOOL CASeeDlg::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
+	CSCThemeDlg::OnInitDialog();
 
 	// 시스템 메뉴에 "정보..." 메뉴 항목을 추가합니다.
 
@@ -171,8 +173,14 @@ BOOL CASeeDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	m_titleDlg.Create(IDD_TITLE, this);
-	m_titleDlg.set_titlebar_movable(false);
+	set_titlebar_height(32);
+	set_titlebar_icon(IDR_MAINFRAME, 16, 16);
+
+	SetWindowLong(m_hWnd, GWL_STYLE, WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME);
+	set_system_buttons(this, SC_MINIMIZE, SC_MAXIMIZE, SC_CLOSE);
+
+	//m_titleDlg.Create(IDD_TITLE, this);
+	//m_titleDlg.set_titlebar_movable(false);
 
 	m_imgDlg.create(this);
 	m_imgDlg.set_dropper_cursor(IDC_CURSOR_DROPPER);
@@ -187,6 +195,7 @@ BOOL CASeeDlg::OnInitDialog()
 
 	RestoreWindowPosition(&theApp, this);
 
+	/*
 	if (IsZoomed())
 	{
 		ModifyStyle(WS_CAPTION, 0);
@@ -196,6 +205,7 @@ BOOL CASeeDlg::OnInitDialog()
 	{
 		ModifyStyle(0, WS_CAPTION | WS_THICKFRAME);
 	}
+	*/
 
 	bool bAlwaysOnTop = theApp.GetProfileInt(_T("setting"), _T("always on top"), false);
 	SetWindowPos((bAlwaysOnTop ? &wndTopMost : &wndNoTopMost), 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
@@ -257,8 +267,8 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 				return;
 			}
 
-			m_titleDlg.parent_maximized(true);
-			ModifyStyle(WS_CAPTION, 0);
+			//m_titleDlg.parent_maximized(true);
+			//ModifyStyle(WS_CAPTION, 0);
 		}
 		else if ((nID & 0xFFF0) == SC_MINIMIZE)
 		{
@@ -266,7 +276,7 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 		}
 		else if ((nID & 0xFFF0) == SC_RESTORE)
 		{
-			m_titleDlg.parent_maximized(false);
+			//m_titleDlg.parent_maximized(false);
 
 			//restore 시킬 때 전체화면에서 minimized 되었는지에 따라 ModifyStyle()로 캡션바를 없앨지를 처리해야 한다.
 			int is_zoomed = theApp.GetProfileInt(_T("setting"), _T("is zoomed"), false);
@@ -276,8 +286,8 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 			if (IsZoomed() || !is_zoomed)
 			{
 				//m_titleDlg.parent_maximized(true);
-				m_titleDlg.ShowWindow(SW_HIDE);
-				ModifyStyle(0, WS_CAPTION | WS_THICKFRAME);
+				//m_titleDlg.ShowWindow(SW_HIDE);
+				//ModifyStyle(0, WS_CAPTION | WS_THICKFRAME);
 			}
 		}
 
@@ -312,7 +322,7 @@ void CASeeDlg::OnPaint()
 	{
 		//CASeeDlg::OnPaint()에서 특별히 하는 일이 없어도 기본으로 생성된 코드인 CDialogEx::OnPaint(); 코드를 생략해선 안된다.
 		//생략할 경우 maximize, restore시에 제대로 이벤트가 발생하지 않는다.
-		CDialogEx::OnPaint();
+		CSCThemeDlg::OnPaint();
 	}
 }
 
@@ -331,12 +341,12 @@ void CASeeDlg::OnBnClickedOk()
 	if (!IsZoomed())
 	{
 		//ShowWindow(SW_HIDE);
-		ModifyStyle(WS_CAPTION | WS_THICKFRAME, 0);
+		//ModifyStyle(WS_CAPTION | WS_THICKFRAME, 0);
 		ShowWindow(SW_MAXIMIZE);
 	}
 	else
 	{
-		ModifyStyle(0, WS_CAPTION | WS_THICKFRAME);
+		//ModifyStyle(0, WS_CAPTION | WS_THICKFRAME);
 		ShowWindow(SW_RESTORE);
 	}
 }
@@ -352,18 +362,19 @@ void CASeeDlg::OnBnClickedCancel()
 
 void CASeeDlg::OnSize(UINT nType, int cx, int cy)
 {
-	CDialogEx::OnSize(nType, cx, cy);
+	CSCThemeDlg::OnSize(nType, cx, cy);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
-	if (m_imgDlg.m_hWnd == NULL || m_titleDlg.m_hWnd == NULL)
+	if (m_imgDlg.m_hWnd == NULL)// || m_titleDlg.m_hWnd == NULL)
 		return;
 
 	CRect rc;
 	GetClientRect(rc);
-	m_imgDlg.MoveWindow(rc);
+	rc.top = get_titlebar_height();
+	m_imgDlg.MoveWindow(rc, false);
 
-	rc.bottom = rc.top + m_titleDlg.get_titlebar_height();
-	m_titleDlg.MoveWindow(rc);
+	//rc.bottom = rc.top + m_titleDlg.get_titlebar_height();
+	//m_titleDlg.MoveWindow(rc);
 }
 
 void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
@@ -371,18 +382,21 @@ void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
 	CDialogEx::OnWindowPosChanged(lpwndpos);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
-	if (m_imgDlg.m_hWnd == NULL || m_titleDlg.m_hWnd == NULL)
+	if (m_imgDlg.m_hWnd == NULL)// || m_titleDlg.m_hWnd == NULL)
 		return;
 
 	CRect rc;
 	GetClientRect(rc);
-	m_imgDlg.MoveWindow(rc);
+	rc.top = get_titlebar_height();
+	m_imgDlg.MoveWindow(rc, false);
 
-	CRect rw;
-	GetWindowRect(rw);
-	rw.bottom = rw.top + m_titleDlg.get_titlebar_height();
-	m_titleDlg.MoveWindow(rw);
-	ClientToScreen(rw);
+	//CRect rw;
+	//GetWindowRect(rw);
+	//rw.bottom = rw.top + m_titleDlg.get_titlebar_height();
+	//m_titleDlg.MoveWindow(rw);
+	//ClientToScreen(rw);
+
+	//SetTimer(timer_refresh_title_area, 1, NULL);
 
 	SaveWindowPosition(&theApp, this);
 }
@@ -436,7 +450,7 @@ void CASeeDlg::update_title(CString title)
 
 	m_imgDlg.set_alt_info(alt_info);
 	SetWindowText(str);
-	m_titleDlg.update_title(str);
+	//m_titleDlg.update_title(str);
 }
 
 void CASeeDlg::execute_video()
@@ -1083,43 +1097,31 @@ void CASeeDlg::OnMenuShowInfo()
 	m_imgDlg.set_show_info(show);
 }
 
-void CASeeDlg::draw_system_buttons(CDC& dc)
-{
-	if (m_button_hover_index >= 0 && m_button_hover_index < 3)
-		dc.FillSolidRect(m_rSysButton[m_button_hover_index], (m_button_hover_index == 2 ? RGB(255, 0, 0) : (m_button_pressed ? RGB(0, 122, 204) : GRAY(96))));
-
-	//draw minimize
-	draw_line(&dc, m_rSysButton[0].left + 20, m_rSysButton[0].bottom - 10,
-		m_rSysButton[0].right - 20, m_rSysButton[0].bottom - 10, gGRAY(192), 1);
-
-	//draw restore
-	CRect r = make_center_rect(m_rSysButton[1].CenterPoint().x, m_rSysButton[1].CenterPoint().y, 14, 14);
-	r.OffsetRect(2, -2);
-	draw_rect(&dc, r, gGRAY(192), NULL_BRUSH, 1);
-	r.OffsetRect(-4, 4);
-	draw_rect(&dc, r, gGRAY(192), (m_button_hover_index == 1 ? (m_button_pressed ? gRGB(0, 122, 204) : gGRAY(96)) : gGRAY(96)), 1);
-
-	//draw quit
-	int size = m_rSysButton[2].Height() / 4;
-	r = m_rSysButton[2];
-	CPoint cp = r.CenterPoint();
-	//r.DeflateRect(4, 4);
-	draw_line(&dc, cp.x - size, cp.y - size, cp.x + size, cp.y + size, gGRAY(192), 1);
-	draw_line(&dc, cp.x - size, cp.y + size, cp.x + size, cp.y - size, gGRAY(192), 1);
-
-	//for (int i = 0; i < 3; i++)
-	//	DrawRectangle(&dc, m_rSysButton[i], red);
-}
-
 void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	if (IsZoomed() && !m_imgDlg.is_lbutton_down() && !IsShiftPressed() && !IsCtrlPressed())
+	//if (IsZoomed() && !m_imgDlg.is_lbutton_down() && !IsShiftPressed() && !IsCtrlPressed())
 	{
-		if (m_titleDlg.IsWindowVisible() == false && point.y < m_titleDlg.get_titlebar_height() + 10)
-			m_titleDlg.ShowWindow(SW_SHOW);
-		else if (m_titleDlg.IsWindowVisible() && point.y > m_titleDlg.get_titlebar_height() + 10)
-			m_titleDlg.ShowWindow(SW_HIDE);
+		if (get_titlebar_height() < 32 && point.y < 32)
+		{
+			set_titlebar_height(32);
+			CRect rc;
+			GetClientRect(rc);
+			rc.top = get_titlebar_height();
+			m_imgDlg.MoveWindow(rc, false);
+		}
+		else if (get_titlebar_height() == 32 && point.y > 32)
+		{
+			set_titlebar_height(0);
+			CRect rc;
+			GetClientRect(rc);
+			rc.top = get_titlebar_height();
+			m_imgDlg.MoveWindow(rc, false);
+		}
+		//if (m_titleDlg.IsWindowVisible() == false && point.y < m_titleDlg.get_titlebar_height() + 10)
+		//	m_titleDlg.ShowWindow(SW_SHOW);
+		//else if (m_titleDlg.IsWindowVisible() && point.y > m_titleDlg.get_titlebar_height() + 10)
+		//	m_titleDlg.ShowWindow(SW_HIDE);
 	}
 
 	CDialogEx::OnMouseMove(nFlags, point);
@@ -1353,4 +1355,37 @@ void CASeeDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 void CASeeDlg::OnMenuShowCursorGuideLine()
 {
 	m_imgDlg.set_show_cursor_guide_line(-1);
+}
+
+void CASeeDlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
+{
+	CSCThemeDlg::OnActivate(nState, pWndOther, bMinimized);
+
+	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
+	if (nState == 0)
+	{
+		SetTimer(timer_refresh_title_area, 1, NULL);
+	}
+	else
+	{
+		KillTimer(timer_refresh_title_area);
+	}
+}
+
+void CASeeDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	if (nIDEvent == timer_refresh_title_area)
+	{
+		KillTimer(nIDEvent);
+		CRect rc;
+		GetClientRect(rc);
+		rc.bottom = 10;
+		//InvalidateRect(rc, false);
+		//m_sys_buttons.Invalidate();
+
+		m_imgDlg.Invalidate(false);
+	}
+
+	CSCThemeDlg::OnTimer(nIDEvent);
 }

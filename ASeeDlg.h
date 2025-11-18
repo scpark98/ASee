@@ -10,12 +10,13 @@
 #include "Common/CDialog/SCShapeDlg/SCShapeDlg.h"
 #include "Common/ThumbCtrl/SCThumbCtrl.h"
 #include "Common/file_system/SCDirWatcher/SCDirWatcher.h"
+#include "Common/CDialog/SCThemeDlg/SCThemeDlg.h"
 
 #include "TitleDlg.h"
 #include "ZigzagColorDlg.h"
 
 // CASeeDlg 대화 상자
-class CASeeDlg : public CDialogEx
+class CASeeDlg : public CSCThemeDlg
 {
 // 생성입니다.
 public:
@@ -34,6 +35,7 @@ public:
 protected:
 	enum TIMER_ID
 	{
+		timer_refresh_title_area,
 	};
 
 	enum RECENT_FOLDERS_POPUP_MENU
@@ -91,7 +93,6 @@ protected:
 	CRect			m_rSysButton[3];
 	int				m_button_hover_index = -1;
 	bool			m_button_pressed;
-	void			draw_system_buttons(CDC& dc);
 
 
 
@@ -169,4 +170,6 @@ public:
 	afx_msg void OnMenuSaveToRaw();
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnMenuShowCursorGuideLine();
+	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };
