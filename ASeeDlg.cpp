@@ -1105,10 +1105,14 @@ void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 		if (get_titlebar_height() < 32 && point.y < 32)
 		{
 			set_titlebar_height(32);
-			CRect rc;
-			GetClientRect(rc);
-			rc.top = get_titlebar_height();
-			m_imgDlg.MoveWindow(rc, false);
+
+			//if (!IsZoomed())
+			{
+				CRect rc;
+				GetClientRect(rc);
+				rc.top = get_titlebar_height();
+				m_imgDlg.MoveWindow(rc, false);
+			}
 		}
 		else if (get_titlebar_height() == 32 && point.y > 32)
 		{
