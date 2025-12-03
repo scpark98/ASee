@@ -499,17 +499,23 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	
 	//최근 접근 폴더 메뉴 추가
 	int recent_folders_count = theApp.GetProfileInt(_T("setting\\CSCImage2dDlg\\recent folders"), _T("count"), 0);
+	int valid_count = 0;
 	for (int i = 0; i < recent_folders_count; i++)
 	{
 		str.Format(_T(" (&%d)"), i + 1);
 		recent_folder = theApp.GetProfileString(_T("setting\\CSCImage2dDlg\\recent folders"), i2S(i), _T(""));
-		if (!recent_folder.IsEmpty())
+
+		if (!recent_folder.IsEmpty() && PathFileExists(recent_folder))
 		{
 			recent_folder_exist = true;
-			//pRecentFoldersMenu->AppendMenu(MF_STRING, menu_recent_folders_start + i, recent_folder + str);
-			pRecentFoldersMenu->InsertMenu(i, MF_BYPOSITION | MF_STRING, menu_recent_folders_start + i, recent_folder + str);
+			str.Format(_T(" (&%d)"), valid_count + 1);
+			pRecentFoldersMenu->InsertMenu(valid_count, MF_BYPOSITION | MF_STRING, menu_recent_folders_start + valid_count, recent_folder + str);
+			theApp.WriteProfileString(_T("setting\\CSCImage2dDlg\\recent folders"), i2S(valid_count), recent_folder);
+			valid_count++;
 		}
 	}
+
+	theApp.WriteProfileInt(_T("setting\\CSCImage2dDlg\\recent folders"), _T("count"), valid_count);
 
 	if (recent_folder_exist)
 		pMenu->InsertMenu(3, MF_BYPOSITION | MF_POPUP, (UINT_PTR)pRecentFoldersMenu->GetSafeHmenu(), _T("최근 접근 폴더"));
