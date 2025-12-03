@@ -1100,9 +1100,16 @@ void CASeeDlg::OnMenuShowInfo()
 void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	trace(point);
+
 	//if (IsZoomed() && !m_imgDlg.is_lbutton_down() && !IsShiftPressed() && !IsCtrlPressed())
 	{
-		if (get_titlebar_height() < 32 && point.y < 32)
+		int min_y = 32;
+
+		if (IsZoomed())
+			min_y = 7;
+
+		if (get_titlebar_height() < 32 && point.y <= min_y)
 		{
 			set_titlebar_height(32);
 
@@ -1114,7 +1121,7 @@ void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 				m_imgDlg.MoveWindow(rc, false);
 			}
 		}
-		else if (get_titlebar_height() == 32 && point.y > 32)
+		else if (get_titlebar_height() == 32 && point.y > min_y)
 		{
 			set_titlebar_height(0);
 			CRect rc;
