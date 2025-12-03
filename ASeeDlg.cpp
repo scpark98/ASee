@@ -138,6 +138,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CSCThemeDlg)
 	ON_COMMAND(ID_MENU_SHOW_CURSOR_GUIDE_LINE, &CASeeDlg::OnMenuShowCursorGuideLine)
 	ON_WM_ACTIVATE()
 	ON_WM_TIMER()
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 
@@ -1093,6 +1094,11 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 		TRACE(_T("WM_MBUTTONDOWN\n"));
 		OnBnClickedOk();
 	}
+	else if (pMsg->message == WM_LBUTTONDOWN)
+	{
+		//TRACE(_T("WM_LBUTTONDOWN\n"));
+		//DefWindowProc(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(pMsg->pt.x, pMsg->pt.y));
+	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
@@ -1286,6 +1292,13 @@ LRESULT CASeeDlg::on_message_CSCImage2dDlg(WPARAM wParam, LPARAM lParam)
 	{
 		show_message(_T("맨 마지막 이미지"));
 	}
+	//else if (msg->msg == CSCImage2dDlg::message_lbuttondown)
+	//{
+	//	CPoint pt;
+	//	GetCursorPos(&pt);
+	//	ScreenToClient(&pt);
+	//	DefWindowProc(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(pt.x, pt.y));
+	//}
 
 
 	return 0;
@@ -1405,4 +1418,12 @@ void CASeeDlg::OnTimer(UINT_PTR nIDEvent)
 	}
 
 	CSCThemeDlg::OnTimer(nIDEvent);
+}
+
+void CASeeDlg::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	//DefWindowProc(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(point.x, point.y));
+
+	CSCThemeDlg::OnLButtonDown(nFlags, point);
 }
