@@ -47,9 +47,9 @@ BOOL CTitleDlg::OnInitDialog()
 	set_system_buttons(this, SC_MINIMIZE, SC_MAXIMIZE, SC_CLOSE);
 	//set_target_wnd(GetParent());
 	//set_title_font_bold();
-	set_titlebar_font_size(12);
-	set_titlebar_height(48);
-	set_titlebar_icon(IDR_MAINFRAME, 24, 24);
+	set_titlebar_font_size(9);
+	set_titlebar_height(28);
+	set_titlebar_icon(IDR_MAINFRAME, 16, 16);
 	set_draw_border(false);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -59,6 +59,13 @@ BOOL CTitleDlg::OnInitDialog()
 BOOL CTitleDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	if (pMsg->message == WM_KEYDOWN ||
+		pMsg->message == WM_KEYUP ||
+		pMsg->message == WM_NCHITTEST)
+	{
+		TRACE(_T("msg(%d) on CTitleDlg\n"), pMsg->message);
+		return FALSE;
+	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
@@ -116,4 +123,9 @@ void CTitleDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 	}
 
 	CSCThemeDlg::OnLButtonDblClk(nFlags, point);
+}
+
+int CTitleDlg::get_titlebar_height()
+{
+	return CSCThemeDlg::get_titlebar_height();
 }

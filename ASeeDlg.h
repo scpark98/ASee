@@ -10,13 +10,13 @@
 #include "Common/CDialog/SCShapeDlg/SCShapeDlg.h"
 #include "Common/ThumbCtrl/SCThumbCtrl.h"
 #include "Common/file_system/SCDirWatcher/SCDirWatcher.h"
-#include "Common/CDialog/SCThemeDlg/SCThemeDlg.h"
+//#include "Common/CDialog/SCThemeDlg/SCThemeDlg.h"
 
 #include "TitleDlg.h"
 #include "ZigzagColorDlg.h"
 
 // CASeeDlg 대화 상자
-class CASeeDlg : public CSCThemeDlg
+class CASeeDlg : public CDialogEx//CSCThemeDlg
 {
 // 생성입니다.
 public:
@@ -65,7 +65,6 @@ protected:
 	//title이 ""이면 현재 표시되는 이미지의 파일명으로 변경한다. 클립보드로부터 붙여 넣은 이미지의 경우는 "paste from clipboard"로 표시한다.
 	void			update_title(CString title = _T(""));
 
-	//CSCImageDlg		m_imgDlg;
 	CSCImage2dDlg	m_imgDlg;
 
 	CSCShapeDlg		m_message;
@@ -88,12 +87,12 @@ protected:
 //단일 인스턴스 허용시 쉘에서 넘어온 파라미터 처리
 	LRESULT			OnMessageShellCommandParameter(WPARAM, LPARAM);
 
-//타이틀바 및 시스템 버튼
-	CRect			m_rTitle;
-	CRect			m_rSysButton[3];
-	int				m_button_hover_index = -1;
-	bool			m_button_pressed;
+	CRect			m_border_thickness;		//resize 처리를 위한 기본 윈도우 테두리 두께. OnPaint()에서 그리는 테두리는 m_border_width.
+	//이 변수는 DwmExtendFrameIntoClientArea()과 관련된 변수로 true/false에 따라 동작하게 하려 했으나 false일 경우는 부작용이 많다. 우선 true로 고정한다.
+	//메인에서 WS_THICKFRAME을 주면 
+	//bool			m_has_thickframe = true;
 
+	int				m_corner_index = -1;	//커서가 코너의 어느 영역에 있는지
 
 
 	protected:
@@ -173,4 +172,7 @@ public:
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg BOOL OnNcActivate(BOOL bActive);
+	afx_msg void OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp);
+	afx_msg LRESULT OnNcHitTest(CPoint point);
 };

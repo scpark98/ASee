@@ -78,9 +78,6 @@
     <ClInclude Include="..\Common\CWnd\WndShadow\WndShadow.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="TitleDlg.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -125,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="..\LMM_Koino_service\LMMHost\tvnserver\CrashHandler.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleDlg.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

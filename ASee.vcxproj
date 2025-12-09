@@ -208,7 +208,16 @@
     <ClInclude Include="..\Common\CDialog\SCImage2dDlg\SCImage2dDlg.h" />
     <ClInclude Include="..\Common\CDialog\SCImageDlg\SCImageDlg.h" />
     <ClInclude Include="..\Common\CDialog\SCShapeDlg\SCShapeDlg.h" />
-    <ClInclude Include="..\Common\CDialog\SCThemeDlg\SCThemeDlg.h" />
+    <ClInclude Include="..\Common\CDialog\SCThemeDlg\SCThemeDlg.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\Common\CEdit\SCEdit\SCEdit.h" />
     <ClInclude Include="..\Common\colors.h" />
     <ClInclude Include="..\Common\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.h" />
@@ -285,6 +294,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\Common\CEdit\SCEdit\SCEdit.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>

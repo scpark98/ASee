@@ -59,17 +59,17 @@ END_MESSAGE_MAP()
 
 
 CASeeDlg::CASeeDlg(CWnd* pParent /*=nullptr*/)
-	: CSCThemeDlg(IDD_ASEE_DIALOG, pParent)
+	: CDialogEx(IDD_ASEE_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
 void CASeeDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CSCThemeDlg::DoDataExchange(pDX);
+	CDialogEx::DoDataExchange(pDX);
 }
 
-BEGIN_MESSAGE_MAP(CASeeDlg, CSCThemeDlg)
+BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
@@ -139,6 +139,9 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CSCThemeDlg)
 	ON_WM_ACTIVATE()
 	ON_WM_TIMER()
 	ON_WM_LBUTTONDOWN()
+	ON_WM_NCACTIVATE()
+	ON_WM_NCCALCSIZE()
+	ON_WM_NCHITTEST()
 END_MESSAGE_MAP()
 
 
@@ -146,7 +149,7 @@ END_MESSAGE_MAP()
 
 BOOL CASeeDlg::OnInitDialog()
 {
-	CSCThemeDlg::OnInitDialog();
+	CDialogEx::OnInitDialog();
 
 	// 시스템 메뉴에 "정보..." 메뉴 항목을 추가합니다.
 
@@ -174,18 +177,36 @@ BOOL CASeeDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	set_titlebar_height(32);
-	set_titlebar_icon(IDR_MAINFRAME, 16, 16);
+	// 
+	//WS_THICKFRAME이 들어가면 상단에 흰 영역이 생기는 부작용이 생긴다.
+	//child 구성 및 동작 방식에 따라 WS_CLIPCHILDREN을 추가해야 할 경우도 있다.
+	//LONG style = ::GetWindowLongPtr(m_hWnd, GWL_STYLE);
+	//style = style | (WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME);
+	//::SetWindowLongPtr(m_hWnd, GWL_STYLE, style);
+	SetWindowLongPtr(m_hWnd, GWL_STYLE, WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME);// | WS_CLIPCHILDREN);
 
-	SetWindowLong(m_hWnd, GWL_STYLE, WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME);
-	set_system_buttons(this, SC_MINIMIZE, SC_MAXIMIZE, SC_CLOSE);
+	//find border thickness
+	if (GetWindowLongPtr(m_hWnd, GWL_STYLE) & WS_THICKFRAME)
+	{
+		AdjustWindowRectEx(&m_border_thickness, GetWindowLongPtr(m_hWnd, GWL_STYLE) & ~WS_CAPTION, FALSE, NULL);
+		m_border_thickness.left *= -1;
+		m_border_thickness.top *= -1;
+	}
+	else if (GetWindowLongPtr(m_hWnd, GWL_STYLE) & WS_BORDER)
+	{
+		SetRect(&m_border_thickness, 1, 1, 1, 1);
+	}
 
-	//m_titleDlg.Create(IDD_TITLE, this);
-	//m_titleDlg.set_titlebar_movable(false);
+	MARGINS margins = { 0 };
+	DwmExtendFrameIntoClientArea(m_hWnd, &margins);
 
 	m_imgDlg.create(this);
 	m_imgDlg.set_dropper_cursor(IDC_CURSOR_DROPPER);
 	m_imgDlg.set_cross_cursor(IDC_CURSOR_CROSS);
+
+	m_titleDlg.Create(IDD_TITLE, this);
+	m_titleDlg.ShowWindow(SW_SHOW);
+	m_titleDlg.set_titlebar_movable(true);
 
 	m_message.set_text(this, _T(""), 40, Gdiplus::FontStyleBold, 4.0f, 2.4f);
 	m_message.set_stroke_color(Gdiplus::Color::Black);
@@ -264,12 +285,14 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 			//실제 적용할 이곳에서 IsZoomed()일 경우는 SC_RESTORE를 다시 전송하면 된다.
 			if (IsZoomed())
 			{
+				m_titleDlg.ShowWindow(SW_SHOW);
 				PostMessage(WM_SYSCOMMAND, SC_RESTORE);
-				return;
 			}
-
-			//m_titleDlg.parent_maximized(true);
-			//ModifyStyle(WS_CAPTION, 0);
+			else
+			{
+				m_titleDlg.ShowWindow(SW_HIDE);
+				m_titleDlg.parent_maximized(true);
+			}
 		}
 		else if ((nID & 0xFFF0) == SC_MINIMIZE)
 		{
@@ -277,8 +300,10 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 		}
 		else if ((nID & 0xFFF0) == SC_RESTORE)
 		{
-			//m_titleDlg.parent_maximized(false);
+			m_titleDlg.parent_maximized(false);
+			m_titleDlg.ShowWindow(SW_SHOW);
 
+			/*
 			//restore 시킬 때 전체화면에서 minimized 되었는지에 따라 ModifyStyle()로 캡션바를 없앨지를 처리해야 한다.
 			int is_zoomed = theApp.GetProfileInt(_T("setting"), _T("is zoomed"), false);
 			//아직 CDialogEx::OnSysCommand(nID, lParam);가 호출되기 전이므로 아래 if문의 IsZoomed()는 올바른 값을 리턴하지 못한다.
@@ -286,10 +311,10 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 			//좀 더 정석적인 해결책이 필요하다.
 			if (IsZoomed() || !is_zoomed)
 			{
-				//m_titleDlg.parent_maximized(true);
-				//m_titleDlg.ShowWindow(SW_HIDE);
-				//ModifyStyle(0, WS_CAPTION | WS_THICKFRAME);
+				m_titleDlg.parent_maximized(true);
+				m_titleDlg.ShowWindow(SW_HIDE);
 			}
+			*/
 		}
 
 		CDialogEx::OnSysCommand(nID, lParam);
@@ -323,7 +348,7 @@ void CASeeDlg::OnPaint()
 	{
 		//CASeeDlg::OnPaint()에서 특별히 하는 일이 없어도 기본으로 생성된 코드인 CDialogEx::OnPaint(); 코드를 생략해선 안된다.
 		//생략할 경우 maximize, restore시에 제대로 이벤트가 발생하지 않는다.
-		CSCThemeDlg::OnPaint();
+		CDialogEx::OnPaint();
 	}
 }
 
@@ -337,33 +362,19 @@ HCURSOR CASeeDlg::OnQueryDragIcon()
 
 void CASeeDlg::OnBnClickedOk()
 {
-	//m_notice.ShowWindow(SW_HIDE);
-
-	if (!IsZoomed())
-	{
-		//ShowWindow(SW_HIDE);
-		//ModifyStyle(WS_CAPTION | WS_THICKFRAME, 0);
-		ShowWindow(SW_MAXIMIZE);
-	}
-	else
-	{
-		//ModifyStyle(0, WS_CAPTION | WS_THICKFRAME);
-		ShowWindow(SW_RESTORE);
-	}
+	PostMessage(WM_SYSCOMMAND, IsZoomed() ? SC_RESTORE : SC_MAXIMIZE);
 }
 
 void CASeeDlg::OnBnClickedCancel()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	//if (m_files.size() && m_index >= 0)
-	//	theApp.WriteProfileString(_T("setting"), _T("recent file"), m_files[m_index]);
 
 	CDialogEx::OnCancel();
 }
 
 void CASeeDlg::OnSize(UINT nType, int cx, int cy)
 {
-	CSCThemeDlg::OnSize(nType, cx, cy);
+	CDialogEx::OnSize(nType, cx, cy);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 	if (m_imgDlg.m_hWnd == NULL)// || m_titleDlg.m_hWnd == NULL)
@@ -371,11 +382,22 @@ void CASeeDlg::OnSize(UINT nType, int cx, int cy)
 
 	CRect rc;
 	GetClientRect(rc);
-	rc.top = get_titlebar_height();
-	m_imgDlg.MoveWindow(rc, false);
 
-	//rc.bottom = rc.top + m_titleDlg.get_titlebar_height();
-	//m_titleDlg.MoveWindow(rc);
+	CRect r = rc;
+
+	r.bottom = m_titleDlg.get_titlebar_height();
+	m_titleDlg.MoveWindow(r);
+
+	if (IsZoomed())
+	{
+		m_imgDlg.MoveWindow(rc, false);
+	}
+	else
+	{
+		r = rc;
+		r.top = m_titleDlg.get_titlebar_height();
+		m_imgDlg.MoveWindow(r, false);
+	}
 }
 
 void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
@@ -383,21 +405,24 @@ void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
 	CDialogEx::OnWindowPosChanged(lpwndpos);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
-	if (m_imgDlg.m_hWnd == NULL)// || m_titleDlg.m_hWnd == NULL)
-		return;
-
 	CRect rc;
 	GetClientRect(rc);
-	rc.top = get_titlebar_height();
-	m_imgDlg.MoveWindow(rc, false);
 
-	//CRect rw;
-	//GetWindowRect(rw);
-	//rw.bottom = rw.top + m_titleDlg.get_titlebar_height();
-	//m_titleDlg.MoveWindow(rw);
-	//ClientToScreen(rw);
+	CRect r = rc;
 
-	//SetTimer(timer_refresh_title_area, 1, NULL);
+	r.bottom = m_titleDlg.get_titlebar_height();
+	m_titleDlg.MoveWindow(r);
+
+	if (IsZoomed())
+	{
+		m_imgDlg.MoveWindow(rc, false);
+	}
+	else
+	{
+		r = rc;
+		r.top = m_titleDlg.get_titlebar_height();
+		m_imgDlg.MoveWindow(r, false);
+	}
 
 	SaveWindowPosition(&theApp, this);
 }
@@ -450,8 +475,8 @@ void CASeeDlg::update_title(CString title)
 	}
 
 	m_imgDlg.set_alt_info(alt_info);
-	SetWindowText(str);
-	//m_titleDlg.update_title(str);
+	//SetWindowText(str);
+	m_titleDlg.update_title(str);
 }
 
 void CASeeDlg::execute_video()
@@ -1113,7 +1138,23 @@ void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	trace(point);
+	trace(m_titleDlg.IsWindowVisible());
 
+	int min_y = 32;
+
+	if (IsZoomed())
+		min_y = 7;
+
+	if (!m_titleDlg.IsWindowVisible() && point.y <= min_y)
+	{
+		m_titleDlg.ShowWindow(SW_SHOW);
+		//m_titleDlg.Invalidate();
+	}
+	else// if (m_titleDlg.IsWindowVisible())
+	{
+		//m_titleDlg.ShowWindow(SW_HIDE);
+	}
+	/*
 	//if (IsZoomed() && !m_imgDlg.is_lbutton_down() && !IsShiftPressed() && !IsCtrlPressed())
 	{
 		int min_y = 32;
@@ -1146,6 +1187,7 @@ void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 		//else if (m_titleDlg.IsWindowVisible() && point.y > m_titleDlg.get_titlebar_height() + 10)
 		//	m_titleDlg.ShowWindow(SW_HIDE);
 	}
+	*/
 
 	CDialogEx::OnMouseMove(nFlags, point);
 }
@@ -1389,7 +1431,7 @@ void CASeeDlg::OnMenuShowCursorGuideLine()
 
 void CASeeDlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
-	CSCThemeDlg::OnActivate(nState, pWndOther, bMinimized);
+	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 	if (nState == 0)
@@ -1417,7 +1459,7 @@ void CASeeDlg::OnTimer(UINT_PTR nIDEvent)
 		m_imgDlg.Invalidate(false);
 	}
 
-	CSCThemeDlg::OnTimer(nIDEvent);
+	CDialogEx::OnTimer(nIDEvent);
 }
 
 void CASeeDlg::OnLButtonDown(UINT nFlags, CPoint point)
@@ -1425,5 +1467,76 @@ void CASeeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	//DefWindowProc(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(point.x, point.y));
 
-	CSCThemeDlg::OnLButtonDown(nFlags, point);
+	CDialogEx::OnLButtonDown(nFlags, point);
+}
+
+BOOL CASeeDlg::OnNcActivate(BOOL bActive)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	
+	//이 처리를 해주지 않으면 activate 상태 변화가 생길때 흰색선이 보여진다.
+	return FALSE;
+	//return CDialogEx::OnNcActivate(bActive);
+}
+
+void CASeeDlg::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	//resizing 상태를 감지하기 위한 마진 설정
+	if (lpncsp)
+	{
+		lpncsp->rgrc[0].left += m_border_thickness.left;
+		lpncsp->rgrc[0].right -= m_border_thickness.right;
+		lpncsp->rgrc[0].bottom -= m_border_thickness.bottom;
+		return;
+	}
+
+	CDialogEx::OnNcCalcSize(bCalcValidRects, lpncsp);
+}
+
+LRESULT CASeeDlg::OnNcHitTest(CPoint point)
+{
+	DWORD win_ver = get_windows_major_version();
+	LRESULT result;
+
+	if (win_ver >= 10)
+	{
+		result = CDialogEx::OnNcHitTest(point);
+
+		if (result == HTCLIENT)
+		{
+			ScreenToClient(&point);
+			if (point.y < m_border_thickness.top)
+				return HTTOP;
+		}
+	}
+	else
+	{
+		CRect rc;
+
+		GetClientRect(rc);
+
+		enum { left = 1, top = 2, right = 4, bottom = 8 };
+
+		int hit = 0;
+
+		if (point.x < m_border_thickness.left) hit |= left;
+		if (point.x > rc.right - m_border_thickness.right) hit |= right;
+		if (point.y < m_border_thickness.top) hit |= top;
+		if (point.y > rc.bottom - m_border_thickness.bottom) hit |= bottom;
+
+		if (hit & top && hit & left) return HTTOPLEFT;
+		if (hit & top && hit & right) return HTTOPRIGHT;
+		if (hit & bottom && hit & left) return HTBOTTOMLEFT;
+		if (hit & bottom && hit & right) return HTBOTTOMRIGHT;
+		if (hit & left) return HTLEFT;
+		if (hit & top) return HTTOP;
+		if (hit & right) return HTRIGHT;
+		if (hit & bottom) return HTBOTTOM;
+
+		return HTCLIENT;
+	}
+
+	return result;
 }

@@ -14,6 +14,7 @@ public:
 	virtual ~CTitleDlg();
 
 	void		update_title(CString title);
+	int			get_titlebar_height();
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
