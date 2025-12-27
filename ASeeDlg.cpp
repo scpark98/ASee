@@ -490,6 +490,7 @@ void CASeeDlg::execute_video()
 
 	//movie.avi.jpg의 타이틀이 movie.avi이므로 타이틀에 포함된 동영상 확장자까지 모두 제거해줘야 한다.
 	if (GetFileTypeFromExtension(ext) == FILE_TYPE_VIDEO)
+
 		stitle = get_part(stitle, fn_title);
 
 	std::deque<CString> dqFiles;
