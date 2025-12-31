@@ -182,3 +182,10 @@ void CZigzagColorDlg::OnBnClickedRadioCustom()
 	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_zigzag_color(m_cr_back, m_cr_fore);
 	theApp.WriteProfileInt(_T("setting"), _T("zigzag option"), 3);
 }
+
+BOOL CZigzagColorDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+	TRACE(_T("CZigzagColorDlg::PreTranslateMessage. pMsg->message = %d\n"), pMsg->message);
+	return CDialogEx::PreTranslateMessage(pMsg);
+}

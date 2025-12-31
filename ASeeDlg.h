@@ -36,6 +36,11 @@ protected:
 	enum TIMER_ID
 	{
 		timer_refresh_title_area,
+
+		//언제부터인가 dlg 시작 후 m_imgDlg가 갱신되지 않은 상태로 시작된다.
+		//아마 CSCD2Context로 on_size_changed()를 옮기면서 발생되는 현상인듯하다.
+		//임시로 프로그램 시작 시 타이머로 m_imgDlg.Invalidate()을 강제 호출하며 시작되도록 우선 조치한다.
+		timer_refresh_image_area,
 	};
 
 	enum RECENT_FOLDERS_POPUP_MENU

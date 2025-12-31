@@ -95,6 +95,7 @@ void CTitleDlg::OnSysCommand(UINT nID, LPARAM lParam)
 void CTitleDlg::update_title(CString title)
 {
 	SetWindowText(title);
+	Invalidate();
 }
 
 //CSCThemeDlg에서 타이틀바를 더블클릭하면 maximize 또는 restore 시켜야 하는데

@@ -256,6 +256,8 @@ BOOL CASeeDlg::OnInitDialog()
 
 	m_zigzagColorDlg.Create(IDD_ZIGZAG_COLOR, this);
 
+	SetTimer(timer_refresh_image_area, 1, NULL);
+
 	/* for test 좌표변환 시 소실되는 값 확인용
 	CRect displayed(0, 0, 789, 675);
 	Gdiplus::RectF scr(123, 235, 413, 523), img;
@@ -388,16 +390,13 @@ void CASeeDlg::OnSize(UINT nType, int cx, int cy)
 	r.bottom = m_titleDlg.get_titlebar_height();
 	m_titleDlg.MoveWindow(r);
 
-	if (IsZoomed())
-	{
-		m_imgDlg.MoveWindow(rc, false);
-	}
-	else
+	if (!IsZoomed())
 	{
 		r = rc;
 		r.top = m_titleDlg.get_titlebar_height();
-		m_imgDlg.MoveWindow(r, false);
 	}
+
+	m_imgDlg.MoveWindow(r, false);
 }
 
 void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
@@ -475,7 +474,11 @@ void CASeeDlg::update_title(CString title)
 	}
 
 	m_imgDlg.set_alt_info(alt_info);
-	//SetWindowText(str);
+
+	//mainDlg의 타이틀 또한 같이 갱신되어야 한다.
+	//그래야만 탐색기에서 이미지 파일을 열 경우 "ASee - "로 시작되는 프로세스를 찾아서 열어줄 수 있다.
+	SetWindowText(str);
+
 	m_titleDlg.update_title(str);
 }
 
@@ -890,6 +893,9 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 		if (m_imgDlg.m_thumb.is_editing())
 			return false;
 
+		//if (IsChild(GetFocus()))
+		//	return FALSE;
+
 		CRect rc;
 		GetClientRect(rc);
 
@@ -901,9 +907,9 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 		TRACE(_T("%s : %d\n"), __function__, pMsg->wParam);
 		switch (pMsg->wParam)
 		{
-			case VK_ESCAPE:
-				OnBnClickedCancel();
-				return true;
+			//case VK_ESCAPE:
+			//	OnBnClickedCancel();
+			//	return true;
 			case VK_RETURN:
 				if (IsCtrlPressed())
 				{
@@ -1122,7 +1128,7 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 	}
 	else if (pMsg->message == WM_LBUTTONDOWN)
 	{
-		//TRACE(_T("WM_LBUTTONDOWN\n"));
+		TRACE(_T("WM_LBUTTONDOWN\n"));
 		//DefWindowProc(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(pMsg->pt.x, pMsg->pt.y));
 	}
 
@@ -1138,8 +1144,8 @@ void CASeeDlg::OnMenuShowInfo()
 void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	trace(point);
-	trace(m_titleDlg.IsWindowVisible());
+	//trace(point);
+	//trace(m_titleDlg.IsWindowVisible());
 
 	int min_y = 32;
 
@@ -1459,6 +1465,11 @@ void CASeeDlg::OnTimer(UINT_PTR nIDEvent)
 
 		m_imgDlg.Invalidate(false);
 	}
+	else if (nIDEvent == timer_refresh_image_area)
+	{
+		KillTimer(timer_refresh_image_area);
+		m_imgDlg.Invalidate(false);
+	}
 
 	CDialogEx::OnTimer(nIDEvent);
 }
@@ -1476,8 +1487,13 @@ BOOL CASeeDlg::OnNcActivate(BOOL bActive)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	
 	//이 처리를 해주지 않으면 activate 상태 변화가 생길때 흰색선이 보여진다.
-	return FALSE;
-	//return CDialogEx::OnNcActivate(bActive);
+	//return FALSE;
+	//위와 같이 return FALSE;를 하면 popup dialog의 버튼 클릭 이벤트가 모두 무시되는 현상이 발생한다.
+	//우선 아래와 같이 강제 invalidate()을 시켰으나 깜빡임이 발생한다.
+	if (m_titleDlg.m_hWnd)
+		m_titleDlg.Invalidate();
+
+	return CDialogEx::OnNcActivate(bActive);
 }
 
 void CASeeDlg::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp)

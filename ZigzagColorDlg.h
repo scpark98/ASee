@@ -47,4 +47,5 @@ public:
 	afx_msg void OnBnClickedRadioBlack();
 	CButton m_radio_custom;
 	afx_msg void OnBnClickedRadioCustom();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };
