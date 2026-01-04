@@ -235,7 +235,7 @@ BOOL CASeeDlg::OnInitDialog()
 	CString sfile = theApp.GetProfileString(_T("setting"), _T("shell parameter"), _T(""));
 
 	//탐색기 등에서 직접 이미지 파일을 연 경우
-	if (!sfile.IsEmpty() && GetFileTypeFromFilename(sfile) == FILE_TYPE_IMAGE)
+	if (!sfile.IsEmpty() && get_filetype_from_filename(sfile) == FILE_TYPE_IMAGE)
 	{
 		m_imgDlg.display_image(sfile, true);
 		theApp.WriteProfileString(_T("setting"), _T("shell parameter"), _T(""));
@@ -244,7 +244,7 @@ BOOL CASeeDlg::OnInitDialog()
 	else
 	{
 		sfile = theApp.GetProfileString(_T("setting\\CSCImage2dDlg"), _T("recent file"), _T(""));
-		if (PathFileExists(sfile) && !sfile.IsEmpty() && GetFileTypeFromFilename(sfile) == FILE_TYPE_IMAGE)
+		if (PathFileExists(sfile) && !sfile.IsEmpty() && get_filetype_from_filename(sfile) == FILE_TYPE_IMAGE)
 		{
 			m_imgDlg.display_image(sfile, true);
 		}
@@ -492,7 +492,7 @@ void CASeeDlg::execute_video()
 	CString folder = get_part(sfile, fn_folder);
 
 	//movie.avi.jpg의 타이틀이 movie.avi이므로 타이틀에 포함된 동영상 확장자까지 모두 제거해줘야 한다.
-	if (GetFileTypeFromExtension(ext) == FILE_TYPE_VIDEO)
+	if (get_filetype_from_extension(ext) == FILE_TYPE_VIDEO)
 
 		stitle = get_part(stitle, fn_title);
 
