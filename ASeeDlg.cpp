@@ -287,11 +287,13 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 			//실제 적용할 이곳에서 IsZoomed()일 경우는 SC_RESTORE를 다시 전송하면 된다.
 			if (IsZoomed())
 			{
+				TRACE(_T("show\n"));
 				m_titleDlg.ShowWindow(SW_SHOW);
 				PostMessage(WM_SYSCOMMAND, SC_RESTORE);
 			}
 			else
 			{
+				TRACE(_T("hide\n"));
 				m_titleDlg.ShowWindow(SW_HIDE);
 				m_titleDlg.parent_maximized(true);
 			}
@@ -395,6 +397,8 @@ void CASeeDlg::OnSize(UINT nType, int cx, int cy)
 		r = rc;
 		r.top = m_titleDlg.get_titlebar_height();
 	}
+	else
+		r.top += 15;
 
 	m_imgDlg.MoveWindow(r, false);
 }
@@ -409,7 +413,7 @@ void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
 
 	CRect r = rc;
 
-	r.bottom = m_titleDlg.get_titlebar_height();
+	r.bottom = r.top + m_titleDlg.get_titlebar_height();
 	m_titleDlg.MoveWindow(r);
 
 	if (IsZoomed())
@@ -1145,21 +1149,31 @@ void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	//trace(point);
-	//trace(m_titleDlg.IsWindowVisible());
-
-	int min_y = 32;
-
 	if (IsZoomed())
-		min_y = 7;
+	{
+		trace(m_titleDlg.IsWindowVisible());
+		CRect rw;
+		m_titleDlg.GetWindowRect(rw);
+		TRACE(_T("r = %s\n"), get_rect_info_str(rw));
+		int min_y = 32;
 
-	if (!m_titleDlg.IsWindowVisible() && point.y <= min_y)
-	{
-		m_titleDlg.ShowWindow(SW_SHOW);
-		//m_titleDlg.Invalidate();
-	}
-	else// if (m_titleDlg.IsWindowVisible())
-	{
-		//m_titleDlg.ShowWindow(SW_HIDE);
+		//if (IsZoomed())
+		//	min_y = 7;
+
+		if (/*!m_titleDlg.IsWindowVisible() && */point.y <= min_y)
+		{
+			TRACE(_T("show\n"));
+			m_titleDlg.ShowWindow(SW_SHOW);
+			m_titleDlg.SetWindowPos(&m_imgDlg, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
+			m_imgDlg.SetWindowPos(&wndNoTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+			SetForegroundWindowForce(m_titleDlg.m_hWnd, true);
+			//m_titleDlg.Invalidate();
+		}
+		else if (m_titleDlg.IsWindowVisible())
+		{
+			TRACE(_T("hide\n"));
+			m_titleDlg.ShowWindow(SW_HIDE);
+		}
 	}
 	/*
 	//if (IsZoomed() && !m_imgDlg.is_lbutton_down() && !IsShiftPressed() && !IsCtrlPressed())
