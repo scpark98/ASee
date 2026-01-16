@@ -1511,10 +1511,12 @@ void CASeeDlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 	if (nState == 0)
 	{
+		m_titleDlg.refresh_activate_status(false);
 		SetTimer(timer_refresh_title_area, 1, NULL);
 	}
 	else
 	{
+		m_titleDlg.refresh_activate_status(true);
 		KillTimer(timer_refresh_title_area);
 	}
 }
