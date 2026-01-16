@@ -217,6 +217,11 @@ BOOL CASeeDlg::OnInitDialog()
 
 	RestoreWindowPosition(&theApp, this);
 
+	if (theApp.GetProfileInt(_T("screen"), _T("maximized"), false))
+	{
+		m_titleDlg.ModifyStyle(WS_CHILD, WS_POPUP);
+		m_titleDlg.SetParent(NULL);
+	}
 	/*
 	if (IsZoomed())
 	{
@@ -288,12 +293,26 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 			if (IsZoomed())
 			{
 				TRACE(_T("show\n"));
+				m_titleDlg.ModifyStyle(WS_POPUP, WS_CHILD);
+				m_titleDlg.SetParent(this);
+				/*
+				CRect rc;
+				GetClientRect(rc);
+
+				CRect r = rc;
+
+				r.bottom = r.top + m_titleDlg.get_titlebar_height();
+				m_titleDlg.MoveWindow(r);
+				*/
+
 				m_titleDlg.ShowWindow(SW_SHOW);
 				PostMessage(WM_SYSCOMMAND, SC_RESTORE);
 			}
 			else
 			{
 				TRACE(_T("hide\n"));
+				m_titleDlg.ModifyStyle(WS_CHILD, WS_POPUP);
+				m_titleDlg.SetParent(NULL);
 				m_titleDlg.ShowWindow(SW_HIDE);
 				m_titleDlg.parent_maximized(true);
 			}
@@ -305,6 +324,18 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 		else if ((nID & 0xFFF0) == SC_RESTORE)
 		{
 			m_titleDlg.parent_maximized(false);
+
+			m_titleDlg.ModifyStyle(WS_POPUP, WS_CHILD);
+			m_titleDlg.SetParent(this);
+			/*
+			CRect rc;
+			GetClientRect(rc);
+
+			CRect r = rc;
+
+			r.bottom = r.top + m_titleDlg.get_titlebar_height();
+			m_titleDlg.MoveWindow(r);
+			*/
 			m_titleDlg.ShowWindow(SW_SHOW);
 
 			/*
@@ -408,10 +439,14 @@ void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
 	CDialogEx::OnWindowPosChanged(lpwndpos);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
-	CRect rc;
+	CRect rc, rw;
 	GetClientRect(rc);
+	GetWindowRect(rw);
 
 	CRect r = rc;
+
+	if (IsZoomed())
+		r = rw;
 
 	r.bottom = r.top + m_titleDlg.get_titlebar_height();
 	m_titleDlg.MoveWindow(r);

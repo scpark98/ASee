@@ -9,7 +9,7 @@
 
 // CTitleDlg 대화 상자
 
-IMPLEMENT_DYNAMIC(CTitleDlg, CDialogEx)
+IMPLEMENT_DYNAMIC(CTitleDlg, CSCThemeDlg)
 
 CTitleDlg::CTitleDlg(CWnd* pParent /*=nullptr*/)
 	: CSCThemeDlg(IDD_TITLE, pParent)
@@ -32,6 +32,7 @@ BEGIN_MESSAGE_MAP(CTitleDlg, CSCThemeDlg)
 	ON_BN_CLICKED(IDCANCEL, &CTitleDlg::OnBnClickedCancel)
 	ON_WM_SYSCOMMAND()
 	ON_WM_LBUTTONDBLCLK()
+	ON_WM_CREATE()
 END_MESSAGE_MAP()
 
 
@@ -76,7 +77,7 @@ void CTitleDlg::OnBnClickedOk()
 
 void CTitleDlg::OnBnClickedCancel()
 {
-	::PostMessage(GetParent()->GetSafeHwnd(), WM_SYSCOMMAND, SC_CLOSE, 0);
+	::PostMessage(m_parent->m_hWnd, WM_SYSCOMMAND, SC_CLOSE, 0);
 }
 
 void CTitleDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -89,7 +90,7 @@ void CTitleDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	if (nID == SC_MAXIMIZE)
 		ShowWindow(SW_HIDE);
 
-	::PostMessage(GetParent()->GetSafeHwnd(), WM_SYSCOMMAND, nID, lParam);
+	::PostMessage(m_parent->m_hWnd, WM_SYSCOMMAND, nID, lParam);
 }
 
 void CTitleDlg::update_title(CString title)
@@ -109,18 +110,16 @@ void CTitleDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 	{
 		//실제 maximize or restore를 수행할 윈도우가 이 윈도우라면 target = this지만
 		//이 프로젝트에서는 CTitleDlg가 아니라 CASeeDlg이므로 target = GetParent()가 된다.
-		CWnd* target = GetParent();
-
 		//프로그램 아이콘을 더블클릭한 경우
 		if (point.x < 32)
 		{
-			target->SendMessage(WM_SYSCOMMAND, SC_CLOSE);
+			m_parent->SendMessage(WM_SYSCOMMAND, SC_CLOSE);
 			return;
 		}
 
 		//maximize, restore도 캡션바 show/hide 등의 부가적인 처리가 필요하므로
 		//이 클래스에서 직접 처리하지말고 CASeeDlg에서 처리해야 한다.
-		target->SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE);
+		m_parent->SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE);
 	}
 
 	CSCThemeDlg::OnLButtonDblClk(nFlags, point);
@@ -129,4 +128,15 @@ void CTitleDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 int CTitleDlg::get_titlebar_height()
 {
 	return CSCThemeDlg::get_titlebar_height();
+}
+
+int CTitleDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CSCThemeDlg::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	// TODO:  여기에 특수화된 작성 코드를 추가합니다.
+	m_parent = AfxGetApp()->GetMainWnd();// AfxGetMainWnd();
+
+	return 0;
 }
