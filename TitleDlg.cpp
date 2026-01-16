@@ -49,7 +49,7 @@ BOOL CTitleDlg::OnInitDialog()
 	//set_target_wnd(GetParent());
 	//set_title_font_bold();
 	set_titlebar_font_size(9);
-	set_titlebar_height(28);
+	//set_titlebar_height(32);
 	set_titlebar_icon(IDR_MAINFRAME, 16, 16);
 	set_draw_border(false);
 

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "afxdialogex.h"
 
-#include "../Common/CDialog/SCThemeDlg/SCThemeDlg.h"
+#include "Common/CDialog/SCThemeDlg/SCThemeDlg.h"
 
 // CTitleDlg 대화 상자
 

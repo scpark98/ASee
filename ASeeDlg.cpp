@@ -450,7 +450,22 @@ void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
 	CRect r = rc;
 
 	if (IsZoomed())
+	{
+		//zoomed 일때는 타이틀바를 WS_POPUP으로 변경하여 표시하는데 DWM의 영향으로 rw의 값이 실제 모니터 영역보다 크게 리턴된다.
+		//이를 보정해줘야 한다. 또는 아래와 같이 zoomed일때는 속해있는 모니터의 크기값으로 대체하는 것이 좋다.
+		//(GPT도 이를 추천)
 		r = rw;
+		int index = get_monitor_index(r.CenterPoint().x, r.CenterPoint().y);
+		r = g_monitors[index].rMonitor;
+
+		//DWM을 이용하여 실제 윈도우 크기를 얻는 방법인데 이 역시 zoomed 상태에서는 올바른 값을 얻지 못한다.
+		//HRESULT hr = DwmGetWindowAttribute(
+		//	m_hWnd,
+		//	DWMWA_EXTENDED_FRAME_BOUNDS,
+		//	&r,
+		//	sizeof(r)
+		//);
+	}
 
 	r.bottom = r.top + m_titleDlg.get_titlebar_height();
 	m_titleDlg.MoveWindow(r);
