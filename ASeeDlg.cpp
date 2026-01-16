@@ -221,6 +221,7 @@ BOOL CASeeDlg::OnInitDialog()
 	{
 		m_titleDlg.ModifyStyle(WS_CHILD, WS_POPUP);
 		m_titleDlg.SetParent(NULL);
+		m_titleDlg.set_titlebar_movable(false);
 	}
 	/*
 	if (IsZoomed())
@@ -295,6 +296,7 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 				TRACE(_T("show\n"));
 				m_titleDlg.ModifyStyle(WS_POPUP, WS_CHILD);
 				m_titleDlg.SetParent(this);
+				m_titleDlg.set_titlebar_movable(true);
 				/*
 				CRect rc;
 				GetClientRect(rc);
@@ -313,6 +315,7 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 				TRACE(_T("hide\n"));
 				m_titleDlg.ModifyStyle(WS_CHILD, WS_POPUP);
 				m_titleDlg.SetParent(NULL);
+				m_titleDlg.set_titlebar_movable(false);
 				m_titleDlg.ShowWindow(SW_HIDE);
 				m_titleDlg.parent_maximized(true);
 			}
@@ -327,6 +330,7 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 
 			m_titleDlg.ModifyStyle(WS_POPUP, WS_CHILD);
 			m_titleDlg.SetParent(this);
+			m_titleDlg.set_titlebar_movable(true);
 			/*
 			CRect rc;
 			GetClientRect(rc);
