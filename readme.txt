@@ -7,7 +7,7 @@
 [수정할 내용]
 - 원본크기로 표시인 경우 화면보다 큰 이미지라면 화면크기에 맞춰 표시해야 한다.
   그렇다고 fit2ctrl을 true로 강제 변경하진 않는다.
-- Ctrl+Enter 전체 모니터 크기로 확대?
+- Ctrl+Enter 전체 멀티모니터 크기로 확대?
 - thumb context 메뉴에서 theme 선택
 - recalc_tile_rect()에서 우측 여백이 남을 경우 tile_gap.cx를 늘려주고 다시 계산한다.
 

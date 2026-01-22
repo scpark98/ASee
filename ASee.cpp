@@ -99,20 +99,21 @@ BOOL CASeeApp::InitInstance()
 		//SetForegroundWindow(hWnd);
 		//SetActiveWindow(hWnd);
 
-		if (true)//::IsIconic(hWnd))
+		if (::IsIconic(hWnd))
 		{
 			//msgbox(_T("before SendMessage, Message_CASeeApp = %d"), Message_CASeeApp);
 			//최소화 버튼을 눌러서 최소화 시킨 경우는 왜 restore가 안될까...
 			//작업표시줄에서 토글로 최소화 시킨 경우는 잘 동작한다.
-			//::ShowWindow(hWnd, SW_RESTORE);
+			::ShowWindow(hWnd, SW_RESTORE);
+			Wait(10);
 			::SendMessage(hWnd, Message_CASeeApp, 0, 0);
 			//msgbox(_T("after SendMessage, Message_CASeeApp = %d"), Message_CASeeApp);
 		}
 		else
 		{
-			msgbox(_T("not iconic"));
+			//msgbox(_T("not iconic"));
 			::SendMessage(hWnd, Message_CASeeApp, 0, 0);
-			msgbox(_T("after SendMessage, Message_CASeeApp = %d"), Message_CASeeApp);
+			//msgbox(_T("after SendMessage, Message_CASeeApp = %d"), Message_CASeeApp);
 		}
 
 		m_hMutex = NULL;

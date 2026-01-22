@@ -31,7 +31,7 @@ BEGIN_MESSAGE_MAP(CTitleDlg, CSCThemeDlg)
 	ON_BN_CLICKED(IDOK, &CTitleDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDCANCEL, &CTitleDlg::OnBnClickedCancel)
 	ON_WM_SYSCOMMAND()
-	ON_WM_LBUTTONDBLCLK()
+	//ON_WM_LBUTTONDBLCLK()
 	ON_WM_CREATE()
 END_MESSAGE_MAP()
 
@@ -99,9 +99,11 @@ void CTitleDlg::update_title(CString title)
 	Invalidate();
 }
 
-//CSCThemeDlg에서 타이틀바를 더블클릭하면 maximize 또는 restore 시켜야 하는데
+//CSCThemeDlg에서 타이틀바를 더블클릭하면 대상 윈도우를 maximize 또는 restore 시켜야 하는데
 //그 대상은 현재 윈도우가 될 수도 있고 현재 윈도우의 parent가 될 수도 있다.
 //따라서 CSCThemeDlg에 이 핸들러를 정의할 수 없다.
+//하지만 매번 타깃 윈도우가 다를 경우 이러한 처리를 추가하는 것도 번거로우므로
+//타깃 윈도우를 지정해서	그 타깃 윈도우에 메시지를 보내도록 하는 방법도 있다.
 //타깃 윈도우에 SC_MAXIMIZE를 보내면 타깃 윈도우에서 상황에 맞게 maximize 또는 restore로 처리되어야 한다.
 void CTitleDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
@@ -122,7 +124,8 @@ void CTitleDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 		m_parent->SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE);
 	}
 
-	CSCThemeDlg::OnLButtonDblClk(nFlags, point);
+	CDialogEx::OnLButtonDblClk(nFlags, point);
+	//CSCThemeDlg::OnLButtonDblClk(nFlags, point);
 }
 
 int CTitleDlg::get_titlebar_height()
