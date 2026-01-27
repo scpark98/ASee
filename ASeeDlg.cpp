@@ -222,6 +222,7 @@ BOOL CASeeDlg::OnInitDialog()
 		m_titleDlg.ModifyStyle(WS_CHILD, WS_POPUP);
 		m_titleDlg.SetParent(NULL);
 		m_titleDlg.set_titlebar_movable(false);
+		m_titleDlg.parent_maximized(true);
 	}
 	/*
 	if (IsZoomed())
@@ -1208,25 +1209,30 @@ void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 		trace(m_titleDlg.IsWindowVisible());
 		CRect rw;
 		m_titleDlg.GetWindowRect(rw);
-		TRACE(_T("r = %s\n"), get_rect_info_str(rw));
-		int min_y = 32;
+		trace(get_rect_info_str(rw));
+		//int min_y = 32;
 
 		//if (IsZoomed())
 		//	min_y = 7;
 
-		if (/*!m_titleDlg.IsWindowVisible() && */point.y <= min_y)
+		if (m_titleDlg.is_in_sliding() == false)
 		{
-			TRACE(_T("show\n"));
-			m_titleDlg.ShowWindow(SW_SHOW);
-			m_titleDlg.SetWindowPos(&m_imgDlg, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
-			m_imgDlg.SetWindowPos(&wndNoTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
-			SetForegroundWindowForce(m_titleDlg.m_hWnd, true);
-			//m_titleDlg.Invalidate();
-		}
-		else if (m_titleDlg.IsWindowVisible())
-		{
-			TRACE(_T("hide\n"));
-			m_titleDlg.ShowWindow(SW_HIDE);
+			if (point.y <= m_titleDlg.get_titlebar_height())
+			{
+				TRACE(_T("show\n"));
+				//m_titleDlg.ShowWindow(SW_SHOW);
+				m_titleDlg.sliding_show(true);
+				//m_titleDlg.SetWindowPos(&m_imgDlg, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
+				//m_imgDlg.SetWindowPos(&wndNoTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+				//SetForegroundWindowForce(m_titleDlg.m_hWnd, true);
+				//m_titleDlg.Invalidate();
+			}
+			else if (m_titleDlg.IsWindowVisible())
+			//{
+			//	TRACE(_T("hide\n"));
+			//	//m_titleDlg.ShowWindow(SW_HIDE);
+				m_titleDlg.sliding_show(false);
+			//}
 		}
 	}
 	/*
@@ -1509,6 +1515,9 @@ void CASeeDlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
+	if (m_titleDlg.is_in_sliding())
+		return;
+
 	if (nState == 0)
 	{
 		//m_titleDlg.refresh_activate_status(false);
@@ -1527,18 +1536,12 @@ void CASeeDlg::OnTimer(UINT_PTR nIDEvent)
 	if (nIDEvent == timer_refresh_title_area)
 	{
 		KillTimer(nIDEvent);
-		CRect rc;
-		GetClientRect(rc);
-		rc.bottom = 10;
-		//InvalidateRect(rc, false);
-		//m_sys_buttons.Invalidate();
-
-		m_imgDlg.Invalidate(false);
+		//m_imgDlg.Invalidate(false);
 	}
 	else if (nIDEvent == timer_refresh_image_area)
 	{
 		KillTimer(timer_refresh_image_area);
-		m_imgDlg.Invalidate(false);
+		//m_imgDlg.Invalidate(false);
 	}
 
 	CDialogEx::OnTimer(nIDEvent);

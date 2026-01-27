@@ -33,6 +33,7 @@ BEGIN_MESSAGE_MAP(CTitleDlg, CSCThemeDlg)
 	ON_WM_SYSCOMMAND()
 	//ON_WM_LBUTTONDBLCLK()
 	ON_WM_CREATE()
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 
@@ -142,4 +143,64 @@ int CTitleDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_parent = AfxGetApp()->GetMainWnd();// AfxGetMainWnd();
 
 	return 0;
+}
+
+void CTitleDlg::sliding_show(bool show)
+{
+	KillTimer(timer_sliding_show);
+
+	m_sliding_show = show;
+
+	CRect rw;
+	GetWindowRect(rw);
+
+	m_cur_pt.x = rw.left;
+	
+	if (m_sliding_show)
+	{
+		m_cur_pt.y = -m_titlebar_height;
+		ShowWindow(SW_SHOW);
+	}
+	else
+	{
+		m_cur_pt.y = 0;
+	}
+
+
+	m_sliding = true;
+	SetTimer(timer_sliding_show, 1, NULL);
+}
+void CTitleDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	if (nIDEvent == timer_sliding_show)
+	{
+		if (m_sliding_show)
+		{
+			m_cur_pt.y += 4;
+			if (m_cur_pt.y >= 0)
+			{
+				m_cur_pt.y = 0;
+				KillTimer(timer_sliding_show);
+				m_sliding = false;
+			}
+		}
+		else
+		{
+			m_cur_pt.y -= 4;
+			if (m_cur_pt.y <= -m_titlebar_height)
+			{
+				m_cur_pt.y = -m_titlebar_height;
+				KillTimer(timer_sliding_show);
+				m_sliding = false;
+				ShowWindow(SW_HIDE);
+			}
+		}
+
+		SetWindowPos(NULL, m_cur_pt.x, m_cur_pt.y, 0, 0, SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
+
+		trace(m_cur_pt);
+	}
+
+	CSCThemeDlg::OnTimer(nIDEvent);
 }
