@@ -296,28 +296,18 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 			{
 				TRACE(_T("show\n"));
 				m_titleDlg.ModifyStyle(WS_POPUP, WS_CHILD);
-				m_titleDlg.SetParent(this);
 				m_titleDlg.set_titlebar_movable(true);
-				/*
-				CRect rc;
-				GetClientRect(rc);
-
-				CRect r = rc;
-
-				r.bottom = r.top + m_titleDlg.get_titlebar_height();
-				m_titleDlg.MoveWindow(r);
-				*/
-
-				m_titleDlg.ShowWindow(SW_SHOW);
+				m_titleDlg.SetParent(this);
+				//m_titleDlg.ShowWindow(SW_SHOW);
 				PostMessage(WM_SYSCOMMAND, SC_RESTORE);
 			}
 			else
 			{
 				TRACE(_T("hide\n"));
 				m_titleDlg.ModifyStyle(WS_CHILD, WS_POPUP);
-				m_titleDlg.SetParent(NULL);
 				m_titleDlg.set_titlebar_movable(false);
-				m_titleDlg.ShowWindow(SW_HIDE);
+				m_titleDlg.SetParent(NULL);
+				//m_titleDlg.ShowWindow(SW_HIDE);
 				m_titleDlg.parent_maximized(true);
 			}
 		}
@@ -329,32 +319,10 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 		{
 			m_titleDlg.parent_maximized(false);
 
+			m_titleDlg.set_titlebar_movable(true);
 			m_titleDlg.ModifyStyle(WS_POPUP, WS_CHILD);
 			m_titleDlg.SetParent(this);
-			m_titleDlg.set_titlebar_movable(true);
-			/*
-			CRect rc;
-			GetClientRect(rc);
-
-			CRect r = rc;
-
-			r.bottom = r.top + m_titleDlg.get_titlebar_height();
-			m_titleDlg.MoveWindow(r);
-			*/
-			m_titleDlg.ShowWindow(SW_SHOW);
-
-			/*
-			//restore 시킬 때 전체화면에서 minimized 되었는지에 따라 ModifyStyle()로 캡션바를 없앨지를 처리해야 한다.
-			int is_zoomed = theApp.GetProfileInt(_T("setting"), _T("is zoomed"), false);
-			//아직 CDialogEx::OnSysCommand(nID, lParam);가 호출되기 전이므로 아래 if문의 IsZoomed()는 올바른 값을 리턴하지 못한다.
-			//상태가 완전히 변경된 후 처리하려면 timer를 쓰던가 해야하는데 점점 난잡해진다.
-			//좀 더 정석적인 해결책이 필요하다.
-			if (IsZoomed() || !is_zoomed)
-			{
-				m_titleDlg.parent_maximized(true);
-				m_titleDlg.ShowWindow(SW_HIDE);
-			}
-			*/
+			//m_titleDlg.ShowWindow(SW_SHOW);
 		}
 
 		CDialogEx::OnSysCommand(nID, lParam);
@@ -966,9 +934,9 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 		TRACE(_T("%s : %d\n"), __function__, pMsg->wParam);
 		switch (pMsg->wParam)
 		{
-			//case VK_ESCAPE:
-			//	OnBnClickedCancel();
-			//	return true;
+			case VK_ESCAPE:
+				OnBnClickedCancel();
+				return true;
 			case VK_RETURN:
 				if (IsCtrlPressed())
 				{
@@ -1206,33 +1174,25 @@ void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 	//trace(point);
 	if (IsZoomed())
 	{
-		trace(m_titleDlg.IsWindowVisible());
-		CRect rw;
-		m_titleDlg.GetWindowRect(rw);
-		trace(get_rect_info_str(rw));
-		//int min_y = 32;
-
-		//if (IsZoomed())
-		//	min_y = 7;
-
-		if (m_titleDlg.is_in_sliding() == false)
+		if (m_titleDlg.is_in_fade_in() == false)
 		{
 			if (point.y <= m_titleDlg.get_titlebar_height())
 			{
-				TRACE(_T("show\n"));
-				//m_titleDlg.ShowWindow(SW_SHOW);
-				m_titleDlg.sliding_show(true);
-				//m_titleDlg.SetWindowPos(&m_imgDlg, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
-				//m_imgDlg.SetWindowPos(&wndNoTopMost, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
-				//SetForegroundWindowForce(m_titleDlg.m_hWnd, true);
-				//m_titleDlg.Invalidate();
+				m_titleDlg.ShowWindow(SW_SHOW);
+				m_titleDlg.SetWindowPos(&m_imgDlg, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
+				SetForegroundWindowForce(m_titleDlg.m_hWnd, true);
+
+				if (m_titleDlg.m_alpha != 0)
+				{
+					TRACE(_T("start fade in\n"));
+					m_titleDlg.fade_in(true);
+				}
 			}
-			else if (m_titleDlg.IsWindowVisible())
-			//{
-			//	TRACE(_T("hide\n"));
-			//	//m_titleDlg.ShowWindow(SW_HIDE);
-				m_titleDlg.sliding_show(false);
-			//}
+			else if (m_titleDlg.m_alpha == 0)
+			{
+				TRACE(_T("start fade out\n"));
+				m_titleDlg.fade_in(false);
+			}
 		}
 	}
 	/*
@@ -1515,7 +1475,7 @@ void CASeeDlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
-	if (m_titleDlg.is_in_sliding())
+	if (m_titleDlg.is_in_fade_in())
 		return;
 
 	if (nState == 0)

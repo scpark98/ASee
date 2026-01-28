@@ -126,6 +126,9 @@
     <ClInclude Include="TitleDlg.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\LayeredWindowHelperST.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ASee.cpp">
@@ -216,6 +219,9 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\LMM_Koino_service\LMMHost\tvnserver\CrashHandler.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\LayeredWindowHelperST.cpp">
       <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>

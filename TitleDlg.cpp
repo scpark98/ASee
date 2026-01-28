@@ -65,7 +65,7 @@ BOOL CTitleDlg::PreTranslateMessage(MSG* pMsg)
 		pMsg->message == WM_KEYUP ||
 		pMsg->message == WM_NCHITTEST)
 	{
-		TRACE(_T("msg(%d) on CTitleDlg\n"), pMsg->message);
+		TRACE(_T("msg(%d), wParam = %d, on CTitleDlg\n"), pMsg->message, pMsg->wParam);
 		return FALSE;
 	}
 
@@ -145,62 +145,89 @@ int CTitleDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
-void CTitleDlg::sliding_show(bool show)
+void CTitleDlg::fade_in(bool show)
 {
-	KillTimer(timer_sliding_show);
+	KillTimer(timer_fade_in);
 
-	m_sliding_show = show;
+	m_fade_in = show;
 
-	CRect rw;
-	GetWindowRect(rw);
-
-	m_cur_pt.x = rw.left;
-	
-	if (m_sliding_show)
+	if (m_fade_in)
 	{
-		m_cur_pt.y = -m_titlebar_height;
+		m_layered.AddLayeredStyle(m_hWnd);
+
+		m_alpha = 100;
+		m_layered.SetTransparent(m_hWnd, m_alpha);
+
 		ShowWindow(SW_SHOW);
 	}
 	else
 	{
-		m_cur_pt.y = 0;
+		m_layered.AddLayeredStyle(m_hWnd);
+
+		m_alpha = 0;
+		m_layered.SetTransparent(m_hWnd, m_alpha);
+
+		ShowWindow(SW_SHOW);
 	}
 
-
-	m_sliding = true;
-	SetTimer(timer_sliding_show, 1, NULL);
+	m_in_fade_in = true;
+	SetTimer(timer_fade_in, 1, NULL);
 }
 void CTitleDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	if (nIDEvent == timer_sliding_show)
+	if (nIDEvent == timer_fade_in)
 	{
-		if (m_sliding_show)
+		if (m_fade_in)
 		{
-			m_cur_pt.y += 4;
-			if (m_cur_pt.y >= 0)
+			m_alpha -= 4;
+			if (m_alpha <= 0)
 			{
-				m_cur_pt.y = 0;
-				KillTimer(timer_sliding_show);
-				m_sliding = false;
+				KillTimer(timer_fade_in);
+				m_alpha = 0;
+				m_in_fade_in = false;
 			}
+			m_layered.SetTransparent(m_hWnd, m_alpha);
 		}
 		else
 		{
-			m_cur_pt.y -= 4;
-			if (m_cur_pt.y <= -m_titlebar_height)
+			m_alpha += 4;
+			if (m_alpha >= 100)
 			{
-				m_cur_pt.y = -m_titlebar_height;
-				KillTimer(timer_sliding_show);
-				m_sliding = false;
-				ShowWindow(SW_HIDE);
+				KillTimer(timer_fade_in);
+				m_alpha = 100;
+				m_in_fade_in = false;
 			}
+			m_layered.SetTransparent(m_hWnd, m_alpha);
 		}
 
-		SetWindowPos(NULL, m_cur_pt.x, m_cur_pt.y, 0, 0, SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
+		TRACE(_T("m_alpha = %d\n"), m_alpha);
 
-		trace(m_cur_pt);
+		//처음엔 sliding 방식으로 구현했으나 CSCThemeDlg의 특성 때문인지 direct2d 때문인지
+		//상단의 깜빡임이 계속 발생하여 fade in/out 효과로 변경함.
+		//SetWindowPos(NULL, m_cur_pt.x, m_cur_pt.y, 0, 0, SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
 	}
 
 	CSCThemeDlg::OnTimer(nIDEvent);
+}
+
+//원래 CSCThemeDlg에 정의되어 있었으나 이 프로젝트에서는 별도로 fade in/out 처리가 들어가서
+//부가적인 처리를 위해 함수를 override 함.
+void CTitleDlg::set_titlebar_movable(bool movable)
+{
+	m_layered.AddLayeredStyle(m_hWnd);
+
+	if (movable)
+	{
+		//KillTimer(timer_fade_in);
+		m_alpha = 0;
+	}
+	else
+	{
+		m_alpha = 100;
+	}
+
+	m_layered.SetTransparent(m_hWnd, m_alpha);
+
+	CSCThemeDlg::set_titlebar_movable(movable);
 }

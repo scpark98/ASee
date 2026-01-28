@@ -2,6 +2,7 @@
 #include "afxdialogex.h"
 
 #include "Common/CDialog/SCThemeDlg/SCThemeDlg.h"
+#include "Common/LayeredWindowHelperST.h"
 
 // CTitleDlg 대화 상자
 
@@ -15,13 +16,18 @@ public:
 
 	void		update_title(CString title);
 	int			get_titlebar_height();
-	bool		is_in_sliding() { return m_sliding; }
+	bool		is_in_fade_in() { return m_in_fade_in; }
+
+	void		set_titlebar_movable(bool movable);
+
+	CLayeredWindowHelperST m_layered;
+	int			m_alpha = 100;
 
 	enum TIMER_ID
 	{
-		timer_sliding_show = 0,
+		timer_fade_in = 0,
 	};
-	void		sliding_show(bool show);
+	void		fade_in(bool show);
 
 	//일반적인 dlg라면 GetParent()로 parent를 얻어오면 되지만
 	//이 앱의 경우는 일반 화면일때는 mainDlg가 parent가 되지만
@@ -37,9 +43,8 @@ public:
 #endif
 
 protected:
-	bool		m_sliding_show = false;
-	bool		m_sliding = false;
-	CPoint		m_cur_pt = 0;
+	bool		m_fade_in = false;		//fade in으로 동작시킬지, fade_out으로 동작시킬지
+	bool		m_in_fade_in = false;	//타이머에 의해 현재 fade in 또는 fade out이 진행중인지
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
