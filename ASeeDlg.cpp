@@ -255,6 +255,10 @@ BOOL CASeeDlg::OnInitDialog()
 		{
 			m_imgDlg.display_image(sfile, true);
 		}
+		else
+		{
+			m_imgDlg.display_image(get_part(sfile, fn_folder), true);
+		}
 	}
 
 	m_dir_watcher.init(this);
