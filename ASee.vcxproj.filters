@@ -48,9 +48,6 @@
     <ClInclude Include="..\Common\MemoryDC.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\CDialog\SCImageDlg\SCImageDlg.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\CStatic\SCStatic\SCStatic.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -108,25 +105,19 @@
     <ClInclude Include="..\Common\SCGdiplusBitmap.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\CDialog\SCImage2dDlg\SCImage2dDlg.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\directx\CSCD2Context\SCD2Context.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\directx\CSCD2Image\SCD2Image.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\system\CrashHandler\CrashHandler.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\LMM_Koino_service\LMMHost\tvnserver\CrashHandler.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="TitleDlg.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\LayeredWindowHelperST.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\CDialog\SCD2ImageDlg\SCD2ImageDlg.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
@@ -144,9 +135,6 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\Functions.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\CDialog\SCImageDlg\SCImageDlg.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\CStatic\SCStatic\SCStatic.cpp">
@@ -206,22 +194,16 @@
     <ClCompile Include="..\Common\SCGdiplusBitmap.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\CDialog\SCImage2dDlg\SCImage2dDlg.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\directx\CSCD2Context\SCD2Context.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\directx\CSCD2Image\SCD2Image.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\system\CrashHandler\CrashHandler.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\LMM_Koino_service\LMMHost\tvnserver\CrashHandler.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\LayeredWindowHelperST.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\CDialog\SCD2ImageDlg\SCD2ImageDlg.cpp">
       <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>

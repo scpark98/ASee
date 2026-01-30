@@ -125,7 +125,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_RECENT_FOLDERS_CLEAR, &CASeeDlg::OnMenuRecentFoldersClear)
 	ON_REGISTERED_MESSAGE(Message_CASeeApp, &CASeeDlg::on_message_CASeeApp)
 	ON_REGISTERED_MESSAGE(Message_CSCDirWatcher, &CASeeDlg::on_message_CSCDirWatcher)
-	ON_REGISTERED_MESSAGE(Message_CSCImage2dDlg, &CASeeDlg::on_message_CSCImage2dDlg)
+	ON_REGISTERED_MESSAGE(Message_CSCD2ImageDlg, &CASeeDlg::on_message_CSCD2ImageDlg)
 	ON_COMMAND(ID_MENU_TRANSPARENT_BACK, &CASeeDlg::OnMenuTransparentBack)
 	ON_COMMAND(ID_MENU_PROPERTY, &CASeeDlg::OnMenuProperty)
 	ON_COMMAND(ID_MENU_VIEW_TOGGLE, &CASeeDlg::OnMenuViewToggle)
@@ -207,6 +207,7 @@ BOOL CASeeDlg::OnInitDialog()
 	m_titleDlg.Create(IDD_TITLE, this);
 	m_titleDlg.ShowWindow(SW_SHOW);
 	m_titleDlg.set_titlebar_movable(true);
+	m_titleDlg.update_title(_T("ASee - no image loaded"));
 
 	m_message.set_text(this, _T(""), 40, Gdiplus::FontStyleBold, 4.0f, 2.4f);
 	m_message.set_stroke_color(Gdiplus::Color::Black);
@@ -250,14 +251,19 @@ BOOL CASeeDlg::OnInitDialog()
 	//프로그램을 그냥 실행시킨 경우라면 최근 열었던 이미지를 열어준다.
 	else
 	{
-		sfile = theApp.GetProfileString(_T("setting\\CSCImage2dDlg"), _T("recent file"), _T(""));
+		sfile = theApp.GetProfileString(_T("setting\\CSCD2ImageDlg"), _T("recent file"), _T(""));
 		if (PathFileExists(sfile) && !sfile.IsEmpty() && get_filetype_from_filename(sfile) == FILE_TYPE_IMAGE)
 		{
 			m_imgDlg.display_image(sfile, true);
 		}
-		else
+		else if (!sfile.IsEmpty())
 		{
-			m_imgDlg.display_image(get_part(sfile, fn_folder), true);
+			CString folder = get_part(sfile, fn_folder);
+
+			if (PathFileExists(folder))
+				m_imgDlg.display_image(folder, true);
+			else
+				SetWindowText(_T("ASee - no image loaded"));
 		}
 	}
 
@@ -559,24 +565,24 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	}
 	
 	//최근 접근 폴더 메뉴 추가
-	int recent_folders_count = theApp.GetProfileInt(_T("setting\\CSCImage2dDlg\\recent folders"), _T("count"), 0);
+	int recent_folders_count = theApp.GetProfileInt(_T("setting\\CSCD2ImageDlg\\recent folders"), _T("count"), 0);
 	int valid_count = 0;
 	for (int i = 0; i < recent_folders_count; i++)
 	{
 		str.Format(_T(" (&%d)"), i + 1);
-		recent_folder = theApp.GetProfileString(_T("setting\\CSCImage2dDlg\\recent folders"), i2S(i), _T(""));
+		recent_folder = theApp.GetProfileString(_T("setting\\CSCD2ImageDlg\\recent folders"), i2S(i), _T(""));
 
 		if (!recent_folder.IsEmpty() && PathFileExists(recent_folder))
 		{
 			recent_folder_exist = true;
 			str.Format(_T(" (&%d)"), valid_count + 1);
 			pRecentFoldersMenu->InsertMenu(valid_count, MF_BYPOSITION | MF_STRING, menu_recent_folders_start + valid_count, recent_folder + str);
-			theApp.WriteProfileString(_T("setting\\CSCImage2dDlg\\recent folders"), i2S(valid_count), recent_folder);
+			theApp.WriteProfileString(_T("setting\\CSCD2ImageDlg\\recent folders"), i2S(valid_count), recent_folder);
 			valid_count++;
 		}
 	}
 
-	theApp.WriteProfileInt(_T("setting\\CSCImage2dDlg\\recent folders"), _T("count"), valid_count);
+	theApp.WriteProfileInt(_T("setting\\CSCD2ImageDlg\\recent folders"), _T("count"), valid_count);
 
 	if (recent_folder_exist)
 		pMenu->InsertMenu(3, MF_BYPOSITION | MF_POPUP, (UINT_PTR)pRecentFoldersMenu->GetSafeHmenu(), _T("최근 접근 폴더"));
@@ -831,20 +837,20 @@ void CASeeDlg::OnMenuWallpaper()
 
 void CASeeDlg::OnMenuCopyToClipboard()
 {
-	show_message(m_imgDlg.copy_to_clipboard(CSCImage2dDlg::copy_whole_image) ? _T("클립보드로 복사됨") : _T("클립보드 복사 실패"));
+	show_message(m_imgDlg.copy_to_clipboard(CSCD2ImageDlg::copy_whole_image) ? _T("클립보드로 복사됨") : _T("클립보드 복사 실패"));
 }
 
 void CASeeDlg::OnMenuCopyToClipboardROI()
 {
 	if (m_imgDlg.get_image_roi().IsEmptyArea())
-		show_message(m_imgDlg.copy_to_clipboard(CSCImage2dDlg::copy_whole_image) ? _T("클립보드로 복사됨") : _T("클립보드 복사 실패"));
+		show_message(m_imgDlg.copy_to_clipboard(CSCD2ImageDlg::copy_whole_image) ? _T("클립보드로 복사됨") : _T("클립보드 복사 실패"));
 	else
-		show_message(m_imgDlg.copy_to_clipboard(CSCImage2dDlg::copy_auto) ? _T("선택 영역이 클립보드로 복사됨") : _T("클립보드 복사 실패"));
+		show_message(m_imgDlg.copy_to_clipboard(CSCD2ImageDlg::copy_auto) ? _T("선택 영역이 클립보드로 복사됨") : _T("클립보드 복사 실패"));
 }
 
 void CASeeDlg::OnMenuCopyToClipboardEXIF()
 {
-	show_message(m_imgDlg.copy_to_clipboard(CSCImage2dDlg::copy_photo_exif) ? _T("사진 정보가 클립보드로 복사됨") : _T("클립보드 복사 실패"));
+	show_message(m_imgDlg.copy_to_clipboard(CSCD2ImageDlg::copy_photo_exif) ? _T("사진 정보가 클립보드로 복사됨") : _T("클립보드 복사 실패"));
 }
 
 void CASeeDlg::OnMenuDelete()
@@ -1065,13 +1071,13 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				m_imgDlg.display_image(-1);
 				return true;
 
-			//CSCImage2dDlg가 focus를 가진 상태에서는 CSCImage2dDlg에서 VK_LEFT를 처리한 후
+			//CSCD2ImageDlg가 focus를 가진 상태에서는 CSCD2ImageDlg에서 VK_LEFT를 처리한 후
 			//CASeeDlg에서 VK_LEFT에 대한 추가 처리가 이어지는데
-			//CSCShapeDlg로 알림 메시지를 띠운 후 사라진 후에는 CSCImage2dDlg가 포커스를 가지는게 아니고 CASeeDlg가 가지게 되므로
-			//CSCImage2dDlg의 VK_LEFT 처리가 되지 않는다.
+			//CSCShapeDlg로 알림 메시지를 띠운 후 사라진 후에는 CSCD2ImageDlg가 포커스를 가지는게 아니고 CASeeDlg가 가지게 되므로
+			//CSCD2ImageDlg의 VK_LEFT 처리가 되지 않는다.
 			//CSCShapeDlg 생성시 포커스를 가지지 않게 하거나, (WS_EX_NOACTIVATE을 줘봤으나 소용없고)
-			//알림 메시지를 띠울 때 CSCImage2dDlg에게 포커스를 다시 주거나 (우선 이방법으로 처리함)
-			//키처리를 무조건 메인에서 처리하도록 하는 방법이 있는데 (매번 메인에 CSCImage2dDlg::on_key(nkey);와 같은 함수 호출이 필요)
+			//알림 메시지를 띠울 때 CSCD2ImageDlg에게 포커스를 다시 주거나 (우선 이방법으로 처리함)
+			//키처리를 무조건 메인에서 처리하도록 하는 방법이 있는데 (매번 메인에 CSCD2ImageDlg::on_key(nkey);와 같은 함수 호출이 필요)
 			//일반적인 해법으로 처리해야 한다.
 			case VK_LEFT:
 				m_imgDlg.start_slide_show(0);
@@ -1248,13 +1254,13 @@ void CASeeDlg::on_menu_recent_folders(UINT nID)
 {
 	int index = nID - menu_recent_folders_start;
 
-	CString recent_folder = theApp.GetProfileString(_T("setting\\CSCImage2dDlg\\recent folders"), i2S(index), _T(""));
+	CString recent_folder = theApp.GetProfileString(_T("setting\\CSCD2ImageDlg\\recent folders"), i2S(index), _T(""));
 	m_imgDlg.display_image(recent_folder);
 }
 
 void CASeeDlg::OnMenuRecentFoldersClear()
 {
-	theApp.WriteProfileInt(_T("setting\\CSCImage2dDlg\\recent folders"), _T("count"), 0);
+	theApp.WriteProfileInt(_T("setting\\CSCD2ImageDlg\\recent folders"), _T("count"), 0);
 }
 
 LRESULT CASeeDlg::on_message_CSCDirWatcher(WPARAM wParam, LPARAM lParam)
@@ -1357,29 +1363,29 @@ void CASeeDlg::set_zigzag_color(COLORREF cr_back, COLORREF cr_fore)
 	m_imgDlg.set_zigzag_color(gcr_back, gcr_fore);
 }
 
-LRESULT CASeeDlg::on_message_CSCImage2dDlg(WPARAM wParam, LPARAM lParam)
+LRESULT CASeeDlg::on_message_CSCD2ImageDlg(WPARAM wParam, LPARAM lParam)
 {
-	auto msg = (CSCImage2dDlgMessage*)(wParam);
+	auto msg = (CSCD2ImageDlgMessage*)(wParam);
 
-	if (msg->msg == CSCImage2dDlg::message_image_changed)
+	if (msg->msg == CSCD2ImageDlg::message_image_changed)
 	{
 		update_title();
 		m_dir_watcher.stop();
 		m_dir_watcher.add(get_part(m_imgDlg.get_filename(), fn_folder));
 	}
-	else if (msg->msg == CSCImage2dDlg::message_hide_message)
+	else if (msg->msg == CSCD2ImageDlg::message_hide_message)
 	{
 		m_message.ShowWindow(SW_HIDE);
 	}
-	else if (msg->msg == CSCImage2dDlg::message_first_image)
+	else if (msg->msg == CSCD2ImageDlg::message_first_image)
 	{
 		show_message(_T("맨 처음 이미지"));
 	}
-	else if (msg->msg == CSCImage2dDlg::message_last_image)
+	else if (msg->msg == CSCD2ImageDlg::message_last_image)
 	{
 		show_message(_T("맨 마지막 이미지"));
 	}
-	//else if (msg->msg == CSCImage2dDlg::message_lbuttondown)
+	//else if (msg->msg == CSCD2ImageDlg::message_lbuttondown)
 	//{
 	//	CPoint pt;
 	//	GetCursorPos(&pt);
