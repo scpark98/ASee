@@ -180,4 +180,5 @@ public:
 	afx_msg BOOL OnNcActivate(BOOL bActive);
 	afx_msg void OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp);
 	afx_msg LRESULT OnNcHitTest(CPoint point);
+	afx_msg void OnMenuOpen();
 };

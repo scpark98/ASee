@@ -142,6 +142,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_WM_NCACTIVATE()
 	ON_WM_NCCALCSIZE()
 	ON_WM_NCHITTEST()
+	ON_COMMAND(ID_MENU_OPEN, &CASeeDlg::OnMenuOpen)
 END_MESSAGE_MAP()
 
 
@@ -207,7 +208,7 @@ BOOL CASeeDlg::OnInitDialog()
 	m_titleDlg.Create(IDD_TITLE, this);
 	m_titleDlg.ShowWindow(SW_SHOW);
 	m_titleDlg.set_titlebar_movable(true);
-	m_titleDlg.update_title(_T("ASee - no image loaded"));
+	update_title(_T("no image"));
 
 	m_message.set_text(this, _T(""), 40, Gdiplus::FontStyleBold, 4.0f, 2.4f);
 	m_message.set_stroke_color(Gdiplus::Color::Black);
@@ -1599,4 +1600,17 @@ LRESULT CASeeDlg::OnNcHitTest(CPoint point)
 	}
 
 	return result;
+}
+
+void CASeeDlg::OnMenuOpen()
+{
+	CString cur_file = m_imgDlg.get_filename();
+	CString image_filter = _T("Image Files|*.bmp;*.jpg;*.jpeg;*.png;*.webp;*.gif;*.yuv;*.jfif;*.avif|All Files|*.*||");
+
+	CFileDialog dlg(TRUE, _T("*"), cur_file.IsEmpty() ? get_exe_directory(true) : cur_file, OFN_HIDEREADONLY, image_filter);
+
+	if (dlg.DoModal() == IDCANCEL)
+		return;
+
+	m_imgDlg.load(dlg.GetPathName(), true);
 }
