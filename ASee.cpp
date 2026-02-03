@@ -31,11 +31,6 @@ CASeeApp::CASeeApp()
 	// TODO: 여기에 생성 코드를 추가합니다.
 	// InitInstance에 모든 중요한 초기화 작업을 배치합니다.
 	m_hMutex = NULL;
-
-	//CoInitializeEx()를 호출하지 않거나 COINIT_MULTITHREADED로 실행할 경우 ::SHBrowseForFolder() api가 응답하지 않음.
-	//기존 프로젝트들에서는 이를 호출하지 않아도 폴더선택창이 제대로 열렸으나
-	//Direct2D를 이용하는 이 프로젝트에서는 문제가 발생했다.
-	CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
 }
 
 CASeeApp::~CASeeApp()
@@ -57,6 +52,17 @@ CASeeApp theApp;
 BOOL CASeeApp::InitInstance()
 {
 	SetRegistryKey(_T("Legends Software"));
+
+	//CoInitializeEx()를 호출하지 않거나 COINIT_MULTITHREADED로 실행할 경우 ::SHBrowseForFolder() api가 응답하지 않음.
+	//기존 프로젝트들에서는 이를 호출하지 않아도 폴더선택창이 제대로 열렸으나
+	//Direct2D를 이용하는 이 프로젝트에서는 문제가 발생했다.
+	CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED);
+
+	if (!AfxOleInit())
+	{
+		AfxMessageBox(_T("OLE initialization failed"));
+		return FALSE;
+	}
 
 	//AfxMessageBox(i2S(__argc));
 	if (__argc > 1)

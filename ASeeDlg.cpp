@@ -10,7 +10,9 @@
 
 #include "RoiInputDlg.h"
 #include "ZigzagColorDlg.h"
-#include "../Common/messagebox/Win32InputBox/Win32InputBox.h"
+#include "Common/messagebox/Win32InputBox/Win32InputBox.h"
+
+#include "Common/SCGdiplusBitmap.h"
 
 #include <mmsystem.h>
 #pragma comment(lib,"winmm.lib")
@@ -178,7 +180,6 @@ BOOL CASeeDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-	// 
 	//WS_THICKFRAME이 들어가면 상단에 흰 영역이 생기는 부작용이 생긴다.
 	//child 구성 및 동작 방식에 따라 WS_CLIPCHILDREN을 추가해야 할 경우도 있다.
 	//LONG style = ::GetWindowLongPtr(m_hWnd, GWL_STYLE);
@@ -942,7 +943,7 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 
 		Gdiplus::RectF roi = m_imgDlg.get_image_roi();
 
-		TRACE(_T("%s : %d\n"), __function__, pMsg->wParam);
+		//TRACE(_T("%s : %d\n"), __function__, pMsg->wParam);
 		switch (pMsg->wParam)
 		{
 			case VK_ESCAPE:
