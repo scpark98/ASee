@@ -207,23 +207,24 @@ BOOL CASeeDlg::OnInitDialog()
 	m_imgDlg.set_cross_cursor(IDC_CURSOR_CROSS);
 
 	m_titleDlg.Create(IDD_TITLE, this);
-	m_titleDlg.ShowWindow(SW_SHOW);
+	//m_titleDlg.ModifyStyle(WS_POPUP, WS_CHILD);
 	m_titleDlg.set_titlebar_movable(true);
 	update_title(_T("no image"));
+	m_titleDlg.ShowWindow(SW_SHOW);
 
 	m_message.set_text(this, _T(""), 40, Gdiplus::FontStyleBold, 4.0f, 2.4f);
 	m_message.set_stroke_color(Gdiplus::Color::Black);
 	m_message.set_alpha(192);
 	m_message.use_control(false);
 
-	EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, 0);
+	EnumDisplayMonitors(nullptr, nullptr, MonitorEnumProc, 0);
 
 	RestoreWindowPosition(&theApp, this);
 
 	if (theApp.GetProfileInt(_T("screen"), _T("maximized"), false))
 	{
 		m_titleDlg.ModifyStyle(WS_CHILD, WS_POPUP);
-		m_titleDlg.SetParent(NULL);
+		m_titleDlg.SetParent(nullptr);
 		m_titleDlg.set_titlebar_movable(false);
 		m_titleDlg.parent_maximized(true);
 	}
@@ -288,6 +289,9 @@ BOOL CASeeDlg::OnInitDialog()
 	}
 	*/
 
+	//float f = 0.5f;
+	//int n = ROUND(f, 0);
+	//n = (int)f;
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -306,21 +310,20 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 			//실제 적용할 이곳에서 IsZoomed()일 경우는 SC_RESTORE를 다시 전송하면 된다.
 			if (IsZoomed())
 			{
-				TRACE(_T("show\n"));
 				m_titleDlg.ModifyStyle(WS_POPUP, WS_CHILD);
+				m_titleDlg.SetWindowPos(&wndTop, 0, 0, 0, 0,
+					SWP_FRAMECHANGED | SWP_NOSIZE | SWP_NOMOVE);
 				m_titleDlg.set_titlebar_movable(true);
 				m_titleDlg.SetParent(this);
-				//m_titleDlg.ShowWindow(SW_SHOW);
 				PostMessage(WM_SYSCOMMAND, SC_RESTORE);
 			}
 			else
 			{
-				TRACE(_T("hide\n"));
 				m_titleDlg.ModifyStyle(WS_CHILD, WS_POPUP);
 				m_titleDlg.set_titlebar_movable(false);
-				m_titleDlg.SetParent(NULL);
-				//m_titleDlg.ShowWindow(SW_HIDE);
+				m_titleDlg.SetParent(nullptr);
 				m_titleDlg.parent_maximized(true);
+				m_titleDlg.m_alpha = 0;
 			}
 		}
 		else if ((nID & 0xFFF0) == SC_MINIMIZE)
@@ -333,8 +336,10 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 
 			m_titleDlg.set_titlebar_movable(true);
 			m_titleDlg.ModifyStyle(WS_POPUP, WS_CHILD);
+			m_titleDlg.SetWindowPos(&wndTop, 0, 0, 0, 0,
+				SWP_FRAMECHANGED | SWP_NOSIZE | SWP_NOMOVE);
 			m_titleDlg.SetParent(this);
-			//m_titleDlg.ShowWindow(SW_SHOW);
+			m_titleDlg.m_alpha = 255;
 		}
 
 		CDialogEx::OnSysCommand(nID, lParam);
@@ -943,7 +948,7 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 
 		Gdiplus::RectF roi = m_imgDlg.get_image_roi();
 
-		//TRACE(_T("%s : %d\n"), __function__, pMsg->wParam);
+		TRACE(_T("%s : %d\n"), __function__, pMsg->wParam);
 		switch (pMsg->wParam)
 		{
 			case VK_ESCAPE:
@@ -1082,7 +1087,7 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 			//키처리를 무조건 메인에서 처리하도록 하는 방법이 있는데 (매번 메인에 CSCD2ImageDlg::on_key(nkey);와 같은 함수 호출이 필요)
 			//일반적인 해법으로 처리해야 한다.
 			case VK_LEFT:
-				m_imgDlg.start_slide_show(0);
+				//m_imgDlg.start_slide_show(0);
 				//if (!m_imgDlg.get_fit2ctrl())
 				//{
 				//	m_imgDlg.scroll(is_ctrl_pressed ? interval * 8 : 8, 0);
@@ -1090,7 +1095,7 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				//}
 				break;
 			case VK_RIGHT:
-				m_imgDlg.start_slide_show(0);
+				//m_imgDlg.start_slide_show(0);
 				//if (!m_imgDlg.get_fit2ctrl())
 				//{
 				//	m_imgDlg.scroll(is_ctrl_pressed ? interval * -8 : -8, 0);
@@ -1186,6 +1191,63 @@ void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 	//trace(point);
 	if (IsZoomed())
 	{
+		if (point.y <= m_titleDlg.get_titlebar_height() + 10)
+		{
+			SetForegroundWindowForce(m_titleDlg.m_hWnd, true);
+			if (!m_titleDlg.IsWindowVisible() || m_titleDlg.m_alpha == 0)
+			{
+				m_titleDlg.SetWindowPos(&m_imgDlg, 0, 0, 0, 0,
+					SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
+				m_titleDlg.fade_in(true);
+			}
+			else if (m_titleDlg.m_alpha != 255 && !m_titleDlg.is_in_fade_in())
+			{
+				m_titleDlg.fade_in(true);
+			}
+		}
+		else
+		{
+			if (m_titleDlg.m_alpha == 255 && !m_titleDlg.is_in_fade_in())
+			{
+				m_titleDlg.fade_in(false);
+			}
+		}
+
+		/*
+		// ===== Fade 상태 체크 개선 =====
+		if (m_titleDlg.is_in_fade_in() == false && m_titleDlg.IsWindowVisible())
+		{
+			if (point.y <= m_titleDlg.get_titlebar_height() + 10)
+			{
+				// 이미 표시 중이면 추가 작업 안 함
+				if (m_titleDlg.m_alpha != 255)
+				{
+					m_titleDlg.fade_in(true);
+				}
+			}
+			else if (m_titleDlg.m_alpha == 255)
+			{
+				// 사라질 조건 (일정 시간 후)
+				m_titleDlg.fade_in(false);
+			}
+		}
+		else if (point.y <= m_titleDlg.get_titlebar_height() + 10)
+		{
+			// 타이틀이 숨겨진 상태에서 최상단 감지
+			if (m_titleDlg.m_alpha == 0 || !m_titleDlg.IsWindowVisible())
+			{
+				// Z-order 명시적 설정
+				m_titleDlg.SetWindowPos(&m_imgDlg, 0, 0, 0, 0,
+					SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
+				m_titleDlg.ShowWindow(SW_SHOW);
+
+				// Fade in 시작
+				m_titleDlg.fade_in(true);
+				SetForegroundWindowForce(m_titleDlg.m_hWnd, true);
+			}
+		}
+		*/
+		/*
 		if (m_titleDlg.is_in_fade_in() == false)
 		{
 			if (point.y <= m_titleDlg.get_titlebar_height())
@@ -1206,6 +1268,7 @@ void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 				m_titleDlg.fade_in(false);
 			}
 		}
+		*/
 	}
 	/*
 	//if (IsZoomed() && !m_imgDlg.is_lbutton_down() && !IsShiftPressed() && !IsCtrlPressed())

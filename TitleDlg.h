@@ -21,11 +21,13 @@ public:
 	void		set_titlebar_movable(bool movable);
 
 	CLayeredWindowHelperST m_layered;
-	int			m_alpha = 100;
+	//SetLayeredWindowAttributes API의 bAlpha와 일관되게 0이면 투명, 255이면 불투명.
+	int			m_alpha = 0;
 
 	enum TIMER_ID
 	{
 		timer_fade_in = 0,
+		timer_debug_info,
 	};
 	void		fade_in(bool show);
 
@@ -59,4 +61,5 @@ public:
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };

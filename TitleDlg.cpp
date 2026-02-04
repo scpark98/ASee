@@ -34,6 +34,7 @@ BEGIN_MESSAGE_MAP(CTitleDlg, CSCThemeDlg)
 	//ON_WM_LBUTTONDBLCLK()
 	ON_WM_CREATE()
 	ON_WM_TIMER()
+	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 
@@ -44,6 +45,8 @@ BOOL CTitleDlg::OnInitDialog()
 	CSCThemeDlg::OnInitDialog();
 
 	// TODO:  여기에 추가 초기화 작업을 추가합니다.
+	m_layered.AddLayeredStyle(m_hWnd);
+
 	//m_theme.cr_back = Gdiplus::Color::White;
 	set_color_theme(CSCColorTheme::color_theme_dark_gray);
 	set_system_buttons(this, SC_MINIMIZE, SC_MAXIMIZE, SC_CLOSE);
@@ -53,6 +56,8 @@ BOOL CTitleDlg::OnInitDialog()
 	//set_titlebar_height(32);
 	set_titlebar_icon(IDR_MAINFRAME, 16, 16);
 	set_draw_border(false);
+
+	//SetTimer(timer_debug_info, 1000, NULL);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
@@ -65,7 +70,7 @@ BOOL CTitleDlg::PreTranslateMessage(MSG* pMsg)
 		pMsg->message == WM_KEYUP ||
 		pMsg->message == WM_NCHITTEST)
 	{
-		TRACE(_T("msg(%d), wParam = %d, on CTitleDlg\n"), pMsg->message, pMsg->wParam);
+		//TRACE(_T("msg(%d), wParam = %d, on CTitleDlg\n"), pMsg->message, pMsg->wParam);
 		return FALSE;
 	}
 
@@ -153,18 +158,19 @@ void CTitleDlg::fade_in(bool show)
 
 	if (m_fade_in)
 	{
+		SetParent(nullptr);
 		m_layered.AddLayeredStyle(m_hWnd);
 
-		m_alpha = 100;
+		m_alpha = 0;
 		m_layered.SetTransparent(m_hWnd, m_alpha);
 
 		ShowWindow(SW_SHOW);
 	}
 	else
 	{
-		m_layered.AddLayeredStyle(m_hWnd);
+		//m_layered.AddLayeredStyle(m_hWnd);
 
-		m_alpha = 0;
+		m_alpha = 255;
 		m_layered.SetTransparent(m_hWnd, m_alpha);
 
 		ShowWindow(SW_SHOW);
@@ -180,7 +186,19 @@ void CTitleDlg::OnTimer(UINT_PTR nIDEvent)
 	{
 		if (m_fade_in)
 		{
-			m_alpha -= 4;
+			m_alpha += 25;
+			if (m_alpha >= 255)
+			{
+				KillTimer(timer_fade_in);
+				m_alpha = 255;
+				m_in_fade_in = false;
+				SetForegroundWindowForce(m_hWnd, true);
+			}
+			m_layered.SetTransparent(m_hWnd, m_alpha);
+		}
+		else
+		{
+			m_alpha -= 25;
 			if (m_alpha <= 0)
 			{
 				KillTimer(timer_fade_in);
@@ -189,23 +207,32 @@ void CTitleDlg::OnTimer(UINT_PTR nIDEvent)
 			}
 			m_layered.SetTransparent(m_hWnd, m_alpha);
 		}
-		else
-		{
-			m_alpha += 4;
-			if (m_alpha >= 100)
-			{
-				KillTimer(timer_fade_in);
-				m_alpha = 100;
-				m_in_fade_in = false;
-			}
-			m_layered.SetTransparent(m_hWnd, m_alpha);
-		}
 
-		TRACE(_T("m_alpha = %d\n"), m_alpha);
+		//TRACE(_T("m_alpha = %d\n"), m_alpha);
+		ShowWindow(SW_SHOW);
 
 		//처음엔 sliding 방식으로 구현했으나 CSCThemeDlg의 특성 때문인지 direct2d 때문인지
 		//상단의 깜빡임이 계속 발생하여 fade in/out 효과로 변경함.
 		//SetWindowPos(NULL, m_cur_pt.x, m_cur_pt.y, 0, 0, SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
+	}
+	else if (timer_debug_info)
+	{
+		static DWORD last_trace = 0;
+		DWORD now = GetTickCount();
+		if (now - last_trace > 500)  // 0.5초마다 한 번
+		{
+			TRACE(_T("=== TitleDlg State ===\n"));
+			TRACE(_T("  Visible: %d\n"), IsWindowVisible());
+			TRACE(_T("  Alpha: %d\n"), m_alpha);
+			TRACE(_T("  is_in_fade_in: %d\n"), is_in_fade_in());
+			TRACE(_T("  parent = %p\n"), GetParent());
+			CRect rw;
+			GetWindowRect(rw);
+			trace(rw);
+			//TRACE(_T("  Mouse Y: %d, Threshold: %d\n"), point.y, m_titleDlg.get_titlebar_height() + 10);
+			//TRACE(_T("  IsZoomed: %d\n"), IsZoomed());
+			last_trace = now;
+		}
 	}
 
 	CSCThemeDlg::OnTimer(nIDEvent);
@@ -215,19 +242,25 @@ void CTitleDlg::OnTimer(UINT_PTR nIDEvent)
 //부가적인 처리를 위해 함수를 override 함.
 void CTitleDlg::set_titlebar_movable(bool movable)
 {
-	m_layered.AddLayeredStyle(m_hWnd);
+	//m_layered.AddLayeredStyle(m_hWnd);
 
 	if (movable)
 	{
 		//KillTimer(timer_fade_in);
-		m_alpha = 0;
+		m_alpha = 255;
 	}
 	else
 	{
-		m_alpha = 100;
+		m_alpha = 0;
 	}
 
 	m_layered.SetTransparent(m_hWnd, m_alpha);
 
 	CSCThemeDlg::set_titlebar_movable(movable);
+}
+
+void CTitleDlg::OnMouseMove(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	CSCThemeDlg::OnMouseMove(nFlags, point);
 }
