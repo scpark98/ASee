@@ -3,17 +3,16 @@
 [수정할 내용]
 - 원본크기로 표시인 경우 화면보다 큰 이미지라면 화면크기에 맞춰 표시해야 한다.
   그렇다고 fit2ctrl을 true로 강제 변경하진 않는다.
-- Ctrl+Enter 전체 멀티모니터 크기로 확대?
 - thumb context 메뉴에서 theme 선택
 - recalc_tile_rect()에서 우측 여백이 남을 경우 tile_gap.cx를 늘려주고 다시 계산한다.
 
+
+[수정된 내용]
+- Ctrl+Enter 전체 멀티모니터 크기로 확대?
 - avif, webp, bpg 지원
 - roi resize, move시에 픽셀단위로 이동되도록.
 - show/hide grid line
 - 32bit png clipboard copy
-
-
-[수정된 내용]
 - 확대 후 방향키에 의한 scroll 기능 수정.
 - indexed 8bpp일 경우 색상이 잘못 표시되었는데 이는 load()에서 copied_open을 해서 발생한 문제였음.
 - indexed 8bpp일 경우 width가 4의 배수가 아니면 pal_index를 잘못가져오던 오류 수정.
