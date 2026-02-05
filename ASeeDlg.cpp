@@ -562,7 +562,7 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	pRecentFoldersMenu = menu.GetSubMenu(1);
 
 	//gps 정보가 있다면 지도 보기 메뉴 추가
-	if (m_imgDlg.get_gps_latitude() > 0.0 && m_imgDlg.get_gps_longitude() > 0.0)
+	if (!m_imgDlg.get_gps_latitude_str().IsEmpty() && !m_imgDlg.get_gps_longitude_str().IsEmpty())
 	{
 		pGPSMenu = new CMenu();
 		pGPSMenu->CreatePopupMenu();
