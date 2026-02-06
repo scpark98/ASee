@@ -311,8 +311,6 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 			if (IsZoomed())
 			{
 				m_titleDlg.ModifyStyle(WS_POPUP, WS_CHILD);
-				m_titleDlg.SetWindowPos(&wndTop, 0, 0, 0, 0,
-					SWP_FRAMECHANGED | SWP_NOSIZE | SWP_NOMOVE);
 				m_titleDlg.set_titlebar_movable(true);
 				m_titleDlg.SetParent(this);
 				PostMessage(WM_SYSCOMMAND, SC_RESTORE);
@@ -323,7 +321,7 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 				m_titleDlg.set_titlebar_movable(false);
 				m_titleDlg.SetParent(nullptr);
 				m_titleDlg.parent_maximized(true);
-				m_titleDlg.m_alpha = 0;
+				m_titleDlg.ShowWindow(SW_HIDE);
 			}
 		}
 		else if ((nID & 0xFFF0) == SC_MINIMIZE)
@@ -333,13 +331,10 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 		else if ((nID & 0xFFF0) == SC_RESTORE)
 		{
 			m_titleDlg.parent_maximized(false);
-
 			m_titleDlg.set_titlebar_movable(true);
 			m_titleDlg.ModifyStyle(WS_POPUP, WS_CHILD);
-			m_titleDlg.SetWindowPos(&wndTop, 0, 0, 0, 0,
-				SWP_FRAMECHANGED | SWP_NOSIZE | SWP_NOMOVE);
 			m_titleDlg.SetParent(this);
-			m_titleDlg.m_alpha = 255;
+			m_titleDlg.ShowWindow(SW_SHOW);
 		}
 
 		CDialogEx::OnSysCommand(nID, lParam);
@@ -1193,14 +1188,14 @@ void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 	{
 		if (point.y <= m_titleDlg.get_titlebar_height() + 10)
 		{
-			SetForegroundWindowForce(m_titleDlg.m_hWnd, true);
-			if (!m_titleDlg.IsWindowVisible() || m_titleDlg.m_alpha == 0)
+			//SetForegroundWindowForce(m_titleDlg.m_hWnd, true);
+			/*if (!m_titleDlg.IsWindowVisible() || m_titleDlg.m_alpha == 0)
 			{
-				m_titleDlg.SetWindowPos(&m_imgDlg, 0, 0, 0, 0,
-					SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
+				//m_titleDlg.SetWindowPos(&m_imgDlg, 0, 0, 0, 0,
+				//	SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
 				m_titleDlg.fade_in(true);
 			}
-			else if (m_titleDlg.m_alpha != 255 && !m_titleDlg.is_in_fade_in())
+			else */if (m_titleDlg.m_alpha != 255 && !m_titleDlg.is_in_fade_in())
 			{
 				m_titleDlg.fade_in(true);
 			}

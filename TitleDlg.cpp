@@ -37,6 +37,77 @@ BEGIN_MESSAGE_MAP(CTitleDlg, CSCThemeDlg)
 	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
+static bool ApplyLayeredAlphaViaUpdateLayeredWindow(HWND hWnd, BYTE alpha)
+{
+	if (!::IsWindow(hWnd))
+		return false;
+
+	// WS_EX_LAYERED 보장
+	LONG_PTR ex = ::GetWindowLongPtr(hWnd, GWL_EXSTYLE);
+	if ((ex & WS_EX_LAYERED) == 0)
+		::SetWindowLongPtr(hWnd, GWL_EXSTYLE, ex | WS_EX_LAYERED);
+
+	// 창 크기
+	CRect rc;
+	::GetWindowRect(hWnd, &rc);
+	const int w = rc.Width();
+	const int h = rc.Height();
+	if (w <= 0 || h <= 0)
+		return false;
+
+	HDC hdcScreen = ::GetDC(nullptr);
+	HDC hdcMem = ::CreateCompatibleDC(hdcScreen);
+
+	BITMAPINFO bmi = {};
+	bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	bmi.bmiHeader.biWidth = w;
+	bmi.bmiHeader.biHeight = -h; // top-down
+	bmi.bmiHeader.biPlanes = 1;
+	bmi.bmiHeader.biBitCount = 32;
+	bmi.bmiHeader.biCompression = BI_RGB;
+
+	void* bits = nullptr;
+	HBITMAP hbmp = ::CreateDIBSection(hdcScreen, &bmi, DIB_RGB_COLORS, &bits, nullptr, 0);
+	if (!hbmp)
+	{
+		::DeleteDC(hdcMem);
+		::ReleaseDC(nullptr, hdcScreen);
+		return false;
+	}
+
+	HGDIOBJ old = ::SelectObject(hdcMem, hbmp);
+
+	// 1) 현재 창을 메모리 DC로 렌더링(WM_PRINTCLIENT 이용)
+	// PRF_ERASEBKGND/PRF_CLIENT/PRF_CHILDREN등 필요에 따라 조정
+	::SendMessage(hWnd, WM_PRINT, (WPARAM)hdcMem, PRF_ERASEBKGND | PRF_CLIENT | PRF_CHILDREN);
+
+	POINT ptDst = { rc.left, rc.top };
+	SIZE  szDst = { w, h };
+	POINT ptSrc = { 0, 0 };
+
+	BLENDFUNCTION bf = {};
+	bf.BlendOp = AC_SRC_OVER;
+	bf.SourceConstantAlpha = alpha; // 여기서 전역 알파 적용
+	bf.AlphaFormat = 0;             // per-pixel alpha 사용 안 함(우리는 상수 알파만)
+
+	BOOL ok = ::UpdateLayeredWindow(
+		hWnd,
+		hdcScreen,
+		&ptDst,
+		&szDst,
+		hdcMem,
+		&ptSrc,
+		0,
+		&bf,
+		ULW_ALPHA);
+
+	::SelectObject(hdcMem, old);
+	::DeleteObject(hbmp);
+	::DeleteDC(hdcMem);
+	::ReleaseDC(nullptr, hdcScreen);
+
+	return ok == TRUE;
+}
 
 // CTitleDlg 메시지 처리기
 
@@ -57,7 +128,12 @@ BOOL CTitleDlg::OnInitDialog()
 	set_titlebar_icon(IDR_MAINFRAME, 16, 16);
 	set_draw_border(false);
 
-	//SetTimer(timer_debug_info, 1000, NULL);
+	MARGINS m = { -1 }; // DWM 확장 비활성화(일반적으로 클라이언트 전체 glass를 끄는 효과)
+	DwmExtendFrameIntoClientArea(m_hWnd, &m);
+	BOOL disable = TRUE;
+	DwmSetWindowAttribute(m_hWnd, DWMWA_NCRENDERING_ENABLED, &disable, sizeof(disable));
+
+	//SetTimer(timer_debug_info, 1000, nullptr);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
@@ -154,30 +230,33 @@ void CTitleDlg::fade_in(bool show)
 {
 	KillTimer(timer_fade_in);
 
+	trace(show);
+
 	m_fade_in = show;
+	m_in_fade_in = true;
+
+	m_layered.AddLayeredStyle(m_hWnd);
+	LONG_PTR ex = ::GetWindowLongPtr(m_hWnd, GWL_EXSTYLE);
+	if ((ex & WS_EX_LAYERED) == 0)
+		TRACE(_T("WS_EX_LAYERED not set! ex=0x%08llX\n"), (unsigned long long)ex);
+
+	// owner(소유자) 지정: popup이더라도 main 위에서 안정적으로 뜨게
+	if (m_parent && ::IsWindow(m_parent->m_hWnd))
+		::SetWindowLongPtr(m_hWnd, GWLP_HWNDPARENT, (LONG_PTR)m_parent->m_hWnd);
 
 	if (m_fade_in)
-	{
-		SetParent(nullptr);
-		m_layered.AddLayeredStyle(m_hWnd);
-
-		m_alpha = 0;
-		m_layered.SetTransparent(m_hWnd, m_alpha);
-
-		ShowWindow(SW_SHOW);
-	}
+		m_alpha = 50;
 	else
-	{
-		//m_layered.AddLayeredStyle(m_hWnd);
-
 		m_alpha = 255;
-		m_layered.SetTransparent(m_hWnd, m_alpha);
 
-		ShowWindow(SW_SHOW);
-	}
+	//if (!m_layered.SetTransparent(m_hWnd, (BYTE)m_alpha))
+	//	TRACE(_T("SetTransparent failed. gle=%lu\n"), GetLastError());
+	ApplyLayeredAlphaViaUpdateLayeredWindow(m_hWnd, (BYTE)m_alpha);
 
-	m_in_fade_in = true;
-	SetTimer(timer_fade_in, 1, NULL);
+	SetWindowPos(&wndTop, 0, 0, 0, 0,
+		SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW);
+
+	SetTimer(timer_fade_in, 16, nullptr);
 }
 void CTitleDlg::OnTimer(UINT_PTR nIDEvent)
 {
@@ -192,28 +271,38 @@ void CTitleDlg::OnTimer(UINT_PTR nIDEvent)
 				KillTimer(timer_fade_in);
 				m_alpha = 255;
 				m_in_fade_in = false;
-				SetForegroundWindowForce(m_hWnd, true);
+				//SetForegroundWindowForce(m_hWnd, true);
 			}
-			m_layered.SetTransparent(m_hWnd, m_alpha);
 		}
 		else
 		{
 			m_alpha -= 25;
-			if (m_alpha <= 0)
+			if (m_alpha <= 50)
 			{
 				KillTimer(timer_fade_in);
-				m_alpha = 0;
+				m_alpha = 50;
 				m_in_fade_in = false;
+				//ShowWindow(SW_HIDE);
 			}
-			m_layered.SetTransparent(m_hWnd, m_alpha);
 		}
 
-		//TRACE(_T("m_alpha = %d\n"), m_alpha);
-		ShowWindow(SW_SHOW);
+		TRACE(_T("m_alpha = %d, visible = %d\n"), m_alpha, IsWindowVisible());
+
+		//m_layered.AddLayeredStyle(m_hWnd);
+		//LONG_PTR ex = ::GetWindowLongPtr(m_hWnd, GWL_EXSTYLE);
+		//if ((ex & WS_EX_LAYERED) == 0)
+		//	TRACE(_T("WS_EX_LAYERED not set! ex=0x%08llX\n"), (unsigned long long)ex);
+
+		//if (!m_layered.SetTransparent(m_hWnd, (BYTE)m_alpha))
+		//	TRACE(_T("SetTransparent failed. gle=%lu\n"), GetLastError());
+		ApplyLayeredAlphaViaUpdateLayeredWindow(m_hWnd, (BYTE)m_alpha);
+
+		//TRACE(_T("m_alpha = %d, visible = %d\n"), m_alpha, IsWindowVisible());
+		//ShowWindow(SW_SHOW);
 
 		//처음엔 sliding 방식으로 구현했으나 CSCThemeDlg의 특성 때문인지 direct2d 때문인지
 		//상단의 깜빡임이 계속 발생하여 fade in/out 효과로 변경함.
-		//SetWindowPos(NULL, m_cur_pt.x, m_cur_pt.y, 0, 0, SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
+		//SetWindowPos(nullptr, m_cur_pt.x, m_cur_pt.y, 0, 0, SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
 	}
 	else if (timer_debug_info)
 	{
@@ -242,19 +331,32 @@ void CTitleDlg::OnTimer(UINT_PTR nIDEvent)
 //부가적인 처리를 위해 함수를 override 함.
 void CTitleDlg::set_titlebar_movable(bool movable)
 {
-	//m_layered.AddLayeredStyle(m_hWnd);
-
-	if (movable)
+	if (m_in_fade_in)
 	{
-		//KillTimer(timer_fade_in);
-		m_alpha = 255;
-	}
-	else
-	{
-		m_alpha = 0;
+		CSCThemeDlg::set_titlebar_movable(movable);
+		return;
 	}
 
-	m_layered.SetTransparent(m_hWnd, m_alpha);
+	m_layered.AddLayeredStyle(m_hWnd);
+	LONG_PTR ex = ::GetWindowLongPtr(m_hWnd, GWL_EXSTYLE);
+	if ((ex & WS_EX_LAYERED) == 0)
+		TRACE(_T("WS_EX_LAYERED not set! ex=0x%08llX\n"), (unsigned long long)ex);
+	
+	m_alpha = movable ? 255 : 50;
+
+	//if (movable)
+	//{
+	//	KillTimer(timer_fade_in);
+	//	m_alpha = 255;
+	//}
+	//else
+	//{
+	//	m_alpha = 50;
+	//}
+
+	if (!m_layered.SetTransparent(m_hWnd, (BYTE)m_alpha))
+		TRACE(_T("SetTransparent failed. gle=%lu\n"), GetLastError());
+
 
 	CSCThemeDlg::set_titlebar_movable(movable);
 }
