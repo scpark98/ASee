@@ -26,7 +26,7 @@ public:
 
 	enum TIMER_ID
 	{
-		timer_fade_in = 0,
+		timer_fade_in = 1,
 		timer_debug_info,
 	};
 	void		fade_in(bool show);

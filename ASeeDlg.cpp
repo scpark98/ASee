@@ -336,6 +336,18 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 			m_titleDlg.SetParent(this);
 			m_titleDlg.ShowWindow(SW_SHOW);
 		}
+		// ★ SC_CLOSE 시 popup 상태의 m_titleDlg를 먼저 정리
+		else if ((nID & 0xFFF0) == SC_CLOSE)
+		{
+			// 활성 타이머 제거
+			m_titleDlg.KillTimer(CTitleDlg::timer_fade_in);
+
+			// popup 상태라면 child로 복원하거나 명시적으로 파괴
+			if (m_titleDlg.m_hWnd != NULL)
+				m_titleDlg.DestroyWindow();
+
+			m_dir_watcher.stop();
+		}
 
 		CDialogEx::OnSysCommand(nID, lParam);
 	}
