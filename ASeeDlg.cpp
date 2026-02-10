@@ -436,6 +436,9 @@ void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
 	CDialogEx::OnWindowPosChanged(lpwndpos);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
+	if (m_imgDlg.m_hWnd == NULL || m_titleDlg.m_hWnd == NULL)
+		return;
+
 	CRect rc, rw;
 	GetClientRect(rc);
 	GetWindowRect(rw);
