@@ -202,6 +202,7 @@ BOOL CASeeDlg::OnInitDialog()
 	MARGINS margins = { 0 };
 	DwmExtendFrameIntoClientArea(m_hWnd, &margins);
 
+	m_imgDlg.set_simple_mode(false);
 	m_imgDlg.create(this);
 	m_imgDlg.set_dropper_cursor(IDC_CURSOR_DROPPER);
 	m_imgDlg.set_cross_cursor(IDC_CURSOR_CROSS);

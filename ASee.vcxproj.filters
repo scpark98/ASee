@@ -96,9 +96,6 @@
     <ClInclude Include="..\Common\ThumbCtrl\SCThumbCtrl.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\thread\thread_manager.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\Common\CEdit\SCEdit\SCEdit.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -118,6 +115,9 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\Common\CDialog\SCD2ImageDlg\SCD2ImageDlg.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\thread\ThreadManager.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
@@ -185,9 +185,6 @@
     <ClCompile Include="..\Common\ThumbCtrl\SCThumbCtrl.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\thread\thread_manager.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\Common\CEdit\SCEdit\SCEdit.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -204,6 +201,9 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\CDialog\SCD2ImageDlg\SCD2ImageDlg.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\thread\ThreadManager.cpp">
       <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
