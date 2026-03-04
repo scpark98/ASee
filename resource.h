@@ -45,7 +45,6 @@
 #define IDC_STATIC_OUTER_THRESHOLD      1010
 #define IDC_STATIC_INNER_THRESHOLD      1011
 #define IDC_CHECK_AUTO_DETECT           1012
-#define IDC_MFCCOLORBUTTON1             1013
 #define ID_MENU_ROTATE_LEFT             32771
 #define ID_MENU_ALWAYS_ON_TOP           32772
 #define ID_MENU_SMOOTH                  32773
@@ -113,13 +112,15 @@
 #define ID_MENU_SHOW_CURSOR_GUIDE_LINE  32862
 #define ID_MENU_32863                   32863
 #define ID_MENU_BACK_TRANSPARENCY       32864
+#define ID_MENU_32865                   32865
+#define ID_MENU_SAVE                    32866
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        148
-#define _APS_NEXT_COMMAND_VALUE         32865
+#define _APS_NEXT_COMMAND_VALUE         32867
 #define _APS_NEXT_CONTROL_VALUE         1014
 #define _APS_NEXT_SYMED_VALUE           1105
 #endif

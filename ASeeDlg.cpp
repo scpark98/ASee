@@ -146,6 +146,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_WM_NCHITTEST()
 	ON_COMMAND(ID_MENU_OPEN, &CASeeDlg::OnMenuOpen)
 	ON_COMMAND(ID_MENU_BACK_TRANSPARENCY, &CASeeDlg::OnMenuBackTransparency)
+	ON_COMMAND(ID_MENU_SAVE, &CASeeDlg::OnMenuSave)
 END_MESSAGE_MAP()
 
 
@@ -1719,4 +1720,19 @@ void CASeeDlg::OnMenuBackTransparency()
 void CASeeDlg::set_back_transparency(int target_index, float inner_threshold, float outer_threshold, Gdiplus::Color cr_back)
 {
 	m_imgDlg.set_back_transparency(target_index, inner_threshold, outer_threshold, cr_back);
+}
+
+void CASeeDlg::OnMenuSave()
+{
+	CFileDialog dlg(FALSE, 0, m_imgDlg.get_filename(), OFN_HIDEREADONLY /*| OFN_EXPLOPER */ | OFN_OVERWRITEPROMPT);
+
+	if (dlg.DoModal() == IDCANCEL)
+		return;
+
+	//파일저장 등은 dir_watcher에 영향을 주므로 저장시에는 우선 중지시켜야 한다.
+	m_dir_watcher.stop();
+
+	CString sfile = dlg.GetPathName();
+	m_imgDlg.save(sfile, 1.0f);
+	m_imgDlg.display_image(sfile, true);
 }
