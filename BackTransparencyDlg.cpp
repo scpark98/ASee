@@ -104,7 +104,7 @@ void CBackTransparencyDlg::show_window(int nCmdShow)
 		m_cr_back = Gdiplus::Color::Transparent;
 	else
 		m_cr_back.SetFromCOLORREF(m_button_back_color.GetColor());
-	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_back_transparency(m_target_index, (float)m_inner_threshold, (float)m_outer_threshold, m_cr_back);
+	//((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_back_transparency(m_target_index, (float)m_inner_threshold, (float)m_outer_threshold, m_cr_back);
 }
 
 LRESULT CBackTransparencyDlg::on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lParam)
