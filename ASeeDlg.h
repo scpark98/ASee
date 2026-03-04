@@ -13,6 +13,7 @@
 
 #include "TitleDlg.h"
 #include "ZigzagColorDlg.h"
+#include "BackTransparencyDlg.h"
 
 // CASeeDlg 대화 상자
 class CASeeDlg : public CDialogEx//CSCThemeDlg
@@ -21,9 +22,19 @@ class CASeeDlg : public CDialogEx//CSCThemeDlg
 public:
 	CASeeDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
 
-	CZigzagColorDlg		m_zigzagColorDlg;
+	CZigzagColorDlg			m_zigzagColorDlg;
+	CBackTransparencyDlg	m_backTransparencyDlg;
 
-	void				set_zigzag_color(COLORREF cr_back, COLORREF cr_fore);
+	void					set_zigzag_color(COLORREF cr_back, COLORREF cr_fore);
+
+	Gdiplus::Color			detect_back_color(int index = -1);
+
+	//cr_back을 Transparent가 아닌 다른 색으로 주면 해당 색상을 투명 배경색으로 처리한다.
+	//cr_back을 Red로 주면 실제 배경이 Red가 아니어도 Red에 가까운 색상은 투명하게 처리한다.
+	//inner_threshold는 완전히 투명한 색상과의 최대 허용 오차, (default 30)
+	//outer_threshold는 완전히 불투명한 색상과의 최소 허용 오차이다. (default 120)
+	//inner_threshold와 outer_threshold 사이의 색상은 반투명으로 처리한다.
+	void					set_back_transparency(int target_index, float inner_threshold, float outer_threshold, Gdiplus::Color cr_back = Gdiplus::Color::Transparent);
 
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
@@ -181,4 +192,5 @@ public:
 	afx_msg void OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp);
 	afx_msg LRESULT OnNcHitTest(CPoint point);
 	afx_msg void OnMenuOpen();
+	afx_msg void OnMenuBackTransparency();
 };

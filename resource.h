@@ -20,6 +20,7 @@
 #define IDD_ZIGZAG_COLOR                141
 #define IDC_CURSOR1                     144
 #define IDC_CURSOR_CROSS                144
+#define IDD_BACK_TRANSPARENCY           145
 #define IDC_EDIT_CX                     1000
 #define IDC_EDIT_ROI_CX                 1000
 #define IDC_SPIN_CX                     1001
@@ -37,8 +38,14 @@
 #define IDC_RADIO_DEFAULT               1007
 #define IDC_EDIT_ROI_Y2                 1007
 #define IDC_RADIO_WHITE                 1008
+#define IDC_SLIDER_INNER_THRESHOLD      1008
 #define IDC_RADIO_BLACK                 1009
+#define IDC_SLIDER_OUTER_THRESHOLD      1009
 #define IDC_RADIO_CUSTOM                1010
+#define IDC_STATIC_OUTER_THRESHOLD      1010
+#define IDC_STATIC_INNER_THRESHOLD      1011
+#define IDC_CHECK_AUTO_DETECT           1012
+#define IDC_MFCCOLORBUTTON1             1013
 #define ID_MENU_ROTATE_LEFT             32771
 #define ID_MENU_ALWAYS_ON_TOP           32772
 #define ID_MENU_SMOOTH                  32773
@@ -104,14 +111,16 @@
 #define ID_MENU_32860                   32860
 #define ID_MENU_SHOW_MOUSE_GUIDE_LINE   32861
 #define ID_MENU_SHOW_CURSOR_GUIDE_LINE  32862
+#define ID_MENU_32863                   32863
+#define ID_MENU_BACK_TRANSPARENCY       32864
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        145
-#define _APS_NEXT_COMMAND_VALUE         32863
-#define _APS_NEXT_CONTROL_VALUE         1008
+#define _APS_NEXT_RESOURCE_VALUE        148
+#define _APS_NEXT_COMMAND_VALUE         32865
+#define _APS_NEXT_CONTROL_VALUE         1014
 #define _APS_NEXT_SYMED_VALUE           1105
 #endif
 #endif

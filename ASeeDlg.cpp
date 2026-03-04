@@ -145,6 +145,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_WM_NCCALCSIZE()
 	ON_WM_NCHITTEST()
 	ON_COMMAND(ID_MENU_OPEN, &CASeeDlg::OnMenuOpen)
+	ON_COMMAND(ID_MENU_BACK_TRANSPARENCY, &CASeeDlg::OnMenuBackTransparency)
 END_MESSAGE_MAP()
 
 
@@ -212,6 +213,8 @@ BOOL CASeeDlg::OnInitDialog()
 	m_titleDlg.set_titlebar_movable(true);
 	update_title(_T("no image"));
 	m_titleDlg.ShowWindow(SW_SHOW);
+
+	m_backTransparencyDlg.Create(IDD_BACK_TRANSPARENCY, this);
 
 	m_message.set_text(this, _T(""), 40, Gdiplus::FontStyleBold, 4.0f, 2.4f);
 	m_message.set_stroke_color(Gdiplus::Color::Black);
@@ -873,12 +876,14 @@ void CASeeDlg::OnMenuCopyToClipboardEXIF()
 
 void CASeeDlg::OnMenuDelete()
 {
+	//delete 명령은 roi 선택이 되어있다면 roi를 초기화하는 기능으로 동작한다.
 	if (m_imgDlg.get_image_roi().IsEmptyArea() == false)
 	{
 		m_imgDlg.set_image_roi();
 		return;
 	}
 
+	//roi가 없는 상태에서는 파일삭제 기능으로 동작한다.
 	if (!delete_file(m_imgDlg.get_filename(), true))
 	{
 		show_message(_T("파일 삭제 실패"));
@@ -1135,7 +1140,11 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				OnMenuZoomStretch();
 				return true;
 			case VK_TAB :
-				OnMenuShowInfo();
+				//OnMenuShowInfo();
+				{
+					Gdiplus::Color cr = m_imgDlg.get_cur_image()->detect_back_color();
+					trace(get_color_str(cr));
+				}
 				break;
 		}
 	}
@@ -1188,6 +1197,11 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 	}
 
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+Gdiplus::Color CASeeDlg::detect_back_color(int index)
+{
+	return m_imgDlg.get_cur_image()->detect_back_color();
 }
 
 void CASeeDlg::OnMenuShowInfo()
@@ -1423,20 +1437,18 @@ void CASeeDlg::show_adjust_message(int type, int percentage, bool invalidate)
 
 void CASeeDlg::OnMenuTransparentBack()
 {
-	m_zigzagColorDlg.set_back_color(CSCGdiplusBitmap::m_cr_zigzag_back.ToCOLORREF());
-	m_zigzagColorDlg.set_fore_color(CSCGdiplusBitmap::m_cr_zigzag_fore.ToCOLORREF());
-	m_zigzagColorDlg.CenterWindow();
 	m_zigzagColorDlg.ShowWindow(SW_SHOW);
 }
 
 void CASeeDlg::set_zigzag_color(COLORREF cr_back, COLORREF cr_fore)
 {
-	Gdiplus::Color gcr_back;
 	Gdiplus::Color gcr_fore;
+	Gdiplus::Color gcr_back;
 
-	gcr_back.SetFromCOLORREF(cr_back);
 	gcr_fore.SetFromCOLORREF(cr_fore);
-	m_imgDlg.set_zigzag_color(gcr_back, gcr_fore);
+	gcr_back.SetFromCOLORREF(cr_back);
+
+	m_imgDlg.set_zigzag_color(gcr_fore, gcr_back);
 }
 
 LRESULT CASeeDlg::on_message_CSCD2ImageDlg(WPARAM wParam, LPARAM lParam)
@@ -1448,6 +1460,9 @@ LRESULT CASeeDlg::on_message_CSCD2ImageDlg(WPARAM wParam, LPARAM lParam)
 		update_title();
 		m_dir_watcher.stop();
 		m_dir_watcher.add(get_part(m_imgDlg.get_filename(), fn_folder));
+
+		//현재는 이 dlg를 show_window()하면서 바로 투명 배경 처리를 하므로 이미지 변경시에는 이 창을 숨겨야 한다.
+		m_backTransparencyDlg.ShowWindow(SW_HIDE);
 	}
 	else if (msg->msg == CSCD2ImageDlg::message_hide_message)
 	{
@@ -1688,4 +1703,20 @@ void CASeeDlg::OnMenuOpen()
 		return;
 
 	m_imgDlg.load(dlg.GetPathName(), true);
+}
+
+//target_index를 지정한 후 배경 투명도 조절 다이얼로그를 show_window()하면 
+void CASeeDlg::OnMenuBackTransparency()
+{
+	m_backTransparencyDlg.set_target_index(m_imgDlg.get_cur_frame_index());
+
+	if (!m_backTransparencyDlg.IsWindowVisible())
+	{
+		m_backTransparencyDlg.show_window(SW_SHOW);
+	}
+}
+
+void CASeeDlg::set_back_transparency(int target_index, float inner_threshold, float outer_threshold, Gdiplus::Color cr_back)
+{
+	m_imgDlg.set_back_transparency(target_index, inner_threshold, outer_threshold, cr_back);
 }

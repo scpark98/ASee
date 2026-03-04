@@ -42,10 +42,10 @@ public:
 	CButton m_radio_default;
 	CButton m_radio_white;
 	CButton m_radio_black;
+	CButton m_radio_custom;
 	afx_msg void OnBnClickedRadioDefault();
 	afx_msg void OnBnClickedRadioWhite();
 	afx_msg void OnBnClickedRadioBlack();
-	CButton m_radio_custom;
 	afx_msg void OnBnClickedRadioCustom();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

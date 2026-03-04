@@ -120,6 +120,9 @@
     <ClInclude Include="..\Common\thread\ThreadManager.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="BackTransparencyDlg.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ASee.cpp">
@@ -205,6 +208,9 @@
     </ClCompile>
     <ClCompile Include="..\Common\thread\ThreadManager.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="BackTransparencyDlg.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

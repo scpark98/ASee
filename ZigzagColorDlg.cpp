@@ -54,8 +54,8 @@ BOOL CZigzagColorDlg::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  여기에 추가 초기화 작업을 추가합니다.
-	m_cr_back = theApp.GetProfileInt(_T("setting"), _T("zigzag cr_back"), CSCGdiplusBitmap::m_cr_zigzag_back.ToCOLORREF());
-	m_cr_fore = theApp.GetProfileInt(_T("setting"), _T("zigzag cr_fore"), CSCGdiplusBitmap::m_cr_zigzag_fore.ToCOLORREF());
+	m_cr_back = theApp.GetProfileInt(_T("setting"), _T("zigzag cr_back"), Gdiplus::Color(255, 255, 255).ToCOLORREF());
+	m_cr_fore = theApp.GetProfileInt(_T("setting"), _T("zigzag cr_fore"), Gdiplus::Color(200, 200, 200).ToCOLORREF());
 	m_button_back_color.SetColor(m_cr_back);
 	m_button_fore_color.SetColor(m_cr_fore);
 
@@ -100,15 +100,29 @@ void CZigzagColorDlg::OnBnClickedCancel()
 
 void CZigzagColorDlg::OnBnClickedButtonBackColor()
 {
+	//custom color를 선택하면 Custom으로 선택상태를 바꾸고
+	m_radio_default.SetCheck(BST_UNCHECKED);
+	m_radio_white.SetCheck(BST_UNCHECKED);
+	m_radio_black.SetCheck(BST_UNCHECKED);
+	m_radio_custom.SetCheck(BST_CHECKED);
+
 	m_cr_back = m_button_back_color.GetColor();
 	theApp.WriteProfileInt(_T("setting"), _T("zigzag cr_back"), m_cr_back);
+	theApp.WriteProfileInt(_T("setting"), _T("zigzag option"), 3);
 	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_zigzag_color(m_cr_back, m_cr_fore);
 }
 
 void CZigzagColorDlg::OnBnClickedButtonForeColor()
 {
+	//custom color를 선택하면 Custom으로 선택상태를 바꾸고
+	m_radio_default.SetCheck(BST_UNCHECKED);
+	m_radio_white.SetCheck(BST_UNCHECKED);
+	m_radio_black.SetCheck(BST_UNCHECKED);
+	m_radio_custom.SetCheck(BST_CHECKED);
+
 	m_cr_fore = m_button_fore_color.GetColor();
 	theApp.WriteProfileInt(_T("setting"), _T("zigzag cr_fore"), m_cr_fore);
+	theApp.WriteProfileInt(_T("setting"), _T("zigzag option"), 3);
 	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_zigzag_color(m_cr_back, m_cr_fore);
 }
 
@@ -142,8 +156,9 @@ void CZigzagColorDlg::OnBnClickedRadioDefault()
 {
 	m_cr_back = RGB(255, 255, 255);
 	m_cr_fore = RGB(200, 200, 200);
-	m_button_back_color.EnableWindow(false);
-	m_button_fore_color.EnableWindow(false);
+	m_button_back_color.SetColor(m_cr_back);
+	m_button_fore_color.SetColor(m_cr_fore);
+
 	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_zigzag_color(m_cr_back, m_cr_fore);
 	theApp.WriteProfileInt(_T("setting"), _T("zigzag option"), 0);
 }
@@ -152,8 +167,9 @@ void CZigzagColorDlg::OnBnClickedRadioWhite()
 {
 	m_cr_back = RGB(255, 255, 255);
 	m_cr_fore = RGB(255, 255, 255);
-	m_button_back_color.EnableWindow(false);
-	m_button_fore_color.EnableWindow(false);
+	m_button_back_color.SetColor(m_cr_back);
+	m_button_fore_color.SetColor(m_cr_fore);
+
 	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_zigzag_color(m_cr_back, m_cr_fore);
 	theApp.WriteProfileInt(_T("setting"), _T("zigzag option"), 1);
 }
@@ -162,8 +178,9 @@ void CZigzagColorDlg::OnBnClickedRadioBlack()
 {
 	m_cr_back = RGB(0, 0, 0);
 	m_cr_fore = RGB(0, 0, 0);
-	m_button_back_color.EnableWindow(false);
-	m_button_fore_color.EnableWindow(false);
+	m_button_back_color.SetColor(m_cr_back);
+	m_button_fore_color.SetColor(m_cr_fore);
+
 	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_zigzag_color(m_cr_back, m_cr_fore);
 	theApp.WriteProfileInt(_T("setting"), _T("zigzag option"), 2);
 }
@@ -176,8 +193,6 @@ void CZigzagColorDlg::OnBnClickedRadioCustom()
 
 	m_button_back_color.SetColor(m_cr_back);
 	m_button_fore_color.SetColor(m_cr_fore);
-	m_button_back_color.EnableWindow(true);
-	m_button_fore_color.EnableWindow(true);
 
 	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_zigzag_color(m_cr_back, m_cr_fore);
 	theApp.WriteProfileInt(_T("setting"), _T("zigzag option"), 3);
