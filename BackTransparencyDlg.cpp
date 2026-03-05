@@ -42,6 +42,7 @@ BEGIN_MESSAGE_MAP(CBackTransparencyDlg, CDialogEx)
 	ON_REGISTERED_MESSAGE(Message_CSCSliderCtrl, &CBackTransparencyDlg::on_message_CSCSliderCtrl)
 	ON_BN_CLICKED(IDC_CHECK_AUTO_DETECT, &CBackTransparencyDlg::OnBnClickedCheckAutoDetect)
 	ON_BN_CLICKED(IDC_BUTTON_BACK_COLOR, &CBackTransparencyDlg::OnBnClickedButtonBackColor)
+	ON_BN_CLICKED(IDC_BUTTON_APPLY_TO_ALL_FRAMES, &CBackTransparencyDlg::OnBnClickedButtonApplyToAllFrames)
 END_MESSAGE_MAP()
 
 
@@ -53,18 +54,13 @@ BOOL CBackTransparencyDlg::OnInitDialog()
 	// TODO:  여기에 추가 초기화 작업을 추가합니다.
 	RestoreWindowPosition(AfxGetApp(), this, _T("BackTransparencyDlg"), false, false);
 
-	m_inner_threshold = get_profile_value(_T("setting\\remove background"), _T("m_inner_threshold"), 30);
-	m_outer_threshold = get_profile_value(_T("setting\\remove background"), _T("m_outer_threshold"), 120);
+	m_inner_threshold = AfxGetApp()->GetProfileInt(_T("setting\\remove background"), _T("m_inner_threshold"), 30);
+	m_outer_threshold = AfxGetApp()->GetProfileInt(_T("setting\\remove background"), _T("m_outer_threshold"), 120);
 	
 	m_static_inner_threshold.set_use_edit(true, ES_RIGHT);
 	m_static_outer_threshold.set_use_edit();
 	m_static_inner_threshold.set_text_value(_T("%d"), m_inner_threshold);
 	m_static_outer_threshold.set_text_value(_T("%d"), m_outer_threshold);
-
-	//m_static_inner_threshold.set_prefix_space(2);
-	//m_static_inner_threshold.set_text_color(gGRAY(32));
-	//m_static_inner_threshold.set_back_color(gGRAY(232));
-	//m_static_inner_threshold.set_round(4, Gdiplus::Color::Ivory, get_sys_color(COLOR_3DFACE));// get_sys_color(COLOR_3DFACE), get_sys_color(COLOR_3DFACE));
 
 	m_slider_inner_threshold.set_style(CSCSliderCtrl::style_thumb_round);
 	m_slider_outer_threshold.set_style(CSCSliderCtrl::style_thumb_round);
@@ -158,4 +154,9 @@ void CBackTransparencyDlg::OnBnClickedButtonBackColor()
 		m_cr_back.SetFromCOLORREF(m_button_back_color.GetColor());
 		((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_back_transparency(m_target_index, (float)m_inner_threshold, (float)m_outer_threshold, m_cr_back);
 	}
+}
+
+void CBackTransparencyDlg::OnBnClickedButtonApplyToAllFrames()
+{
+	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_back_transparency(-1, (float)m_inner_threshold, (float)m_outer_threshold, m_cr_back);
 }

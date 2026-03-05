@@ -1214,7 +1214,6 @@ void CASeeDlg::OnMenuShowInfo()
 void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	//trace(point);
 	if (IsZoomed())
 	{
 		if (point.y <= m_titleDlg.get_titlebar_height() + 10)
@@ -1719,6 +1718,9 @@ void CASeeDlg::OnMenuBackTransparency()
 
 void CASeeDlg::set_back_transparency(int target_index, float inner_threshold, float outer_threshold, Gdiplus::Color cr_back)
 {
+	AfxGetApp()->WriteProfileInt(_T("setting\\remove background"), _T("m_inner_threshold"), inner_threshold);
+	AfxGetApp()->WriteProfileInt(_T("setting\\remove background"), _T("m_outer_threshold"), outer_threshold);
+
 	m_imgDlg.set_back_transparency(target_index, inner_threshold, outer_threshold, cr_back);
 }
 

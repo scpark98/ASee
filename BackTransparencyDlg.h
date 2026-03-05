@@ -50,4 +50,5 @@ public:
 	CMFCColorButton m_button_back_color;
 	afx_msg void OnBnClickedCheckAutoDetect();
 	afx_msg void OnBnClickedButtonBackColor();
+	afx_msg void OnBnClickedButtonApplyToAllFrames();
 };

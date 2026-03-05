@@ -45,6 +45,8 @@
 #define IDC_STATIC_OUTER_THRESHOLD      1010
 #define IDC_STATIC_INNER_THRESHOLD      1011
 #define IDC_CHECK_AUTO_DETECT           1012
+#define IDC_BUTTON1                     1014
+#define IDC_BUTTON_APPLY_TO_ALL_FRAMES  1014
 #define ID_MENU_ROTATE_LEFT             32771
 #define ID_MENU_ALWAYS_ON_TOP           32772
 #define ID_MENU_SMOOTH                  32773
@@ -121,7 +123,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        148
 #define _APS_NEXT_COMMAND_VALUE         32867
-#define _APS_NEXT_CONTROL_VALUE         1014
+#define _APS_NEXT_CONTROL_VALUE         1015
 #define _APS_NEXT_SYMED_VALUE           1105
 #endif
 #endif
