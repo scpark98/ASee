@@ -26,7 +26,7 @@ public:
 
 protected:
 	//배경 자동 감지 or 수동
-	bool			m_auto_detect = true;
+	//bool			m_auto_detect = true;
 	Gdiplus::Color	m_cr_back = Gdiplus::Color::Transparent;
 
 	int				m_target_index = 0;
@@ -51,4 +51,5 @@ public:
 	afx_msg void OnBnClickedCheckAutoDetect();
 	afx_msg void OnBnClickedButtonBackColor();
 	afx_msg void OnBnClickedButtonApplyToAllFrames();
+	afx_msg void OnBnClickedButtonApplyCurFrame();
 };

@@ -1708,6 +1708,9 @@ void CASeeDlg::OnMenuOpen()
 //target_index를 지정한 후 배경 투명도 조절 다이얼로그를 show_window()하면 
 void CASeeDlg::OnMenuBackTransparency()
 {
+	//투명 배경처리 창을 띠울때는 무조건 재생은 일시정지 시킨다.
+	m_imgDlg.pause();
+
 	m_backTransparencyDlg.set_target_index(m_imgDlg.get_cur_frame_index());
 
 	if (!m_backTransparencyDlg.IsWindowVisible())
@@ -1721,20 +1724,33 @@ void CASeeDlg::set_back_transparency(int target_index, float inner_threshold, fl
 	AfxGetApp()->WriteProfileInt(_T("setting\\remove background"), _T("m_inner_threshold"), inner_threshold);
 	AfxGetApp()->WriteProfileInt(_T("setting\\remove background"), _T("m_outer_threshold"), outer_threshold);
 
+	//-2가 넘어오면 현재 프레임에 적용.
+	if (target_index == -2)
+		target_index = m_imgDlg.get_cur_frame_index();
+
 	m_imgDlg.set_back_transparency(target_index, inner_threshold, outer_threshold, cr_back);
 }
 
 void CASeeDlg::OnMenuSave()
 {
+	//파일저장 등은 dir_watcher에 영향을 주므로 저장시에는 우선 중지시켜야 한다.
+	//이 코드는 반드시 dlg.DoModal()보다 먼저 호출되어야 한다.
+	//파일대화상자가 표시되면서 dir_watcher에 의해 OnMenuRefresh() → reload_image()가 호출될 가능성이 매우 높다.
+	m_dir_watcher.stop();
+	Wait(100);
+
 	CFileDialog dlg(FALSE, 0, m_imgDlg.get_filename(), OFN_HIDEREADONLY /*| OFN_EXPLOPER */ | OFN_OVERWRITEPROMPT);
 
 	if (dlg.DoModal() == IDCANCEL)
+	{
+		// 저장 취소시 dir_watcher 재시작
+		m_dir_watcher.add(get_part(m_imgDlg.get_filename(), fn_folder));
 		return;
-
-	//파일저장 등은 dir_watcher에 영향을 주므로 저장시에는 우선 중지시켜야 한다.
-	m_dir_watcher.stop();
+	}
 
 	CString sfile = dlg.GetPathName();
 	m_imgDlg.save(sfile, 1.0f);
+	Wait(100);
+
 	m_imgDlg.display_image(sfile, true);
 }

@@ -43,6 +43,7 @@ BEGIN_MESSAGE_MAP(CBackTransparencyDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_AUTO_DETECT, &CBackTransparencyDlg::OnBnClickedCheckAutoDetect)
 	ON_BN_CLICKED(IDC_BUTTON_BACK_COLOR, &CBackTransparencyDlg::OnBnClickedButtonBackColor)
 	ON_BN_CLICKED(IDC_BUTTON_APPLY_TO_ALL_FRAMES, &CBackTransparencyDlg::OnBnClickedButtonApplyToAllFrames)
+	ON_BN_CLICKED(IDC_BUTTON_APPLY_CUR_FRAME, &CBackTransparencyDlg::OnBnClickedButtonApplyCurFrame)
 END_MESSAGE_MAP()
 
 
@@ -96,10 +97,11 @@ void CBackTransparencyDlg::show_window(int nCmdShow)
 	ShowWindow(nCmdShow);
 
 	//현재 설정값을 CASeeDlg에 적용
-	if (m_auto_detect)
+	if (m_check_auto_detect.GetCheck() == BST_CHECKED)
 		m_cr_back = Gdiplus::Color::Transparent;
 	else
 		m_cr_back.SetFromCOLORREF(m_button_back_color.GetColor());
+
 	//((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_back_transparency(m_target_index, (float)m_inner_threshold, (float)m_outer_threshold, m_cr_back);
 }
 
@@ -118,7 +120,7 @@ LRESULT CBackTransparencyDlg::on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lPa
 		m_static_outer_threshold.set_text_value(_T("%d"), m_outer_threshold);
 	}
 
-	if (m_auto_detect)
+	if (m_check_auto_detect.GetCheck() == BST_CHECKED)
 		m_cr_back = Gdiplus::Color::Transparent;
 	else
 		m_cr_back.SetFromCOLORREF(m_button_back_color.GetColor());
@@ -132,7 +134,6 @@ void CBackTransparencyDlg::OnBnClickedCheckAutoDetect()
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
 	if (m_check_auto_detect.GetCheck() == BST_CHECKED)
 	{
-		m_auto_detect = true;
 		m_cr_back = Gdiplus::Color::Transparent;
 
 		Gdiplus::Color cr_detected = ((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->detect_back_color();
@@ -140,7 +141,6 @@ void CBackTransparencyDlg::OnBnClickedCheckAutoDetect()
 	}
 	else
 	{
-		m_auto_detect = false;
 		m_cr_back.SetFromCOLORREF(m_button_back_color.GetColor());
 	}
 	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_back_transparency(m_target_index, (float)m_inner_threshold, (float)m_outer_threshold, m_cr_back);
@@ -148,15 +148,18 @@ void CBackTransparencyDlg::OnBnClickedCheckAutoDetect()
 
 void CBackTransparencyDlg::OnBnClickedButtonBackColor()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	if (!m_auto_detect)
-	{
-		m_cr_back.SetFromCOLORREF(m_button_back_color.GetColor());
-		((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_back_transparency(m_target_index, (float)m_inner_threshold, (float)m_outer_threshold, m_cr_back);
-	}
+	//사용자가 투명처리 할 색상을 선택한 순간 auto detect는 해제되어야 한다.
+	m_check_auto_detect.SetCheck(BST_UNCHECKED);
+	m_cr_back.SetFromCOLORREF(m_button_back_color.GetColor());
+	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_back_transparency(m_target_index, (float)m_inner_threshold, (float)m_outer_threshold, m_cr_back);
 }
 
 void CBackTransparencyDlg::OnBnClickedButtonApplyToAllFrames()
 {
 	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_back_transparency(-1, (float)m_inner_threshold, (float)m_outer_threshold, m_cr_back);
+}
+
+void CBackTransparencyDlg::OnBnClickedButtonApplyCurFrame()
+{
+	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_back_transparency(-2, (float)m_inner_threshold, (float)m_outer_threshold, m_cr_back);
 }
