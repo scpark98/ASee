@@ -147,6 +147,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_OPEN, &CASeeDlg::OnMenuOpen)
 	ON_COMMAND(ID_MENU_BACK_TRANSPARENCY, &CASeeDlg::OnMenuBackTransparency)
 	ON_COMMAND(ID_MENU_SAVE, &CASeeDlg::OnMenuSave)
+	ON_COMMAND(ID_MENU_VIEW_SHAPE_DLG, &CASeeDlg::OnMenuViewShapeDlg)
 END_MESSAGE_MAP()
 
 
@@ -1141,11 +1142,7 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				OnMenuZoomStretch();
 				return true;
 			case VK_TAB :
-				//OnMenuShowInfo();
-				{
-					Gdiplus::Color cr = m_imgDlg.get_cur_image()->detect_back_color();
-					trace(get_color_str(cr));
-				}
+				OnMenuShowInfo();
 				break;
 		}
 	}
@@ -1753,4 +1750,10 @@ void CASeeDlg::OnMenuSave()
 	Wait(100);
 
 	m_imgDlg.display_image(sfile, true);
+}
+
+void CASeeDlg::OnMenuViewShapeDlg()
+{
+	m_shapeDlg.load(this, m_imgDlg.get_filename());
+	m_shapeDlg.ShowWindow(SW_SHOW);
 }

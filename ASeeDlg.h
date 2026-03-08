@@ -88,6 +88,9 @@ protected:
 	CSCShapeDlg		m_message;
 	void			show_message(CString message);
 
+	//현재 이미지를 CShapeDlg로 보여주기 위한 인스턴스.
+	CSCShapeDlg		m_shapeDlg;
+
 	enum ENUM_ADJUST_TYPE
 	{
 		adjust_reset = 0,
@@ -196,4 +199,5 @@ public:
 	afx_msg void OnMenuOpen();
 	afx_msg void OnMenuBackTransparency();
 	afx_msg void OnMenuSave();
+	afx_msg void OnMenuViewShapeDlg();
 };
