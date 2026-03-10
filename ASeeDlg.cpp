@@ -146,7 +146,6 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_WM_NCHITTEST()
 	ON_COMMAND(ID_MENU_OPEN, &CASeeDlg::OnMenuOpen)
 	ON_COMMAND(ID_MENU_BACK_TRANSPARENCY, &CASeeDlg::OnMenuBackTransparency)
-	ON_COMMAND(ID_MENU_SAVE, &CASeeDlg::OnMenuSave)
 	ON_COMMAND(ID_MENU_VIEW_SHAPE_DLG, &CASeeDlg::OnMenuViewShapeDlg)
 END_MESSAGE_MAP()
 
@@ -345,14 +344,8 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 		// ★ SC_CLOSE 시 popup 상태의 m_titleDlg를 먼저 정리
 		else if ((nID & 0xFFF0) == SC_CLOSE)
 		{
-			// 활성 타이머 제거
-			m_titleDlg.KillTimer(CTitleDlg::timer_fade_in);
-
-			// popup 상태라면 child로 복원하거나 명시적으로 파괴
-			if (m_titleDlg.m_hWnd != NULL)
-				m_titleDlg.DestroyWindow();
-
-			m_dir_watcher.stop();
+			OnBnClickedCancel();
+			return;
 		}
 
 		CDialogEx::OnSysCommand(nID, lParam);
@@ -405,7 +398,21 @@ void CASeeDlg::OnBnClickedOk()
 
 void CASeeDlg::OnBnClickedCancel()
 {
-	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+	if (m_shapeDlg.GetSafeHwnd() && m_shapeDlg.IsWindowVisible())
+	{
+		m_shapeDlg.gif_stop();
+		m_shapeDlg.ShowWindow(SW_HIDE);
+		return;
+	}
+
+	// 실제 종료 시에만 정리 작업 수행
+	m_titleDlg.KillTimer(CTitleDlg::timer_fade_in);
+
+	if (m_titleDlg.m_hWnd != NULL)
+		m_titleDlg.DestroyWindow();
+
+	m_dir_watcher.stop(); 
+	m_shapeDlg.gif_stop();
 
 	CDialogEx::OnCancel();
 }
@@ -415,7 +422,7 @@ void CASeeDlg::OnSize(UINT nType, int cx, int cy)
 	CDialogEx::OnSize(nType, cx, cy);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
-	if (m_imgDlg.m_hWnd == NULL)// || m_titleDlg.m_hWnd == NULL)
+	if (m_imgDlg.m_hWnd == nullptr)
 		return;
 
 	CRect rc;
@@ -816,16 +823,6 @@ void CASeeDlg::OnMenuMirror()
 void CASeeDlg::OnMenuFlip()
 {
 	m_imgDlg.rotate(Gdiplus::RotateNoneFlipY);
-}
-
-void CASeeDlg::OnMenuSaveAs()
-{
-	CFileDialog dlg(false, 0, m_imgDlg.get_filename(), OFN_HIDEREADONLY /*| OFN_EXPLOPER */ | OFN_OVERWRITEPROMPT);
-	if (dlg.DoModal() == IDCANCEL)
-		return;
-
-	CString sfile = dlg.GetPathName();
-	m_imgDlg.save(sfile, 1.0f);
 }
 
 void CASeeDlg::OnMenuSlideShow()
@@ -1728,7 +1725,7 @@ void CASeeDlg::set_back_transparency(int target_index, float inner_threshold, fl
 	m_imgDlg.set_back_transparency(target_index, inner_threshold, outer_threshold, cr_back);
 }
 
-void CASeeDlg::OnMenuSave()
+void CASeeDlg::OnMenuSaveAs()
 {
 	//파일저장 등은 dir_watcher에 영향을 주므로 저장시에는 우선 중지시켜야 한다.
 	//이 코드는 반드시 dlg.DoModal()보다 먼저 호출되어야 한다.
@@ -1736,7 +1733,8 @@ void CASeeDlg::OnMenuSave()
 	m_dir_watcher.stop();
 	Wait(100);
 
-	CFileDialog dlg(FALSE, 0, m_imgDlg.get_filename(), OFN_HIDEREADONLY /*| OFN_EXPLOPER */ | OFN_OVERWRITEPROMPT);
+	CString image_filter = _T("Image Files|*.bmp;*.jpg;*.jpeg;*.png;*.webp;*.gif;*.yuv;*.jfif;*.avif|All Files|*.*||");
+	CFileDialog dlg(FALSE, 0, m_imgDlg.get_filename(), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, image_filter);
 
 	if (dlg.DoModal() == IDCANCEL)
 	{

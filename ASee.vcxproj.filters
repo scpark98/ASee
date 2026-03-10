@@ -123,6 +123,9 @@
     <ClInclude Include="BackTransparencyDlg.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\thread\CSCThread\SCThread.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ASee.cpp">
@@ -211,6 +214,9 @@
     </ClCompile>
     <ClCompile Include="BackTransparencyDlg.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\thread\CSCThread\SCThread.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

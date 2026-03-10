@@ -198,6 +198,5 @@ public:
 	afx_msg LRESULT OnNcHitTest(CPoint point);
 	afx_msg void OnMenuOpen();
 	afx_msg void OnMenuBackTransparency();
-	afx_msg void OnMenuSave();
 	afx_msg void OnMenuViewShapeDlg();
 };

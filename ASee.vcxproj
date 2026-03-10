@@ -256,6 +256,7 @@
     <ClInclude Include="..\Common\MemoryDC.h" />
     <ClInclude Include="..\Common\messagebox\Win32InputBox\Win32InputBox.h" />
     <ClInclude Include="..\Common\SCGdiplusBitmap.h" />
+    <ClInclude Include="..\Common\thread\CSCThread\SCThread.h" />
     <ClInclude Include="..\Common\thread\ThreadManager.h" />
     <ClInclude Include="..\Common\ThumbCtrl\SCThumbCtrl.h" />
     <ClInclude Include="ASee.h" />
@@ -393,6 +394,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Common\SCGdiplusBitmap.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Common\thread\CSCThread\SCThread.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
