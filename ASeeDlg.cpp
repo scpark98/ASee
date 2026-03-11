@@ -396,13 +396,13 @@ void CASeeDlg::OnBnClickedOk()
 	PostMessage(WM_SYSCOMMAND, IsZoomed() ? SC_RESTORE : SC_MAXIMIZE);
 }
 
+//esc키와는 달리 종료 버튼을 누른 경우는 프로그램 종료까지 진행된다.
 void CASeeDlg::OnBnClickedCancel()
 {
 	if (m_shapeDlg.GetSafeHwnd() && m_shapeDlg.IsWindowVisible())
 	{
 		m_shapeDlg.gif_stop();
 		m_shapeDlg.ShowWindow(SW_HIDE);
-		return;
 	}
 
 	// 실제 종료 시에만 정리 작업 수행
@@ -967,8 +967,20 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 		switch (pMsg->wParam)
 		{
 			case VK_ESCAPE:
-				OnBnClickedCancel();
-				return true;
+				//esc키를 누를 경우 shapeDlg가 실행중이면	shapeDlg를 종료시키고
+				if (m_shapeDlg.GetSafeHwnd() && m_shapeDlg.IsWindowVisible())
+				{
+					m_shapeDlg.gif_stop();
+					m_shapeDlg.ShowWindow(SW_HIDE);
+					return true;
+				}
+				//그렇지 않으면 프로그램을 종료시킨다.
+				else
+				{
+					OnBnClickedCancel();
+					return true;
+				}
+				break;
 			case VK_RETURN:
 				if (IsCtrlPressed())
 				{
@@ -1753,5 +1765,5 @@ void CASeeDlg::OnMenuSaveAs()
 void CASeeDlg::OnMenuViewShapeDlg()
 {
 	m_shapeDlg.load(this, m_imgDlg.get_filename());
-	m_shapeDlg.ShowWindow(SW_SHOW);
+	m_shapeDlg.show_window(SW_SHOW);
 }
