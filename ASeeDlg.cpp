@@ -882,15 +882,21 @@ void CASeeDlg::OnMenuDelete()
 		return;
 	}
 
+	m_dir_watcher.stop();
+
+	int index = m_imgDlg.get_cur_index();
+
 	//roi가 없는 상태에서는 파일삭제 기능으로 동작한다.
-	if (!delete_file(m_imgDlg.get_filename(), true))
+	if (delete_file(m_imgDlg.get_filename(), true))
+	{
+		//실제 파일이 삭제되면 이미지	목록에서도 제거한다.
+		m_imgDlg.remove(index);
+		Invalidate();
+	}
+	else
 	{
 		show_message(_T("파일 삭제 실패"));
-		return;
 	}
-
-	//현재 이미지 파일을 지우면 해당 폴더를 다시 스캔한다.
-	m_imgDlg.reload_image();
 }
 
 void CASeeDlg::OnMenuClose()
@@ -1367,7 +1373,8 @@ LRESULT CASeeDlg::on_message_CSCDirWatcher(WPARAM wParam, LPARAM lParam)
 
 	//다른 파일의 추가 삭제는 인덱스가 변하므로 refresh하지만
 	//파일 변경, 이름 변경은 현재 이미지가 아니면 매번 refresh 시키지 않는다.
-	if (msg->action != FILE_ACTION_RENAMED_OLD_NAME)// || msg->path1 == m_imgDlg.get_filename())
+	//removed 또한 직접 처리하므로 여기서 refresh 하지 않는다.
+	if ((msg->action != FILE_ACTION_RENAMED_OLD_NAME) && (msg->action != FILE_ACTION_REMOVED))
 	{
 		TRACE(_T("refresh images...\n"));
 		OnMenuRefresh();
