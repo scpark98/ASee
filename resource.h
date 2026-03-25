@@ -48,6 +48,8 @@
 #define IDC_BUTTON_APPLY_TO_ALL_FRAMES  1014
 #define IDC_BUTTON_APPLY_TO_ALL_FRAMES2 1015
 #define IDC_BUTTON_APPLY_CUR_FRAME      1015
+#define IDC_STATIC_CR_BACK              1015
+#define IDC_STATIC_CR_FORE              1016
 #define ID_MENU_ROTATE_LEFT             32771
 #define ID_MENU_ALWAYS_ON_TOP           32772
 #define ID_MENU_SMOOTH                  32773
@@ -126,7 +128,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        148
 #define _APS_NEXT_COMMAND_VALUE         32869
-#define _APS_NEXT_CONTROL_VALUE         1015
+#define _APS_NEXT_CONTROL_VALUE         1017
 #define _APS_NEXT_SYMED_VALUE           1105
 #endif
 #endif

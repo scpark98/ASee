@@ -47,7 +47,7 @@ public:
 	CSCStatic m_static_inner_threshold;
 	CSCStatic m_static_outer_threshold;
 	CButton m_check_auto_detect;
-	CMFCColorButton m_button_back_color;
+	CMFCColorButton m_static_cr_back;
 	afx_msg void OnBnClickedCheckAutoDetect();
 	afx_msg void OnBnClickedButtonBackColor();
 	afx_msg void OnBnClickedButtonApplyToAllFrames();

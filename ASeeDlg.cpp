@@ -1453,15 +1453,9 @@ void CASeeDlg::OnMenuTransparentBack()
 	m_zigzagColorDlg.ShowWindow(SW_SHOW);
 }
 
-void CASeeDlg::set_zigzag_color(COLORREF cr_back, COLORREF cr_fore)
+void CASeeDlg::set_zigzag_color(Gdiplus::Color cr_back, Gdiplus::Color cr_fore)
 {
-	Gdiplus::Color gcr_fore;
-	Gdiplus::Color gcr_back;
-
-	gcr_fore.SetFromCOLORREF(cr_fore);
-	gcr_back.SetFromCOLORREF(cr_back);
-
-	m_imgDlg.set_zigzag_color(gcr_fore, gcr_back);
+	m_imgDlg.set_zigzag_color(cr_fore, cr_back);
 }
 
 LRESULT CASeeDlg::on_message_CSCD2ImageDlg(WPARAM wParam, LPARAM lParam)

@@ -31,7 +31,7 @@ void CBackTransparencyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_INNER_THRESHOLD, m_static_inner_threshold);
 	DDX_Control(pDX, IDC_STATIC_OUTER_THRESHOLD, m_static_outer_threshold);
 	DDX_Control(pDX, IDC_CHECK_AUTO_DETECT, m_check_auto_detect);
-	DDX_Control(pDX, IDC_BUTTON_BACK_COLOR, m_button_back_color);
+	DDX_Control(pDX, IDC_BUTTON_BACK_COLOR, m_static_cr_back);
 }
 
 
@@ -100,7 +100,7 @@ void CBackTransparencyDlg::show_window(int nCmdShow)
 	if (m_check_auto_detect.GetCheck() == BST_CHECKED)
 		m_cr_back = Gdiplus::Color::Transparent;
 	else
-		m_cr_back.SetFromCOLORREF(m_button_back_color.GetColor());
+		m_cr_back.SetFromCOLORREF(m_static_cr_back.GetColor());
 
 	//((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_back_transparency(m_target_index, (float)m_inner_threshold, (float)m_outer_threshold, m_cr_back);
 }
@@ -123,7 +123,7 @@ LRESULT CBackTransparencyDlg::on_message_CSCSliderCtrl(WPARAM wParam, LPARAM lPa
 	if (m_check_auto_detect.GetCheck() == BST_CHECKED)
 		m_cr_back = Gdiplus::Color::Transparent;
 	else
-		m_cr_back.SetFromCOLORREF(m_button_back_color.GetColor());
+		m_cr_back.SetFromCOLORREF(m_static_cr_back.GetColor());
 	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_back_transparency(m_target_index, (float)m_inner_threshold, (float)m_outer_threshold, m_cr_back);
 
 	return 0;
@@ -137,11 +137,11 @@ void CBackTransparencyDlg::OnBnClickedCheckAutoDetect()
 		m_cr_back = Gdiplus::Color::Transparent;
 
 		Gdiplus::Color cr_detected = ((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->detect_back_color();
-		m_button_back_color.SetColor(cr_detected.ToCOLORREF());
+		m_static_cr_back.SetColor(cr_detected.ToCOLORREF());
 	}
 	else
 	{
-		m_cr_back.SetFromCOLORREF(m_button_back_color.GetColor());
+		m_cr_back.SetFromCOLORREF(m_static_cr_back.GetColor());
 	}
 	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_back_transparency(m_target_index, (float)m_inner_threshold, (float)m_outer_threshold, m_cr_back);
 }
@@ -150,7 +150,7 @@ void CBackTransparencyDlg::OnBnClickedButtonBackColor()
 {
 	//사용자가 투명처리 할 색상을 선택한 순간 auto detect는 해제되어야 한다.
 	m_check_auto_detect.SetCheck(BST_UNCHECKED);
-	m_cr_back.SetFromCOLORREF(m_button_back_color.GetColor());
+	m_cr_back.SetFromCOLORREF(m_static_cr_back.GetColor());
 	((CASeeDlg*)(AfxGetApp()->GetMainWnd()))->set_back_transparency(m_target_index, (float)m_inner_threshold, (float)m_outer_threshold, m_cr_back);
 }
 

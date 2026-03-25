@@ -25,7 +25,7 @@ public:
 	CZigzagColorDlg			m_zigzagColorDlg;
 	CBackTransparencyDlg	m_backTransparencyDlg;
 
-	void					set_zigzag_color(COLORREF cr_back, COLORREF cr_fore);
+	void					set_zigzag_color(Gdiplus::Color cr_back, Gdiplus::Color cr_fore);
 
 	Gdiplus::Color			detect_back_color(int index = -1);
 
