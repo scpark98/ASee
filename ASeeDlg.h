@@ -199,4 +199,5 @@ public:
 	afx_msg void OnMenuOpen();
 	afx_msg void OnMenuBackTransparency();
 	afx_msg void OnMenuViewShapeDlg();
+	afx_msg void OnMenuMagnify();
 };

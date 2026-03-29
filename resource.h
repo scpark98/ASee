@@ -121,13 +121,15 @@
 #define ID_MENU_SAVE                    32866
 #define ID_MENU_SHAPEDLG32867           32867
 #define ID_MENU_VIEW_SHAPE_DLG          32868
+#define ID_MENU_32869                   32869
+#define ID_MENU_MAGNIFY                 32870
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        148
-#define _APS_NEXT_COMMAND_VALUE         32869
+#define _APS_NEXT_COMMAND_VALUE         32871
 #define _APS_NEXT_CONTROL_VALUE         1017
 #define _APS_NEXT_SYMED_VALUE           1105
 #endif

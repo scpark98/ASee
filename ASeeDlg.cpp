@@ -13,6 +13,7 @@
 #include "Common/messagebox/Win32InputBox/Win32InputBox.h"
 
 #include "Common/SCGdiplusBitmap.h"
+#include "Common/CDialog/CSCColorPicker/SCDropperDlg.h"
 
 #include <mmsystem.h>
 #pragma comment(lib,"winmm.lib")
@@ -147,6 +148,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_OPEN, &CASeeDlg::OnMenuOpen)
 	ON_COMMAND(ID_MENU_BACK_TRANSPARENCY, &CASeeDlg::OnMenuBackTransparency)
 	ON_COMMAND(ID_MENU_VIEW_SHAPE_DLG, &CASeeDlg::OnMenuViewShapeDlg)
+	ON_COMMAND(ID_MENU_MAGNIFY, &CASeeDlg::OnMenuMagnify)
 END_MESSAGE_MAP()
 
 
@@ -602,7 +604,8 @@ void CASeeDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 		str.Format(_T(" (&%d)"), i + 1);
 		recent_folder = theApp.GetProfileString(_T("setting\\CSCD2ImageDlg\\recent folders"), i2S(i), _T(""));
 
-		if (!recent_folder.IsEmpty() && PathFileExists(recent_folder))
+		//PathFileExists()로 체크하니 유휴상태인 USB HDD때문에 메뉴가 표시되는 동안 시간이 걸린다.
+		if (!recent_folder.IsEmpty())// && PathFileExists(recent_folder))
 		{
 			recent_folder_exist = true;
 			str.Format(_T(" (&%d)"), valid_count + 1);
@@ -1767,4 +1770,34 @@ void CASeeDlg::OnMenuViewShapeDlg()
 {
 	m_shapeDlg.load(this, m_imgDlg.get_filename());
 	m_shapeDlg.show_window(SW_SHOW);
+}
+
+void CASeeDlg::OnMenuMagnify()
+{
+	CSCDropperDlg dlg;
+	dlg.create(this);
+
+	MSG msg = {};
+	bool quit_posted = false;
+	msg = {};
+
+	while (dlg.GetSafeHwnd() != NULL)
+	{
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			if (msg.message == WM_QUIT)
+			{
+				quit_posted = true;
+				break;
+			}
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		if (quit_posted) break;
+		if (dlg.GetSafeHwnd() != NULL)
+			WaitMessage();
+	}
+
+	if (quit_posted)
+		PostQuitMessage(static_cast<int>(msg.wParam));
 }
