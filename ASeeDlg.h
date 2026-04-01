@@ -38,6 +38,7 @@ public:
 	//target_index = -2이면 현재 프레임에 대해 적용. (이 파라미터 값은 CBackTransparencyDlg에서 "현재 프레임에 적용" 버튼을 눌렀을 때만 사용된다)
 	void					set_back_transparency(int target_index, float inner_threshold, float outer_threshold, Gdiplus::Color cr_back = Gdiplus::Color::Transparent);
 
+	LRESULT					on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam);
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_ASEE_DIALOG };

@@ -142,13 +142,14 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_WM_ACTIVATE()
 	ON_WM_TIMER()
 	ON_WM_LBUTTONDOWN()
-	ON_WM_NCACTIVATE()
-	ON_WM_NCCALCSIZE()
-	ON_WM_NCHITTEST()
+	//ON_WM_NCACTIVATE()
+	//ON_WM_NCCALCSIZE()
+	//ON_WM_NCHITTEST()
 	ON_COMMAND(ID_MENU_OPEN, &CASeeDlg::OnMenuOpen)
 	ON_COMMAND(ID_MENU_BACK_TRANSPARENCY, &CASeeDlg::OnMenuBackTransparency)
 	ON_COMMAND(ID_MENU_VIEW_SHAPE_DLG, &CASeeDlg::OnMenuViewShapeDlg)
 	ON_COMMAND(ID_MENU_MAGNIFY, &CASeeDlg::OnMenuMagnify)
+	ON_REGISTERED_MESSAGE(Message_CSCSystemButtons, &CASeeDlg::on_message_CSCSystemButtons)
 END_MESSAGE_MAP()
 
 
@@ -189,6 +190,7 @@ BOOL CASeeDlg::OnInitDialog()
 	//LONG style = ::GetWindowLongPtr(m_hWnd, GWL_STYLE);
 	//style = style | (WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME);
 	//::SetWindowLongPtr(m_hWnd, GWL_STYLE, style);
+	/*
 	SetWindowLongPtr(m_hWnd, GWL_STYLE, WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME);// | WS_CLIPCHILDREN);
 
 	//find border thickness
@@ -205,17 +207,15 @@ BOOL CASeeDlg::OnInitDialog()
 
 	MARGINS margins = { 0 };
 	DwmExtendFrameIntoClientArea(m_hWnd, &margins);
-
+	*/
 	m_imgDlg.set_simple_mode(false);
 	m_imgDlg.create(this);
 	m_imgDlg.set_dropper_cursor(IDC_CURSOR_DROPPER);
 	m_imgDlg.set_cross_cursor(IDC_CURSOR_CROSS);
 
 	m_titleDlg.Create(IDD_TITLE, this);
-	//m_titleDlg.ModifyStyle(WS_POPUP, WS_CHILD);
-	m_titleDlg.set_titlebar_movable(true);
+	m_titleDlg.ShowWindow(SW_HIDE);
 	update_title(_T("no image"));
-	m_titleDlg.ShowWindow(SW_SHOW);
 
 	m_backTransparencyDlg.Create(IDD_BACK_TRANSPARENCY, this);
 
@@ -228,6 +228,7 @@ BOOL CASeeDlg::OnInitDialog()
 
 	RestoreWindowPosition(&theApp, this);
 
+	/*
 	if (theApp.GetProfileInt(_T("screen"), _T("maximized"), false))
 	{
 		m_titleDlg.ModifyStyle(WS_CHILD, WS_POPUP);
@@ -235,6 +236,7 @@ BOOL CASeeDlg::OnInitDialog()
 		m_titleDlg.set_titlebar_movable(false);
 		m_titleDlg.parent_maximized(true);
 	}
+	*/
 	/*
 	if (IsZoomed())
 	{
@@ -311,45 +313,6 @@ void CASeeDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	}
 	else
 	{
-		if ((nID & 0xFFF0) == SC_MAXIMIZE)
-		{
-			//CSCSystemButtons에서는 SC_MAXIMIZE와 SC_RESTORE를 구분하지 않고 SC_MAXIMIZE로 보내므로
-			//실제 적용할 이곳에서 IsZoomed()일 경우는 SC_RESTORE를 다시 전송하면 된다.
-			if (IsZoomed())
-			{
-				m_titleDlg.ModifyStyle(WS_POPUP, WS_CHILD);
-				m_titleDlg.set_titlebar_movable(true);
-				m_titleDlg.SetParent(this);
-				PostMessage(WM_SYSCOMMAND, SC_RESTORE);
-			}
-			else
-			{
-				m_titleDlg.ModifyStyle(WS_CHILD, WS_POPUP);
-				m_titleDlg.set_titlebar_movable(false);
-				m_titleDlg.SetParent(nullptr);
-				m_titleDlg.parent_maximized(true);
-				m_titleDlg.ShowWindow(SW_HIDE);
-			}
-		}
-		else if ((nID & 0xFFF0) == SC_MINIMIZE)
-		{
-			theApp.WriteProfileInt(_T("setting"), _T("is zoomed"), IsZoomed());
-		}
-		else if ((nID & 0xFFF0) == SC_RESTORE)
-		{
-			m_titleDlg.parent_maximized(false);
-			m_titleDlg.set_titlebar_movable(true);
-			m_titleDlg.ModifyStyle(WS_POPUP, WS_CHILD);
-			m_titleDlg.SetParent(this);
-			m_titleDlg.ShowWindow(SW_SHOW);
-		}
-		// ★ SC_CLOSE 시 popup 상태의 m_titleDlg를 먼저 정리
-		else if ((nID & 0xFFF0) == SC_CLOSE)
-		{
-			OnBnClickedCancel();
-			return;
-		}
-
 		CDialogEx::OnSysCommand(nID, lParam);
 	}
 }
@@ -395,7 +358,7 @@ HCURSOR CASeeDlg::OnQueryDragIcon()
 
 void CASeeDlg::OnBnClickedOk()
 {
-	PostMessage(WM_SYSCOMMAND, IsZoomed() ? SC_RESTORE : SC_MAXIMIZE);
+	ShowWindow(IsZoomed() ? SW_RESTORE : SW_MAXIMIZE);
 }
 
 //esc키와는 달리 종료 버튼을 누른 경우는 프로그램 종료까지 진행된다.
@@ -408,9 +371,9 @@ void CASeeDlg::OnBnClickedCancel()
 	}
 
 	// 실제 종료 시에만 정리 작업 수행
-	m_titleDlg.KillTimer(CTitleDlg::timer_fade_in);
+	//m_titleDlg.KillTimer(CTitleDlg::timer_fade_in);
 
-	if (m_titleDlg.m_hWnd != NULL)
+	if (m_titleDlg.m_hWnd != nullptr)
 		m_titleDlg.DestroyWindow();
 
 	m_dir_watcher.stop(); 
@@ -421,7 +384,37 @@ void CASeeDlg::OnBnClickedCancel()
 
 void CASeeDlg::OnSize(UINT nType, int cx, int cy)
 {
-	CDialogEx::OnSize(nType, cx, cy);
+	if (!::IsWindow(m_hWnd))
+		return;
+
+	//SIZE_RESTORED는 최초 생성 직후에도 올 수 있으므로,
+	//불필요한 스타일 변경을 막으려면 현재 최대화 상태를 직접 확인
+	BOOL bZoomed = IsZoomed();
+	LONG_PTR style = ::GetWindowLongPtr(m_hWnd, GWL_STYLE);
+
+	if (bZoomed)
+	{
+		if (style & WS_CAPTION)
+		{
+			style &= ~WS_CAPTION;
+			::SetWindowLongPtr(m_hWnd, GWL_STYLE, style);
+			::SetWindowPos(m_hWnd, nullptr, 0, 0, 0, 0,
+				SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER |
+				SWP_NOACTIVATE | SWP_FRAMECHANGED);
+		}
+	}
+	else
+	{
+		if (!(style & WS_CAPTION))
+		{
+			style |= WS_CAPTION;
+			::SetWindowLongPtr(m_hWnd, GWL_STYLE, style);
+			::SetWindowPos(m_hWnd, nullptr, 0, 0, 0, 0,
+				SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER |
+				SWP_NOACTIVATE | SWP_FRAMECHANGED);
+			m_titleDlg.ShowWindow(SW_HIDE);
+		}
+	}
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
 	if (m_imgDlg.m_hWnd == nullptr)
@@ -431,17 +424,18 @@ void CASeeDlg::OnSize(UINT nType, int cx, int cy)
 	GetClientRect(rc);
 
 	CRect r = rc;
-
+	/*
 	r.bottom = m_titleDlg.get_titlebar_height();
 	m_titleDlg.MoveWindow(r);
 
-	if (!IsZoomed())
+	if (bZoomed)
 	{
 		r = rc;
 		r.top = m_titleDlg.get_titlebar_height();
 	}
 	else
 		r.top += 15;
+	*/
 
 	m_imgDlg.MoveWindow(r, false);
 }
@@ -454,12 +448,11 @@ void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
 	if (m_imgDlg.m_hWnd == NULL || m_titleDlg.m_hWnd == NULL)
 		return;
 
-	CRect rc, rw;
-	GetClientRect(rc);
-	GetWindowRect(rw);
+	CRect rw = get_window_real_rect(this);
+	rw.bottom = rw.top + m_titleDlg.get_titlebar_height();
+	m_titleDlg.MoveWindow(rw);
 
-	CRect r = rc;
-
+	/*
 	if (IsZoomed())
 	{
 		//zoomed 일때는 타이틀바를 WS_POPUP으로 변경하여 표시하는데 DWM의 영향으로 rw의 값이 실제 모니터 영역보다 크게 리턴된다.
@@ -478,8 +471,6 @@ void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
 		//);
 	}
 
-	r.bottom = r.top + m_titleDlg.get_titlebar_height();
-	m_titleDlg.MoveWindow(r);
 
 	if (IsZoomed())
 	{
@@ -491,7 +482,7 @@ void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
 		r.top = m_titleDlg.get_titlebar_height();
 		m_imgDlg.MoveWindow(r, false);
 	}
-
+	*/
 	SaveWindowPosition(&theApp, this);
 }
 
@@ -1228,122 +1219,15 @@ void CASeeDlg::OnMenuShowInfo()
 
 void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 {
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	if (IsZoomed())
 	{
-		if (point.y <= m_titleDlg.get_titlebar_height() + 10)
-		{
-			//SetForegroundWindowForce(m_titleDlg.m_hWnd, true);
-			/*if (!m_titleDlg.IsWindowVisible() || m_titleDlg.m_alpha == 0)
-			{
-				//m_titleDlg.SetWindowPos(&m_imgDlg, 0, 0, 0, 0,
-				//	SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
-				m_titleDlg.fade_in(true);
-			}
-			else */if (m_titleDlg.m_alpha != 255 && !m_titleDlg.is_in_fade_in())
-			{
-				m_titleDlg.fade_in(true);
-			}
-		}
+		CRect rc;
+		GetClientRect(rc);
+		if (point.y < m_titleDlg.get_titlebar_height())
+			m_titleDlg.SetWindowPos(&wndTopMost, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_SHOWWINDOW | SWP_NOACTIVATE);
 		else
-		{
-			if (m_titleDlg.m_alpha == 255 && !m_titleDlg.is_in_fade_in())
-			{
-				m_titleDlg.fade_in(false);
-			}
-		}
-
-		/*
-		// ===== Fade 상태 체크 개선 =====
-		if (m_titleDlg.is_in_fade_in() == false && m_titleDlg.IsWindowVisible())
-		{
-			if (point.y <= m_titleDlg.get_titlebar_height() + 10)
-			{
-				// 이미 표시 중이면 추가 작업 안 함
-				if (m_titleDlg.m_alpha != 255)
-				{
-					m_titleDlg.fade_in(true);
-				}
-			}
-			else if (m_titleDlg.m_alpha == 255)
-			{
-				// 사라질 조건 (일정 시간 후)
-				m_titleDlg.fade_in(false);
-			}
-		}
-		else if (point.y <= m_titleDlg.get_titlebar_height() + 10)
-		{
-			// 타이틀이 숨겨진 상태에서 최상단 감지
-			if (m_titleDlg.m_alpha == 0 || !m_titleDlg.IsWindowVisible())
-			{
-				// Z-order 명시적 설정
-				m_titleDlg.SetWindowPos(&m_imgDlg, 0, 0, 0, 0,
-					SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
-				m_titleDlg.ShowWindow(SW_SHOW);
-
-				// Fade in 시작
-				m_titleDlg.fade_in(true);
-				SetForegroundWindowForce(m_titleDlg.m_hWnd, true);
-			}
-		}
-		*/
-		/*
-		if (m_titleDlg.is_in_fade_in() == false)
-		{
-			if (point.y <= m_titleDlg.get_titlebar_height())
-			{
-				m_titleDlg.ShowWindow(SW_SHOW);
-				m_titleDlg.SetWindowPos(&m_imgDlg, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
-				SetForegroundWindowForce(m_titleDlg.m_hWnd, true);
-
-				if (m_titleDlg.m_alpha != 0)
-				{
-					TRACE(_T("start fade in\n"));
-					m_titleDlg.fade_in(true);
-				}
-			}
-			else if (m_titleDlg.m_alpha == 0)
-			{
-				TRACE(_T("start fade out\n"));
-				m_titleDlg.fade_in(false);
-			}
-		}
-		*/
+			m_titleDlg.SetWindowPos(&wndTopMost, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_HIDEWINDOW | SWP_NOACTIVATE);
 	}
-	/*
-	//if (IsZoomed() && !m_imgDlg.is_lbutton_down() && !IsShiftPressed() && !IsCtrlPressed())
-	{
-		int min_y = 32;
-
-		if (IsZoomed())
-			min_y = 7;
-
-		if (get_titlebar_height() < 32 && point.y <= min_y)
-		{
-			set_titlebar_height(32);
-
-			//if (!IsZoomed())
-			{
-				CRect rc;
-				GetClientRect(rc);
-				rc.top = get_titlebar_height();
-				m_imgDlg.MoveWindow(rc, false);
-			}
-		}
-		else if (get_titlebar_height() == 32 && point.y > min_y)
-		{
-			set_titlebar_height(0);
-			CRect rc;
-			GetClientRect(rc);
-			rc.top = get_titlebar_height();
-			m_imgDlg.MoveWindow(rc, false);
-		}
-		//if (m_titleDlg.IsWindowVisible() == false && point.y < m_titleDlg.get_titlebar_height() + 10)
-		//	m_titleDlg.ShowWindow(SW_SHOW);
-		//else if (m_titleDlg.IsWindowVisible() && point.y > m_titleDlg.get_titlebar_height() + 10)
-		//	m_titleDlg.ShowWindow(SW_HIDE);
-	}
-	*/
 
 	CDialogEx::OnMouseMove(nFlags, point);
 }
@@ -1586,6 +1470,7 @@ void CASeeDlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
+	/*
 	if (m_titleDlg.is_in_fade_in())
 		return;
 
@@ -1599,6 +1484,7 @@ void CASeeDlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 		//m_titleDlg.refresh_activate_status(true);
 		KillTimer(timer_refresh_title_area);
 	}
+	*/
 }
 
 void CASeeDlg::OnTimer(UINT_PTR nIDEvent)
@@ -1800,4 +1686,27 @@ void CASeeDlg::OnMenuMagnify()
 
 	if (quit_posted)
 		PostQuitMessage(static_cast<int>(msg.wParam));
+}
+
+LRESULT CASeeDlg::on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam)
+{
+	CSCSystemButtonsMessage* msg = (CSCSystemButtonsMessage*)wParam;
+
+	switch (msg->cmd)
+	{
+		case SC_PIN:
+			TRACE(_T("SC_PIN\n"));
+			break;
+		case SC_MINIMIZE:
+			ShowWindow(SW_MINIMIZE);
+			break;
+		case SC_RESTORE:
+		case SC_MAXIMIZE:
+			OnBnClickedOk();
+			break;
+		case SC_CLOSE:
+			OnBnClickedCancel();
+	}
+
+	return 0;
 }
