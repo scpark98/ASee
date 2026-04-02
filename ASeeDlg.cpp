@@ -1660,6 +1660,9 @@ void CASeeDlg::OnMenuViewShapeDlg()
 
 void CASeeDlg::OnMenuMagnify()
 {
+	//메뉴가 완전히 사라진 후 돋보기가 표시되어야 하므로 약간의 딜레이가 필요하다.
+	Wait(500);
+
 	CSCDropperDlg dlg;
 	dlg.create(this);
 
@@ -1667,6 +1670,7 @@ void CASeeDlg::OnMenuMagnify()
 	bool quit_posted = false;
 	msg = {};
 
+	//create으로 띠운 후 키보드 또는 마우스 처리를 위해 자체적으로 메시지 루프를 돌린다.(DoModal()이 아니므로)
 	while (dlg.GetSafeHwnd() != NULL)
 	{
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -1695,7 +1699,7 @@ LRESULT CASeeDlg::on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam)
 	switch (msg->cmd)
 	{
 		case SC_PIN:
-			TRACE(_T("SC_PIN\n"));
+			SetWindowPos(is_top_most(m_hWnd) ? &wndNoTopMost : &wndTopMost, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 			break;
 		case SC_MINIMIZE:
 			ShowWindow(SW_MINIMIZE);
@@ -1706,6 +1710,7 @@ LRESULT CASeeDlg::on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam)
 			break;
 		case SC_CLOSE:
 			OnBnClickedCancel();
+			break;
 	}
 
 	return 0;
