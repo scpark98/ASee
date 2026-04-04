@@ -23,6 +23,7 @@ public:
 #endif
 
 protected:
+	CSCColorTheme		m_theme;
 	int					m_titlebar_height = 32;
 	CSCSystemButtons	m_sys_buttons;
 	HICON				m_hIcon;

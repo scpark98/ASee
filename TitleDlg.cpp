@@ -62,8 +62,9 @@ BOOL CTitleDlg::OnInitDialog()
 
 	m_titlebar_font.CreateFontIndirect(&m_titlebar_lf);
 
-
+	m_theme.set_color_theme(CSCColorTheme::color_theme_dark);
 	m_sys_buttons.create(this, 0, -1, 44, m_titlebar_height, SC_PIN, SC_MINIMIZE, SC_RESTORE, SC_CLOSE);
+	m_sys_buttons.set_color_theme(m_theme.get_color_theme());
 	/*
 	m_layered.AddLayeredStyle(m_hWnd);
 
@@ -303,14 +304,14 @@ void CTitleDlg::OnPaint()
 
 	CMemoryDC dc(&dc1, &rc);
 
-	dc.FillSolidRect(rc, m_sys_buttons.get_color_theme()->cr_title_back_active.ToCOLORREF());
+	dc.FillSolidRect(rc, m_theme.cr_title_back_active.ToCOLORREF());
 
 	CRect rIcon = rc;
 	rIcon.right = rIcon.left + m_titlebar_height;
 	draw_icon(&dc, m_hIcon, rIcon);
 
 	dc.SetBkMode(TRANSPARENT);
-	dc.SetTextColor(m_sys_buttons.get_color_theme()->cr_title_text.ToCOLORREF());
+	dc.SetTextColor(m_theme.cr_title_text.ToCOLORREF());
 
 	CRect rTitle = rc;
 	rTitle.left = rIcon.right + 2;

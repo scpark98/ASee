@@ -461,37 +461,6 @@ void CASeeDlg::OnWindowPosChanged(WINDOWPOS* lpwndpos)
 	rw.bottom = rw.top + m_titleDlg.get_titlebar_height();
 	m_titleDlg.MoveWindow(rw);
 
-	/*
-	if (IsZoomed())
-	{
-		//zoomed 일때는 타이틀바를 WS_POPUP으로 변경하여 표시하는데 DWM의 영향으로 rw의 값이 실제 모니터 영역보다 크게 리턴된다.
-		//이를 보정해줘야 한다. 또는 아래와 같이 zoomed일때는 속해있는 모니터의 크기값으로 대체하는 것이 좋다.
-		//(GPT도 이를 추천)
-		r = rw;
-		int index = get_monitor_index(r.CenterPoint().x, r.CenterPoint().y);
-		r = g_monitors[index].rMonitor;
-
-		//DWM을 이용하여 실제 윈도우 크기를 얻는 방법인데 이 역시 zoomed 상태에서는 올바른 값을 얻지 못한다.
-		//HRESULT hr = DwmGetWindowAttribute(
-		//	m_hWnd,
-		//	DWMWA_EXTENDED_FRAME_BOUNDS,
-		//	&r,
-		//	sizeof(r)
-		//);
-	}
-
-
-	if (IsZoomed())
-	{
-		m_imgDlg.MoveWindow(rc, false);
-	}
-	else
-	{
-		r = rc;
-		r.top = m_titleDlg.get_titlebar_height();
-		m_imgDlg.MoveWindow(r, false);
-	}
-	*/
 	SaveWindowPosition(&theApp, this);
 }
 
@@ -1227,6 +1196,7 @@ void CASeeDlg::OnMenuShowInfo()
 
 void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 {
+	//title bar show / hide
 	if (IsZoomed())
 	{
 		CRect rc;
@@ -1519,12 +1489,8 @@ void CASeeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 
-	//if (m_caption_removed)
-	{
-		SendMessage(WM_NCLBUTTONDOWN, HTCAPTION, 0);
-		//DefWindowProc(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(point.x, point.y));
-		//return;
-	}
+	//창 이동
+	SendMessage(WM_NCLBUTTONDOWN, HTCAPTION, 0);
 
 	CDialogEx::OnLButtonDown(nFlags, point);
 }
@@ -1770,6 +1736,7 @@ LRESULT CASeeDlg::on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam)
 	{
 		case SC_PIN:
 			SetWindowPos(is_top_most(m_hWnd) ? &wndNoTopMost : &wndTopMost, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+			theApp.WriteProfileInt(_T("setting"), _T("always on top"), is_top_most(m_hWnd));
 			break;
 		case SC_MINIMIZE:
 			ShowWindow(SW_MINIMIZE);
@@ -1810,6 +1777,7 @@ void CASeeDlg::OnMenuWindowBorder()
 		BOOL value = TRUE;
 		//DwmSetWindowAttribute(m_hWnd, DWMWA_NCRENDERING_POLICY,	&value,	sizeof(value));
 
+		//캡션바를 제거해도 직사각이 아닌 윈11처럼 라운드 모양으로.
 		DWORD corner = DWMWCP_ROUND;
 		DwmSetWindowAttribute(m_hWnd, DWMWA_WINDOW_CORNER_PREFERENCE, &corner, sizeof(corner));
 	}
@@ -1823,12 +1791,9 @@ void CASeeDlg::OnMenuWindowBorder()
 			SWP_NOACTIVATE | SWP_FRAMECHANGED);
 		//m_titleDlg.ShowWindow(SW_HIDE);
 	}
-
-	//CRect rc;
-	//GetClientRect(rc);
-	//m_imgDlg.MoveWindow(rc, false);
 }
 
+//캡션 제거 상태에서 shift키를 누른 상태로 사이징할 때 원본 이미지의 가로세로 비율을 유지하도록 처리
 void CASeeDlg::OnSizing(UINT fwSide, LPRECT pRect)
 {
 	CDialogEx::OnSizing(fwSide, pRect);
