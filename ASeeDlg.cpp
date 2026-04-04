@@ -142,14 +142,17 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_WM_ACTIVATE()
 	ON_WM_TIMER()
 	ON_WM_LBUTTONDOWN()
-	//ON_WM_NCACTIVATE()
-	//ON_WM_NCCALCSIZE()
+	ON_WM_NCACTIVATE()
+	ON_WM_NCCALCSIZE()
 	//ON_WM_NCHITTEST()
 	ON_COMMAND(ID_MENU_OPEN, &CASeeDlg::OnMenuOpen)
 	ON_COMMAND(ID_MENU_BACK_TRANSPARENCY, &CASeeDlg::OnMenuBackTransparency)
 	ON_COMMAND(ID_MENU_VIEW_SHAPE_DLG, &CASeeDlg::OnMenuViewShapeDlg)
 	ON_COMMAND(ID_MENU_MAGNIFY, &CASeeDlg::OnMenuMagnify)
 	ON_REGISTERED_MESSAGE(Message_CSCSystemButtons, &CASeeDlg::on_message_CSCSystemButtons)
+	ON_COMMAND(ID_MENU_WINDOW_BORDER, &CASeeDlg::OnMenuWindowBorder)
+	ON_WM_SIZING()
+	ON_WM_MBUTTONUP()
 END_MESSAGE_MAP()
 
 
@@ -208,6 +211,12 @@ BOOL CASeeDlg::OnInitDialog()
 	MARGINS margins = { 0 };
 	DwmExtendFrameIntoClientArea(m_hWnd, &margins);
 	*/
+
+	//AdjustWindowRectEx(&m_border_thickness, GetWindowLongPtr(m_hWnd, GWL_STYLE) & ~WS_CAPTION, FALSE, NULL);
+	//MARGINS margins = { 0, 0, 10, 0 }; // top 1px 유지
+
+	//DwmExtendFrameIntoClientArea(m_hWnd, &margins);
+
 	m_imgDlg.set_simple_mode(false);
 	m_imgDlg.create(this);
 	m_imgDlg.set_dropper_cursor(IDC_CURSOR_DROPPER);
@@ -405,7 +414,7 @@ void CASeeDlg::OnSize(UINT nType, int cx, int cy)
 	}
 	else
 	{
-		if (!(style & WS_CAPTION))
+		if (!m_caption_removed && !(style & WS_CAPTION))
 		{
 			style |= WS_CAPTION;
 			::SetWindowLongPtr(m_hWnd, GWL_STYLE, style);
@@ -1195,7 +1204,7 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 	else if (pMsg->message == WM_MBUTTONDOWN)
 	{
 		TRACE(_T("WM_MBUTTONDOWN\n"));
-		OnBnClickedOk();
+		//OnBnClickedOk();
 	}
 	else if (pMsg->message == WM_LBUTTONDOWN)
 	{
@@ -1235,8 +1244,15 @@ void CASeeDlg::OnMouseMove(UINT nFlags, CPoint point)
 void CASeeDlg::OnMButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
-	OnBnClickedOk();
 	CDialogEx::OnMButtonDown(nFlags, point);
+}
+
+void CASeeDlg::OnMButtonUp(UINT nFlags, CPoint point)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	OnBnClickedOk();
+
+	CDialogEx::OnMButtonUp(nFlags, point);
 }
 
 void CASeeDlg::on_menu_recent_folders(UINT nID)
@@ -1470,21 +1486,17 @@ void CASeeDlg::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 	CDialogEx::OnActivate(nState, pWndOther, bMinimized);
 
 	// TODO: 여기에 메시지 처리기 코드를 추가합니다.
-	/*
-	if (m_titleDlg.is_in_fade_in())
-		return;
-
 	if (nState == 0)
 	{
 		//m_titleDlg.refresh_activate_status(false);
-		SetTimer(timer_refresh_title_area, 1, NULL);
+		//SetTimer(timer_refresh_title_area, 1, NULL);
 	}
 	else
 	{
 		//m_titleDlg.refresh_activate_status(true);
-		KillTimer(timer_refresh_title_area);
+		//KillTimer(timer_refresh_title_area);
 	}
-	*/
+	m_imgDlg.Invalidate();
 }
 
 void CASeeDlg::OnTimer(UINT_PTR nIDEvent)
@@ -1507,7 +1519,13 @@ void CASeeDlg::OnTimer(UINT_PTR nIDEvent)
 void CASeeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	//DefWindowProc(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(point.x, point.y));
+
+	//if (m_caption_removed)
+	{
+		SendMessage(WM_NCLBUTTONDOWN, HTCAPTION, 0);
+		//DefWindowProc(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(point.x, point.y));
+		//return;
+	}
 
 	CDialogEx::OnLButtonDown(nFlags, point);
 }
@@ -1517,11 +1535,9 @@ BOOL CASeeDlg::OnNcActivate(BOOL bActive)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 	
 	//이 처리를 해주지 않으면 activate 상태 변화가 생길때 흰색선이 보여진다.
-	//return FALSE;
-	//위와 같이 return FALSE;를 하면 popup dialog의 버튼 클릭 이벤트가 모두 무시되는 현상이 발생한다.
-	//우선 아래와 같이 강제 invalidate()을 시켰으나 깜빡임이 발생한다.
-	if (m_titleDlg.m_hWnd)
-		m_titleDlg.Invalidate();
+	//비활성 → 활성 전환 순간에 DWM이 “기본 NC 프레임을 잠깐 그렸다가” 다시 클라이언트로 덮이면서 생기는 플리커입니다.
+	//완전 무시하기 위해 TRUE를 리턴함.
+	return TRUE;
 
 	return CDialogEx::OnNcActivate(bActive);
 }
@@ -1531,19 +1547,73 @@ void CASeeDlg::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp)
 	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
 
 	//resizing 상태를 감지하기 위한 마진 설정
-	if (lpncsp)
+	//if (lpncsp && m_caption_removed)
+	//{
+
+	//	lpncsp->rgrc[0].left += m_border_thickness.left;
+	//	lpncsp->rgrc[0].right -= m_border_thickness.right;
+	//	lpncsp->rgrc[0].bottom -= m_border_thickness.bottom;
+	//	return;
+	//}
+
+	//CDialogEx::OnNcCalcSize(bCalcValidRects, lpncsp);
+
+	if (bCalcValidRects && m_caption_removed)
 	{
-		lpncsp->rgrc[0].left += m_border_thickness.left;
-		lpncsp->rgrc[0].right -= m_border_thickness.right;
-		lpncsp->rgrc[0].bottom -= m_border_thickness.bottom;
-		return;
+		//NCCALCSIZE_PARAMS* pParams = (NCCALCSIZE_PARAMS*)lParam;
+
+		// 👉 여기서 위쪽 잘라내기
+		//pParams->rgrc[0].top += 1; // 또는 0~8 정도 조절
+		lpncsp->rgrc[0].top -= 6;
 	}
 
 	CDialogEx::OnNcCalcSize(bCalcValidRects, lpncsp);
+
+	return; // 중요: 우리가 완전히 처리
 }
 
 LRESULT CASeeDlg::OnNcHitTest(CPoint point)
 {
+	//이 방식으로 resize가 되게 하려면 WS_THICKFRAME 스타일이 반드시 있어야 한다. (WS_BORDER 스타일은 없어도 resize가 된다.)
+	if (m_caption_removed)
+	{
+		const int resizeMargin = 28; // ← 여기서 자유롭게 조절
+
+		CRect rc;
+		GetWindowRect(&rc);
+
+		// 🔥 위쪽 영역 확장 (핵심)
+		if (point.y < rc.top + resizeMargin)
+		{
+			if (point.x < rc.left + resizeMargin)
+				return HTTOPLEFT;
+			if (point.x > rc.right - resizeMargin)
+				return HTTOPRIGHT;
+
+			return HTTOP;
+		}
+
+		// 좌우 / 아래도 동일
+		if (point.x < rc.left + resizeMargin)
+		{
+			if (point.y > rc.bottom - resizeMargin)
+				return HTBOTTOMLEFT;
+			return HTLEFT;
+		}
+
+		if (point.x > rc.right - resizeMargin)
+		{
+			if (point.y > rc.bottom - resizeMargin)
+				return HTBOTTOMRIGHT;
+			return HTRIGHT;
+		}
+
+		if (point.y > rc.bottom - resizeMargin)
+			return HTBOTTOM;
+
+		return HTCAPTION;
+	}
+	/*
 	DWORD win_ver = get_windows_major_version();
 	LRESULT result;
 
@@ -1584,8 +1654,9 @@ LRESULT CASeeDlg::OnNcHitTest(CPoint point)
 
 		return HTCLIENT;
 	}
+	*/
 
-	return result;
+	//return result;
 }
 
 void CASeeDlg::OnMenuOpen()
@@ -1709,4 +1780,90 @@ LRESULT CASeeDlg::on_message_CSCSystemButtons(WPARAM wParam, LPARAM lParam)
 	}
 
 	return 0;
+}
+
+void CASeeDlg::OnMenuWindowBorder()
+{
+	LONG_PTR style = ::GetWindowLongPtr(m_hWnd, GWL_STYLE);
+
+	if (style & WS_CAPTION)
+	{
+		m_caption_removed = true;
+
+		// 캡션 + 모든 테두리 제거
+		style &= ~(WS_CAPTION | WS_THICKFRAME | WS_BORDER | WS_DLGFRAME);
+		style |= WS_THICKFRAME; // resize는 가능하도록 테두리는 남긴다.
+
+		::SetWindowLongPtr(m_hWnd, GWL_STYLE, style);
+
+		// 반드시 필요 (프레임 다시 계산)
+		::SetWindowPos(m_hWnd, nullptr, 0, 0, 0, 0,
+			SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER |
+			SWP_NOACTIVATE | SWP_FRAMECHANGED);
+
+
+		// DWM shadow
+		BOOL value = TRUE;
+		//DwmSetWindowAttribute(m_hWnd, DWMWA_NCRENDERING_POLICY,	&value,	sizeof(value));
+
+		DWORD corner = DWMWCP_ROUND;
+		DwmSetWindowAttribute(m_hWnd, DWMWA_WINDOW_CORNER_PREFERENCE, &corner, sizeof(corner));
+	}
+	else if (!(style & WS_CAPTION))
+	{
+		m_caption_removed = false;
+		style |= (WS_CAPTION | WS_THICKFRAME | WS_BORDER | WS_DLGFRAME);
+		::SetWindowLongPtr(m_hWnd, GWL_STYLE, style);
+		::SetWindowPos(m_hWnd, nullptr, 0, 0, 0, 0,
+			SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER |
+			SWP_NOACTIVATE | SWP_FRAMECHANGED);
+		//m_titleDlg.ShowWindow(SW_HIDE);
+	}
+
+	//CRect rc;
+	//GetClientRect(rc);
+	//m_imgDlg.MoveWindow(rc, false);
+}
+
+void CASeeDlg::OnSizing(UINT fwSide, LPRECT pRect)
+{
+	CDialogEx::OnSizing(fwSide, pRect);
+
+	if (!m_caption_removed || !IsShiftPressed())
+		return;
+
+	CSize imgSz = m_imgDlg.get_img_size();
+	if (imgSz.cx == 0 || imgSz.cy == 0)
+		return;
+
+	const double ratio = (double)imgSz.cx / (double)imgSz.cy; // width / height
+	const int w = pRect->right - pRect->left;
+	const int h = pRect->bottom - pRect->top;
+
+	switch (fwSide)
+	{
+		case WMSZ_LEFT:
+		case WMSZ_RIGHT:
+			// 가로 기준 → 세로 조정
+			pRect->bottom = pRect->top + (int)round(w / ratio);
+			break;
+
+		case WMSZ_TOP:
+		case WMSZ_BOTTOM:
+			// 세로 기준 → 가로 조정
+			pRect->right = pRect->left + (int)round(h * ratio);
+			break;
+
+		case WMSZ_TOPLEFT:
+		case WMSZ_TOPRIGHT:
+			// 위쪽 코너: right/bottom 고정, 가로 기준으로 top 조정
+			pRect->top = pRect->bottom - (int)round(w / ratio);
+			break;
+
+		case WMSZ_BOTTOMLEFT:
+		case WMSZ_BOTTOMRIGHT:
+			// 아래쪽 코너: left/top 고정, 가로 기준으로 bottom 조정
+			pRect->bottom = pRect->top + (int)round(w / ratio);
+			break;
+	}
 }

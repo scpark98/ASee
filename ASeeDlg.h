@@ -116,6 +116,7 @@ protected:
 
 	int				m_corner_index = -1;	//커서가 코너의 어느 영역에 있는지
 
+	bool			m_caption_removed = false;	//제목 표시줄 제거 여부. true이면 제목 표시줄이 제거되고 false이면 제목 표시줄이 보인다. 제목 표시줄이 제거되면 resize 영역도 없어지므로 resize 처리를 위해서는 OnNcHitTest()에서 resize 영역을 직접 만들어줘야 한다.
 
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 지원입니다.
@@ -201,4 +202,7 @@ public:
 	afx_msg void OnMenuBackTransparency();
 	afx_msg void OnMenuViewShapeDlg();
 	afx_msg void OnMenuMagnify();
+	afx_msg void OnMenuWindowBorder();
+	afx_msg void OnSizing(UINT fwSide, LPRECT pRect);
+	afx_msg void OnMButtonUp(UINT nFlags, CPoint point);
 };
