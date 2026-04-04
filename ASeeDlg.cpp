@@ -1204,7 +1204,6 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 	else if (pMsg->message == WM_MBUTTONDOWN)
 	{
 		TRACE(_T("WM_MBUTTONDOWN\n"));
-		//OnBnClickedOk();
 	}
 	else if (pMsg->message == WM_LBUTTONDOWN)
 	{
