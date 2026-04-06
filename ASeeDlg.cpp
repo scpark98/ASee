@@ -1168,7 +1168,7 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 	}
 	else if (pMsg->message == WM_MOUSEMOVE)
 	{
-		TRACE(_T("WM_MOUSEMOVE\n"));
+		//TRACE(_T("WM_MOUSEMOVE\n"));
 	}
 	else if (pMsg->message == WM_MBUTTONDOWN)
 	{
