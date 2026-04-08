@@ -1696,7 +1696,7 @@ void CASeeDlg::OnMenuViewShapeDlg()
 
 void CASeeDlg::OnMenuMagnify()
 {
-	//메뉴가 완전히 사라진 후 돋보기가 표시되어야 하므로 약간의 딜레이가 필요하다.
+	//메뉴가 완전히 사라진 후 캡처하고 돋보기가 표시되어야 하므로 약간의 딜레이가 필요하다.
 	Wait(500);
 
 	CSCDropperDlg dlg;
@@ -1706,7 +1706,7 @@ void CASeeDlg::OnMenuMagnify()
 	bool quit_posted = false;
 	msg = {};
 
-	//create으로 띠운 후 키보드 또는 마우스 처리를 위해 자체적으로 메시지 루프를 돌린다.(DoModal()이 아니므로)
+	//create으로 띠운 후 키보드 또는 마우스 처리를 위해 자체적으로 메시지 루프를 돌려야 한다.(DoModal()이 아니므로)
 	while (dlg.GetSafeHwnd() != NULL)
 	{
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -1805,9 +1805,10 @@ void CASeeDlg::OnSizing(UINT fwSide, LPRECT pRect)
 	if (imgSz.cx == 0 || imgSz.cy == 0)
 		return;
 
-	const double ratio = (double)imgSz.cx / (double)imgSz.cy; // width / height
-	const int w = pRect->right - pRect->left;
-	const int h = pRect->bottom - pRect->top;
+	//cy - n을 하는 이유는 OnNcCalcSize에서 top을 n만큼 잘라내기 때문인데, 이 부분은 OnNcCalcSize에서 잘라내는 양에 맞게 조절해야 한다.
+	const double ratio = (double)imgSz.cx / (double)(imgSz.cy - 9); // width / height
+	const double w = pRect->right - pRect->left;
+	const double h = pRect->bottom - pRect->top;
 
 	switch (fwSide)
 	{
