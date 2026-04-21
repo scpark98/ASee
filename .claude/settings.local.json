@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(awk *)",
+      "Bash(xxd)",
+      "Bash(git *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Read(//d/1.projects_c++/ASee/**)",
+      "Read(//d/1.projects_c++/Common/**)"
+    ]
+  }
+}
