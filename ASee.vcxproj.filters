@@ -132,6 +132,9 @@
     <ClInclude Include="..\Common\CDialog\CSCColorPicker\SCDropperDlg.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\CEdit\CSCStaticEdit\SCStaticEdit.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ASee.cpp">
@@ -228,6 +231,9 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\CDialog\CSCColorPicker\SCDropperDlg.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\CEdit\CSCStaticEdit\SCStaticEdit.cpp">
       <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
