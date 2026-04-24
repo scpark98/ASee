@@ -87,7 +87,8 @@ protected:
 	CSCD2ImageDlg	m_imgDlg;
 
 	CSCShapeDlg		m_message;
-	void			show_message(CString message);
+	//cr_text가 지정되지 않으면 기본 텍스트 색상으로 표시된다.
+	void			show_message(CString message, Gdiplus::Color cr_text = Gdiplus::Color::Transparent);
 
 	//현재 이미지를 CShapeDlg로 보여주기 위한 인스턴스.
 	CSCShapeDlg		m_shapeDlg;

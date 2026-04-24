@@ -1041,6 +1041,8 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				{
 					if (m_imgDlg.paste_from_clipboard())
 						update_title(_T("image from clipboard"));
+					else
+						show_message(_T("클립보드에서 이미지 가져오기 실패"), Gdiplus::Color::Red);
 				}
 				break;
 			case VK_HOME:
@@ -1277,7 +1279,7 @@ LRESULT CASeeDlg::on_message_CASeeApp(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-void CASeeDlg::show_message(CString message)
+void CASeeDlg::show_message(CString message, Gdiplus::Color cr_text)
 {
 	::PlaySound(MAKEINTRESOURCE(IDR_WAVE_DICK), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
 
@@ -1289,6 +1291,9 @@ void CASeeDlg::show_message(CString message)
 	setting->text = message;
 	setting->text_prop.size = rc.Height() / 26.18f;
 	Clamp(setting->text_prop.size, 16.0f, 44.0f);
+
+	if (cr_text.GetValue() != Gdiplus::Color::Transparent)
+		setting->text_prop.cr_text = cr_text;
 
 	m_message.set_text(setting);
 	m_message.CenterWindow();
