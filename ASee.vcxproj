@@ -256,6 +256,7 @@
     <ClInclude Include="..\Common\messagebox\Win32InputBox\Win32InputBox.h" />
     <ClInclude Include="..\Common\SCGdiplusBitmap.h" />
     <ClInclude Include="..\Common\thread\CSCThread\SCThread.h" />
+    <ClInclude Include="..\Common\thread\CSCThreadGroup\SCThreadGroup.h" />
     <ClInclude Include="..\Common\thread\ThreadManager.h" />
     <ClInclude Include="..\Common\ThumbCtrl\SCThumbCtrl.h" />
     <ClInclude Include="ASee.h" />

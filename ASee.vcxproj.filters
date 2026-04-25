@@ -126,6 +126,9 @@
     <ClInclude Include="..\Common\thread\CSCThread\SCThread.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\Common\thread\CSCThreadGroup\SCThreadGroup.h">
+      <Filter>Common</Filter>
+    </ClInclude>
     <ClInclude Include="..\Common\CDialog\CSCColorPicker\SCColorPicker.h">
       <Filter>Common</Filter>
     </ClInclude>

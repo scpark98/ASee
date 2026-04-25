@@ -1502,11 +1502,8 @@ void CASeeDlg::OnLButtonDown(UINT nFlags, CPoint point)
 
 BOOL CASeeDlg::OnNcActivate(BOOL bActive)
 {
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-	
-	//이 처리를 해주지 않으면 activate 상태 변화가 생길때 흰색선이 보여진다.
-	//비활성 → 활성 전환 순간에 DWM이 “기본 NC 프레임을 잠깐 그렸다가” 다시 클라이언트로 덮이면서 생기는 플리커입니다.
-	//완전 무시하기 위해 TRUE를 리턴함.
+	//아래 OnNcCalcSize()에서 -6을 해줬어도 inactive상태가 되면 상단 흰색이 다시 나타난다.
+	//return TRUE를 해줘야 inactive 상태에서도 흰색이 나타나지 않는다.
 	return TRUE;
 
 	return CDialogEx::OnNcActivate(bActive);
@@ -1514,32 +1511,12 @@ BOOL CASeeDlg::OnNcActivate(BOOL bActive)
 
 void CASeeDlg::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp)
 {
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
-
-	//resizing 상태를 감지하기 위한 마진 설정
-	//if (lpncsp && m_caption_removed)
-	//{
-
-	//	lpncsp->rgrc[0].left += m_border_thickness.left;
-	//	lpncsp->rgrc[0].right -= m_border_thickness.right;
-	//	lpncsp->rgrc[0].bottom -= m_border_thickness.bottom;
-	//	return;
-	//}
-
-	//CDialogEx::OnNcCalcSize(bCalcValidRects, lpncsp);
-
 	if (bCalcValidRects && m_caption_removed)
 	{
-		//NCCALCSIZE_PARAMS* pParams = (NCCALCSIZE_PARAMS*)lParam;
-
-		// 👉 여기서 위쪽 잘라내기
-		//pParams->rgrc[0].top += 1; // 또는 0~8 정도 조절
 		lpncsp->rgrc[0].top -= 6;
 	}
 
 	CDialogEx::OnNcCalcSize(bCalcValidRects, lpncsp);
-
-	return; // 중요: 우리가 완전히 처리
 }
 
 LRESULT CASeeDlg::OnNcHitTest(CPoint point)
