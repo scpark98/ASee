@@ -1040,9 +1040,10 @@ BOOL CASeeDlg::PreTranslateMessage(MSG* pMsg)
 				if (IsCtrlPressed())
 				{
 					if (m_imgDlg.paste_from_clipboard())
-						update_title(_T("image from clipboard"));
+						update_title(_T("Image from Clipboard"));
 					else
 						show_message(_T("클립보드에서 이미지 가져오기 실패"), Gdiplus::Color::Red);
+					return TRUE;
 				}
 				break;
 			case VK_HOME:
