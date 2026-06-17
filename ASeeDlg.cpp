@@ -153,6 +153,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_WINDOW_BORDER, &CASeeDlg::OnMenuWindowBorder)
 	ON_WM_SIZING()
 	ON_WM_MBUTTONUP()
+	ON_COMMAND(ID_MENU_COUNT_COLOR_USED, &CASeeDlg::OnMenuCountColorUsed)
 END_MESSAGE_MAP()
 
 
@@ -1819,4 +1820,9 @@ void CASeeDlg::OnSizing(UINT fwSide, LPRECT pRect)
 			pRect->bottom = pRect->top + (int)round(w / ratio);
 			break;
 	}
+}
+
+void CASeeDlg::OnMenuCountColorUsed()
+{
+	m_imgDlg.count_color_used();
 }

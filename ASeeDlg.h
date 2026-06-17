@@ -206,4 +206,5 @@ public:
 	afx_msg void OnMenuWindowBorder();
 	afx_msg void OnSizing(UINT fwSide, LPRECT pRect);
 	afx_msg void OnMButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnMenuCountColorUsed();
 };
