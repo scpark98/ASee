@@ -1,4 +1,4 @@
-# ASee 프로젝트
+﻿# ASee 프로젝트
 
 공통 규칙은 홈 폴더 `~/.claude/claude.md` symlink 를 통해 `Common/claude.md` 에서 자동 로드된다. 이 파일은 ASee **고유 사항**만 기록한다.
 
