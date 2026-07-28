@@ -255,6 +255,7 @@
     <ClInclude Include="..\Common\LayeredWindowHelperST.h" />
     <ClInclude Include="..\Common\MemoryDC.h" />
     <ClInclude Include="..\Common\messagebox\Win32InputBox\Win32InputBox.h" />
+    <ClInclude Include="..\Common\ocr\SCWinOcr.h" />
     <ClInclude Include="..\Common\SCGdiplusBitmap.h" />
     <ClInclude Include="..\Common\thread\CSCThread\SCThread.h" />
     <ClInclude Include="..\Common\thread\CSCThreadGroup\SCThreadGroup.h" />
@@ -267,6 +268,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RoiInputDlg.h" />
+    <ClInclude Include="snapshot_seek.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TitleDlg.h" />
     <ClInclude Include="ZigzagColorDlg.h" />
@@ -414,6 +416,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Common\ocr\SCWinOcr.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
     <ClCompile Include="..\Common\SCGdiplusBitmap.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -448,6 +457,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="RoiInputDlg.cpp" />
+    <ClCompile Include="snapshot_seek.cpp" />
     <ClCompile Include="TitleDlg.cpp" />
     <ClCompile Include="ZigzagColorDlg.cpp" />
   </ItemGroup>

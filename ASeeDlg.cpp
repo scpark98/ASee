@@ -10,6 +10,7 @@
 
 #include "RoiInputDlg.h"
 #include "ZigzagColorDlg.h"
+#include "snapshot_seek.h"
 #include "Common/messagebox/Win32InputBox/Win32InputBox.h"
 
 #include "Common/SCGdiplusBitmap.h"
@@ -222,6 +223,7 @@ BOOL CASeeDlg::OnInitDialog()
 	m_imgDlg.create(this);
 	m_imgDlg.set_dropper_cursor(IDC_CURSOR_DROPPER);
 	m_imgDlg.set_cross_cursor(IDC_CURSOR_CROSS);
+	m_imgDlg.set_relay_dblclk_to_parent(true);
 
 	m_titleDlg.Create(IDD_TITLE, this);
 	m_titleDlg.ShowWindow(SW_HIDE);
@@ -1444,7 +1446,111 @@ void CASeeDlg::OnMenuSaveToRaw()
 
 void CASeeDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
-	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+	//20260728 by claude. 몽타주 스냅샷 셀 hit → OCR 시각 → 매핑된 미디어를 그 시각부터 재생.
+	//Elysium 규약: 스냅샷 파일명은 "<media_full>.jpg|.png".
+	CString image_path = m_imgDlg.get_filename(true);
+	CString media_path;
+	CSCD2Image* img = m_imgDlg.get_cur_image();
+
+	if (img && img->is_valid() && sc_is_snapshot_pair(image_path, media_path))
+	{
+		//부모 client 좌표에서의 imgDlg 표시 영역(aspect-fit 결과) 계산.
+		CRect img_client;
+		m_imgDlg.GetWindowRect(&img_client);
+		ScreenToClient(&img_client);
+
+		CRect disp = m_imgDlg.get_displayed_rect();
+		disp.OffsetRect(img_client.left, img_client.top);
+
+		if (disp.PtInRect(point))
+		{
+			std::vector<int> vsep, hsep;
+			img->detect_grid(vsep, hsep);
+			int cols = (int)vsep.size() - 1;
+			int rows = (int)hsep.size() - 1;
+
+			if (cols >= 1 && rows >= 1)
+			{
+				double fx = (double)(point.x - disp.left) / disp.Width();
+				double fy = (double)(point.y - disp.top)  / disp.Height();
+				int ix = (int)(fx * img->get_width());
+				int iy = (int)(fy * img->get_height());
+
+				int c = 0;
+				for (int j = 0; j < cols; ++j)
+					if (ix >= vsep[j]) c = j;
+				int r = 0;
+				for (int i = 0; i < rows; ++i)
+					if (iy >= hsep[i]) r = i;
+
+				int idx = r * cols + c;
+
+				CString tm = sc_recognize_cell_time(*img, sc_cell_rect(vsep, hsep, r, c));
+
+				//인식 실패 시 이웃 셀 선형 보간(t = dur*(idx+0.5)/total).
+				if (tm.IsEmpty())
+				{
+					int total = cols * rows;
+					std::vector<int> sample_idx, sample_sec;
+					for (int d = 1; d <= 4 && sample_idx.size() < 2; ++d)
+					{
+						int cand[2] = { idx - d, idx + d };
+						for (int k = 0; k < 2 && sample_idx.size() < 2; ++k)
+						{
+							int s = cand[k];
+							if (s < 0 || s >= total)
+								continue;
+							CString t = sc_recognize_cell_time(*img, sc_cell_rect(vsep, hsep, s / cols, s % cols));
+							if (!t.IsEmpty())
+							{
+								sample_idx.push_back(s);
+								sample_sec.push_back(sc_hms_to_sec(t));
+							}
+						}
+					}
+					if (sample_idx.size() >= 2 && sample_idx[0] != sample_idx[1])
+					{
+						int sec = sample_sec[0] + (int)((double)(sample_sec[1] - sample_sec[0]) * (idx - sample_idx[0]) / (sample_idx[1] - sample_idx[0]));
+						if (sec < 0)
+							sec = 0;
+						tm.Format(_T("%02d:%02d:%02d"), sec / 3600, (sec / 60) % 60, sec % 60);
+					}
+				}
+
+				if (tm.IsEmpty())
+				{
+					AfxMessageBox(_T("셀의 시각을 인식하지 못했습니다."));
+				}
+				else
+				{
+					int seek_ms = sc_hms_to_ms(tm);
+
+					//ShellExecute 로 문서를 열면 lpParameters(/seek:)가 버려질 수 있어(연결 명령줄에 %* 미포함 시)
+					//연결된 플레이어 exe 를 찾아 직접 실행하며 "<media>" /seek:<ms> 를 인자로 넘긴다.
+					TCHAR player[MAX_PATH] = { 0 };
+					HINSTANCE h = FindExecutable(media_path, NULL, player);
+					if ((INT_PTR)h > 32 && player[0])
+					{
+						CString args;
+						args.Format(_T("\"%s\" /seek:%d"), media_path, seek_ms);
+						ShellExecute(m_hWnd, _T("open"), player, args, NULL, SW_NORMAL);
+					}
+					else
+					{
+						ShellExecute(m_hWnd, _T("open"), media_path, NULL, NULL, SW_NORMAL);
+					}
+				}
+			}
+			else
+			{
+				AfxMessageBox(_T("격자(검정 테두리)를 검출하지 못했습니다."));
+			}
+
+			CDialogEx::OnLButtonDblClk(nFlags, point);
+			return;
+		}
+	}
+
 	if (!IsZoomed())
 	{
 		trace(point);
