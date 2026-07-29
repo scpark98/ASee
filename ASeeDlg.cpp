@@ -1717,7 +1717,7 @@ LRESULT CASeeDlg::OnNcHitTest(CPoint point)
 void CASeeDlg::OnMenuOpen()
 {
 	CString cur_file = m_imgDlg.get_filename();
-	CString image_filter = _T("Image Files|*.bmp;*.jpg;*.jpeg;*.png;*.webp;*.gif;*.yuv;*.jfif;*.avif|All Files|*.*||");
+	CString image_filter = _T("Image Files|*.bmp;*.jpg;*.jpeg;*.png;*.webp;*.gif;*.yuv;*.jfif;*.avif;*.svg|All Files|*.*||");
 
 	CFileDialog dlg(TRUE, _T("*"), cur_file.IsEmpty() ? get_exe_directory(true) : cur_file, OFN_HIDEREADONLY, image_filter);
 

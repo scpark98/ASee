@@ -19,6 +19,9 @@
     <Filter Include="Common\SCDirWatcher">
       <UniqueIdentifier>{512059e8-1dbd-429d-9da5-6cdea2b43898}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\lunasvg">
+      <UniqueIdentifier>{752f5bec-9e60-4136-8584-7abc8ec585f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ASee.h">
@@ -217,6 +220,72 @@
     </ClCompile>
     <ClCompile Include="..\Common\SCGdiplusBitmap.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\SCSvg.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\source\graphics.cpp">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\source\lunasvg.cpp">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgelement.cpp">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svggeometryelement.cpp">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svglayoutstate.cpp">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgpaintelement.cpp">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgparser.cpp">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgproperty.cpp">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgrenderstate.cpp">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgtextelement.cpp">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-blend.c">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-canvas.c">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-font.c">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-ft-math.c">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-ft-raster.c">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-ft-stroker.c">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-matrix.c">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-paint.c">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-path.c">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-rasterize.c">
+      <Filter>Common\lunasvg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-surface.c">
+      <Filter>Common\lunasvg</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\directx\CSCD2Context\SCD2Context.cpp">
       <Filter>Common</Filter>
