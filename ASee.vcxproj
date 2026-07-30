@@ -106,7 +106,7 @@
       <PreprocessorDefinitions>SC_USE_SVG;LUNASVG_BUILD_STATIC;PLUTOVG_BUILD_STATIC;LUNASVG_DISABLE_LOAD_SYSTEM_FONTS;_WINDOWS;_DEBUG;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\1.Projects_C++\Common\directx\webp\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\plutovg\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\1.Projects_C++\Common\directx\webp\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\plutovg\include;D:\1.Projects_C++\Common\xml\pugixml\src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,7 +134,7 @@
       <PreprocessorDefinitions>SC_USE_SVG;LUNASVG_BUILD_STATIC;PLUTOVG_BUILD_STATIC;LUNASVG_DISABLE_LOAD_SYSTEM_FONTS;WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\1.Projects_C++\Common\directx\webp\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\plutovg\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\1.Projects_C++\Common\directx\webp\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\plutovg\include;D:\1.Projects_C++\Common\xml\pugixml\src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -166,7 +166,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <AdditionalIncludeDirectories>D:\1.Projects_C++\Common\directx\webp\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\plutovg\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\1.Projects_C++\Common\directx\webp\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\plutovg\include;D:\1.Projects_C++\Common\xml\pugixml\src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -201,7 +201,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <AdditionalIncludeDirectories>D:\1.Projects_C++\Common\directx\webp\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\plutovg\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\1.Projects_C++\Common\directx\webp\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\plutovg\include;D:\1.Projects_C++\Common\xml\pugixml\src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -461,6 +461,12 @@
     <ClCompile Include="TitleDlg.cpp" />
     <ClCompile Include="ZigzagColorDlg.cpp" />
     <ClCompile Include="..\Common\SCSvg.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Common\xml\pugixml\src\pugixml.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

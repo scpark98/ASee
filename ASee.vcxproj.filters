@@ -224,6 +224,9 @@
     <ClCompile Include="..\Common\SCSvg.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\xml\pugixml\src\pugixml.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
     <ClCompile Include="..\Common\3rdparty\lunasvg\source\graphics.cpp">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+  <!-- animateTransform: 중심 기준 무한 회전 -->
+  <rect x="90" y="90" width="60" height="60" fill="#3b82f6">
+    <animateTransform attributeName="transform" type="rotate"
+                      from="0 120 120" to="360 120 120"
+                      dur="2s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- animate: 반경 + opacity 왕복(values;keyTimes) -->
+  <circle cx="120" cy="120" r="20" fill="#ef4444">
+    <animate attributeName="r" values="20;50;20" keyTimes="0;0.5;1"
+             dur="1.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="1;0.3;1" keyTimes="0;0.5;1"
+             dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- animate 색 보간(fill) -->
+  <circle cx="120" cy="30" r="14">
+    <animate attributeName="fill" values="#10b981;#f59e0b;#10b981"
+             dur="3s" repeatCount="indefinite"/>
+  </circle>
+</svg>
