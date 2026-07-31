@@ -65,3 +65,12 @@
 - **2026-07-30**: 폰트 포함 SVG 릭 해결 — lunasvg 폰트 캐시 소멸자 추가 (벤더 최소 패치).
   - **원인**: `graphics.h`/`graphics.cpp` 의 `FontFaceCache` 는 함수-로컬 static 싱글턴이고 `plutovg_font_face_cache_create()` 로 캐시를 만들지만 **소멸자가 없어** 우리가 온디맨드 등록한 폰트 페이스 + 로드 데이터(CJK 폰트는 수 MB)가 프로세스 종료까지 해제 안 됨 → 릭. 캐시가 **프로세스 전역**이라 "이미지 release 시 삭제"는 구조상 불가(공유 + remove API 없음).
   - **해결**: `FontFaceCache` 에 소멸자 추가 → `plutovg_font_face_cache_destroy(m_cache)` 호출. 함수-로컬 static 이라 프로세스 종료 시 자동 소멸하며 등록된 모든 폰트를 해제 → 릭 0. **벤더 소스 2줄 수정**(graphics.h 선언 + graphics.cpp 정의, ASCII 주석 `Local addition (not upstream)`). 이전 릭 대책(`LUNASVG_DISABLE_LOAD_SYSTEM_FONTS`)은 시스템 폰트 로드를 껐지만, 우리가 *의도적으로* 등록하는 폰트는 이 소멸자가 있어야 해제된다. Common repo 로 동기화되므로 양 머신 일관.
+
+- **2026-07-31**: **[주말 작업 예정 · 미구현] SVG 애니 로딩 성능 — 병렬 베이킹(A) + 점진적 백그라운드(B).** (집 머신에서 이어서 진행하려고 기록.)
+  - **동기**: 현재 `sc_svg::build_frames`(SCSvg.cpp)가 표시용으로 총 예산(1500ms) 내에서 프레임 수를 적응 감축 → 무거운 SVG 는 fps 가 낮아져 애니가 부자연스러움. fps 를 깎는 대신 병렬화로 시간을 벌자는 것.
+  - **병목**: 프레임마다 pugixml DOM 변형 → 직렬화 → **lunasvg 전체 재파싱 + 래스터**. 이게 비싸고 **프레임끼리 완전 독립**(각 프레임 = 서로 다른 SVG 문자열을 새 Document 로 렌더) → CPU 바운드 병렬화의 이상적 대상.
+  - **(A) 병렬 베이킹**: ① 순차(pugixml 1회 파싱 → N개 프레임 SVG **문자열을 미리 다 생성**) → ② 병렬(스레드풀 ≈코어수: 각자 `lunasvg::loadFromData → renderToBitmap → un-premultiply` → BGRA) → 순서대로 조립. 코어 수만큼 단축 → **fps 복원 가능**. **D2D 는 그대로 순차**(`add_frame_from_raw` 는 UI/D2D 스레드), 병렬 구간은 순수 CPU(BGRA)라 스레드안전.
+  - **주의(폰트캐시)**: lunasvg 전역 폰트캐시(`graphics.cpp` FontFaceCache)는 스레드안전 미보장 → **텍스트 있는 SVG 는 프레임0 을 먼저 렌더해 캐시 예열 후 나머지 병렬, 또는 텍스트면 순차 폴백.** 아이콘류(텍스트 없음)는 완전 병렬 안전. (각 스레드 자기 DOM 필요 → 위 ①에서 문자열을 미리 뽑아두는 게 핵심.)
+  - **(B) 점진적 백그라운드 베이킹**: 프레임0 즉시 표시·재생 + 나머지 백그라운드 워커가 BGRA 굽고 UI 스레드로 marshal 해 `add_frame_from_raw` → **체감 로딩 ≈ 즉시**. (위 2026-07-30 "남은 카드" 와 동일 아이디어.)
+  - **(A+B)** 결합 가능. 대상이 아이콘 위주면 A 만으로 큰 효과, 텍스트까지 매끄럽게는 예열+A, 체감 로딩까지 잡으려면 B 추가.
+  - **손댈 곳**: `Common/SCSvg.cpp`(`build_frames`/`build_frames_stream` 의 렌더 루프 병렬화), `Common/directx/CSCD2Image/SCD2Image.cpp`(`load_svg` — B 의 백그라운드 marshal).
