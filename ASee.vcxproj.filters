@@ -42,112 +42,115 @@
     <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\colors.h">
+    <ClInclude Include="$(CommonLibDir)\colors.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\Functions.h">
+    <ClInclude Include="$(CommonLibDir)\Functions.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\MemoryDC.h">
+    <ClInclude Include="$(CommonLibDir)\MemoryDC.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\CStatic\SCStatic\SCStatic.h">
+    <ClInclude Include="$(CommonLibDir)\CStatic\SCStatic\SCStatic.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\AutoFont.h">
+    <ClInclude Include="$(CommonLibDir)\AutoFont.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="RoiInputDlg.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\CDialog\SCShapeDlg\SCShapeDlg.h">
+    <ClInclude Include="$(CommonLibDir)\CDialog\SCShapeDlg\SCShapeDlg.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\data_structure\SCParagraph\SCParagraph.h">
+    <ClInclude Include="$(CommonLibDir)\data_structure\SCParagraph\SCParagraph.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\messagebox\Win32InputBox\Win32InputBox.h">
+    <ClInclude Include="$(CommonLibDir)\messagebox\Win32InputBox\Win32InputBox.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\CDialog\SCThemeDlg\SCThemeDlg.h">
+    <ClInclude Include="$(CommonLibDir)\CDialog\SCThemeDlg\SCThemeDlg.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\CButton\SCSystemButtons\SCSystemButtons.h">
+    <ClInclude Include="$(CommonLibDir)\CButton\SCSystemButtons\SCSystemButtons.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\CWnd\WndShadow\WndShadow.h">
+    <ClInclude Include="$(CommonLibDir)\CWnd\WndShadow\WndShadow.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.h">
+    <ClInclude Include="$(CommonLibDir)\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChangesPrivate.h">
+    <ClInclude Include="$(CommonLibDir)\file_system\SCDirWatcher\ReadDirectoryChangesPrivate.h">
       <Filter>Common\SCDirWatcher</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\file_system\SCDirWatcher\SCDirWatcher.h">
+    <ClInclude Include="$(CommonLibDir)\file_system\SCDirWatcher\SCDirWatcher.h">
       <Filter>Common\SCDirWatcher</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\file_system\SCDirWatcher\ThreadSafeQueue.h">
+    <ClInclude Include="$(CommonLibDir)\file_system\SCDirWatcher\ThreadSafeQueue.h">
       <Filter>Common\SCDirWatcher</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChanges.h">
+    <ClInclude Include="$(CommonLibDir)\file_system\SCDirWatcher\ReadDirectoryChanges.h">
       <Filter>Common\SCDirWatcher</Filter>
     </ClInclude>
     <ClInclude Include="ZigzagColorDlg.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\ThumbCtrl\SCThumbCtrl.h">
+    <ClInclude Include="$(CommonLibDir)\ThumbCtrl\SCThumbCtrl.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\CEdit\SCEdit\SCEdit.h">
+    <ClInclude Include="$(CommonLibDir)\CEdit\SCEdit\SCEdit.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\SCGdiplusBitmap.h">
+    <ClInclude Include="$(CommonLibDir)\SCGdiplusBitmap.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\directx\CSCD2Context\SCD2Context.h">
+    <ClInclude Include="$(CommonLibDir)\directx\CSCD2Context\SCD2Context.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\directx\CSCD2Image\SCD2Image.h">
+    <ClInclude Include="$(CommonLibDir)\directx\CSCD2Image\SCD2Image.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="TitleDlg.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\LayeredWindowHelperST.h">
+    <ClInclude Include="$(CommonLibDir)\LayeredWindowHelperST.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\CDialog\SCD2ImageDlg\SCD2ImageDlg.h">
+    <ClInclude Include="$(CommonLibDir)\CDialog\SCD2ImageDlg\SCD2ImageDlg.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\thread\ThreadManager.h">
+    <ClInclude Include="$(CommonLibDir)\thread\ThreadManager.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="BackTransparencyDlg.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\thread\CSCThread\SCThread.h">
+    <ClInclude Include="$(CommonLibDir)\thread\CSCThread\SCThread.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\thread\CSCThreadGroup\SCThreadGroup.h">
+    <ClInclude Include="$(CommonLibDir)\thread\CSCThreadGroup\SCThreadGroup.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\CDialog\CSCColorPicker\SCColorPicker.h">
+    <ClInclude Include="$(CommonLibDir)\CDialog\CSCColorPicker\SCColorPicker.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\CDialog\CSCColorPicker\SCDropperDlg.h">
+    <ClInclude Include="$(CommonLibDir)\CDialog\CSCColorPicker\SCDropperDlg.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\CEdit\CSCStaticEdit\SCStaticEdit.h">
+    <ClInclude Include="$(CommonLibDir)\CEdit\CSCStaticEdit\SCStaticEdit.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\CScrollbar\SCScrollbar\SCScrollbar.h">
+    <ClInclude Include="$(CommonLibDir)\CScrollbar\SCScrollbar\SCScrollbar.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\ocr\SCWinOcr.h">
+    <ClInclude Include="$(CommonLibDir)\ocr\SCWinOcr.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="snapshot_seek.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ExportSvgToGifDlg.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -161,172 +164,175 @@
     <ClCompile Include="pch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\colors.cpp">
+    <ClCompile Include="$(CommonLibDir)\colors.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\Functions.cpp">
+    <ClCompile Include="$(CommonLibDir)\Functions.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\CStatic\SCStatic\SCStatic.cpp">
+    <ClCompile Include="$(CommonLibDir)\CStatic\SCStatic\SCStatic.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\AutoFont.cpp">
+    <ClCompile Include="$(CommonLibDir)\AutoFont.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="RoiInputDlg.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\CDialog\SCShapeDlg\SCShapeDlg.cpp">
+    <ClCompile Include="$(CommonLibDir)\CDialog\SCShapeDlg\SCShapeDlg.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\data_structure\SCParagraph\SCParagraph.cpp">
+    <ClCompile Include="$(CommonLibDir)\data_structure\SCParagraph\SCParagraph.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\messagebox\Win32InputBox\Win32InputBox.cpp">
+    <ClCompile Include="$(CommonLibDir)\messagebox\Win32InputBox\Win32InputBox.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\CDialog\SCThemeDlg\SCThemeDlg.cpp">
+    <ClCompile Include="$(CommonLibDir)\CDialog\SCThemeDlg\SCThemeDlg.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\CButton\SCSystemButtons\SCSystemButtons.cpp">
+    <ClCompile Include="$(CommonLibDir)\CButton\SCSystemButtons\SCSystemButtons.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\CWnd\WndShadow\WndShadow.cpp">
+    <ClCompile Include="$(CommonLibDir)\CWnd\WndShadow\WndShadow.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="TitleDlg.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.cpp">
+    <ClCompile Include="$(CommonLibDir)\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\file_system\SCDirWatcher\SCDirWatcher.cpp">
+    <ClCompile Include="$(CommonLibDir)\file_system\SCDirWatcher\SCDirWatcher.cpp">
       <Filter>Common\SCDirWatcher</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChanges.cpp">
+    <ClCompile Include="$(CommonLibDir)\file_system\SCDirWatcher\ReadDirectoryChanges.cpp">
       <Filter>Common\SCDirWatcher</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChangesPrivate.cpp">
+    <ClCompile Include="$(CommonLibDir)\file_system\SCDirWatcher\ReadDirectoryChangesPrivate.cpp">
       <Filter>Common\SCDirWatcher</Filter>
     </ClCompile>
     <ClCompile Include="ZigzagColorDlg.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\ThumbCtrl\SCThumbCtrl.cpp">
+    <ClCompile Include="$(CommonLibDir)\ThumbCtrl\SCThumbCtrl.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\CEdit\SCEdit\SCEdit.cpp">
+    <ClCompile Include="$(CommonLibDir)\CEdit\SCEdit\SCEdit.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\SCGdiplusBitmap.cpp">
+    <ClCompile Include="$(CommonLibDir)\SCGdiplusBitmap.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\SCSvg.cpp">
+    <ClCompile Include="$(CommonLibDir)\SCSvg.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\xml\pugixml\src\pugixml.cpp">
+    <ClCompile Include="$(CommonLibDir)\xml\pugixml\src\pugixml.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\graphics.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\graphics.cpp">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\lunasvg.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\lunasvg.cpp">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgelement.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svgelement.cpp">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svggeometryelement.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svggeometryelement.cpp">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svglayoutstate.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svglayoutstate.cpp">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgpaintelement.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svgpaintelement.cpp">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgparser.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svgparser.cpp">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgproperty.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svgproperty.cpp">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgrenderstate.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svgrenderstate.cpp">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgtextelement.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svgtextelement.cpp">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-blend.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-blend.c">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-canvas.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-canvas.c">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-font.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-font.c">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-ft-math.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-ft-math.c">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-ft-raster.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-ft-raster.c">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-ft-stroker.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-ft-stroker.c">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-matrix.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-matrix.c">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-paint.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-paint.c">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-path.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-path.c">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-rasterize.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-rasterize.c">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-surface.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-surface.c">
       <Filter>Common\lunasvg</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\directx\CSCD2Context\SCD2Context.cpp">
+    <ClCompile Include="$(CommonLibDir)\directx\CSCD2Context\SCD2Context.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\directx\CSCD2Image\SCD2Image.cpp">
+    <ClCompile Include="$(CommonLibDir)\directx\CSCD2Image\SCD2Image.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\LayeredWindowHelperST.cpp">
+    <ClCompile Include="$(CommonLibDir)\LayeredWindowHelperST.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\CDialog\SCD2ImageDlg\SCD2ImageDlg.cpp">
+    <ClCompile Include="$(CommonLibDir)\CDialog\SCD2ImageDlg\SCD2ImageDlg.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\thread\ThreadManager.cpp">
+    <ClCompile Include="$(CommonLibDir)\thread\ThreadManager.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="BackTransparencyDlg.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\thread\CSCThread\SCThread.cpp">
+    <ClCompile Include="$(CommonLibDir)\thread\CSCThread\SCThread.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\CDialog\CSCColorPicker\SCColorPicker.cpp">
+    <ClCompile Include="$(CommonLibDir)\CDialog\CSCColorPicker\SCColorPicker.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\CDialog\CSCColorPicker\SCDropperDlg.cpp">
+    <ClCompile Include="$(CommonLibDir)\CDialog\CSCColorPicker\SCDropperDlg.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\CEdit\CSCStaticEdit\SCStaticEdit.cpp">
+    <ClCompile Include="$(CommonLibDir)\CEdit\CSCStaticEdit\SCStaticEdit.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\CScrollbar\SCScrollbar\SCScrollbar.cpp">
+    <ClCompile Include="$(CommonLibDir)\CScrollbar\SCScrollbar\SCScrollbar.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\Common\ocr\SCWinOcr.cpp">
+    <ClCompile Include="$(CommonLibDir)\ocr\SCWinOcr.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="snapshot_seek.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ExportSvgToGifDlg.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

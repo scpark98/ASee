@@ -11,6 +11,7 @@
 #include "RoiInputDlg.h"
 #include "ZigzagColorDlg.h"
 #include "snapshot_seek.h"
+#include "ExportSvgToGifDlg.h"
 #include "Common/messagebox/Win32InputBox/Win32InputBox.h"
 
 #include "Common/SCGdiplusBitmap.h"
@@ -155,6 +156,7 @@ BEGIN_MESSAGE_MAP(CASeeDlg, CDialogEx)
 	ON_WM_SIZING()
 	ON_WM_MBUTTONUP()
 	ON_COMMAND(ID_MENU_COUNT_COLOR_USED, &CASeeDlg::OnMenuCountColorUsed)
+	ON_COMMAND(ID_MENU_EXPORT_ANIMATION, &CASeeDlg::OnMenuExportAnimation)
 END_MESSAGE_MAP()
 
 
@@ -1778,6 +1780,28 @@ void CASeeDlg::OnMenuSaveAs()
 	m_imgDlg.display_image(sfile, true);
 }
 
+// 애니메이션 SVG → 애니메이션 GIF/WebP 내보내기 대화상자를 띄운다.
+// (예전엔 "다른 이름으로 저장"에서 gif 확장자로 트리거했으나, 전용 메뉴로 분리.)
+void CASeeDlg::OnMenuExportAnimation()
+{
+	CSCD2Image* cur = m_imgDlg.get_cur_image();
+	if (!cur || !cur->is_svg() || !cur->is_animated_image())
+	{
+		AfxMessageBox(_T("애니메이션 SVG 가 아닙니다."));
+		return;
+	}
+
+	// 파일 생성이 dir_watcher 를 건드리지 않도록 잠시 중지(OnMenuSaveAs 와 동일 이유).
+	m_dir_watcher.stop();
+	Wait(100);
+
+	CExportSvgToGifDlg edlg(this);
+	edlg.m_svg_path = m_imgDlg.get_filename(true);	// 출력 경로/크기/포맷은 대화상자에서 결정
+	edlg.DoModal();
+
+	m_dir_watcher.add(get_part(m_imgDlg.get_filename(), fn_folder));
+}
+
 void CASeeDlg::OnMenuViewShapeDlg()
 {
 	m_shapeDlg.load(this, m_imgDlg.get_filename());
@@ -1932,3 +1956,4 @@ void CASeeDlg::OnMenuCountColorUsed()
 {
 	m_imgDlg.count_color_used();
 }
+

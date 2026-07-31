@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -57,6 +57,7 @@
     <UseOfMfc>Static</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Import Project="CommonLib.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
@@ -78,40 +79,40 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>bin/</OutDir>
     <IntDir>$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\1.projects_c++;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(CommonLibRoot);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>bin/</OutDir>
     <IntDir>$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\1.projects_c++;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(CommonLibRoot);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>bin/</OutDir>
     <IntDir>$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\1.projects_c++;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(CommonLibRoot);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>bin/</OutDir>
     <IntDir>$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\1.projects_c++;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(CommonLibRoot);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>SC_USE_SVG;LUNASVG_BUILD_STATIC;PLUTOVG_BUILD_STATIC;LUNASVG_DISABLE_LOAD_SYSTEM_FONTS;_WINDOWS;_DEBUG;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SC_USE_SVG;SC_USE_WEBP;SC_USE_APNG;LUNASVG_BUILD_STATIC;PLUTOVG_BUILD_STATIC;LUNASVG_DISABLE_LOAD_SYSTEM_FONTS;_WINDOWS;_DEBUG;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\1.Projects_C++\Common\directx\webp\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\plutovg\include;D:\1.Projects_C++\Common\xml\pugixml\src;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CommonLibDir)\directx\webp\include;$(CommonLibDir)\3rdparty\lunasvg\include;$(CommonLibDir)\3rdparty\lunasvg\plutovg\include;$(CommonLibDir)\xml\pugixml\src;$(CommonLibDir)\3rdparty\lpng1658;$(CommonLibDir)\3rdparty\zlib-1.3.2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
-      <AdditionalLibraryDirectories>D:\1.Projects_C++\Common\directx\webp\lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CommonLibDir)\directx\webp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Link>
@@ -134,12 +135,12 @@
       <PreprocessorDefinitions>SC_USE_SVG;LUNASVG_BUILD_STATIC;PLUTOVG_BUILD_STATIC;LUNASVG_DISABLE_LOAD_SYSTEM_FONTS;WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>D:\1.Projects_C++\Common\directx\webp\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\plutovg\include;D:\1.Projects_C++\Common\xml\pugixml\src;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CommonLibDir)\directx\webp\include;$(CommonLibDir)\3rdparty\lunasvg\include;$(CommonLibDir)\3rdparty\lunasvg\plutovg\include;$(CommonLibDir)\xml\pugixml\src;$(CommonLibDir)\3rdparty\lpng1658;$(CommonLibDir)\3rdparty\zlib-1.3.2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
-      <AdditionalLibraryDirectories>D:\1.Projects_C++\Common\directx\webp\lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CommonLibDir)\directx\webp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Link>
@@ -166,7 +167,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <AdditionalIncludeDirectories>D:\1.Projects_C++\Common\directx\webp\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\plutovg\include;D:\1.Projects_C++\Common\xml\pugixml\src;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CommonLibDir)\directx\webp\include;$(CommonLibDir)\3rdparty\lunasvg\include;$(CommonLibDir)\3rdparty\lunasvg\plutovg\include;$(CommonLibDir)\xml\pugixml\src;$(CommonLibDir)\3rdparty\lpng1658;$(CommonLibDir)\3rdparty\zlib-1.3.2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -174,7 +175,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\1.Projects_C++\Common\directx\webp\lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CommonLibDir)\directx\webp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Link>
@@ -196,12 +197,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>SC_USE_SVG;LUNASVG_BUILD_STATIC;PLUTOVG_BUILD_STATIC;LUNASVG_DISABLE_LOAD_SYSTEM_FONTS;_WINDOWS;NDEBUG;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SC_USE_SVG;SC_USE_WEBP;SC_USE_APNG;LUNASVG_BUILD_STATIC;PLUTOVG_BUILD_STATIC;LUNASVG_DISABLE_LOAD_SYSTEM_FONTS;_WINDOWS;NDEBUG;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>MaxSpeed</Optimization>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <AdditionalIncludeDirectories>D:\1.Projects_C++\Common\directx\webp\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\include;D:\1.Projects_C++\Common\3rdparty\lunasvg\plutovg\include;D:\1.Projects_C++\Common\xml\pugixml\src;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CommonLibDir)\directx\webp\include;$(CommonLibDir)\3rdparty\lunasvg\include;$(CommonLibDir)\3rdparty\lunasvg\plutovg\include;$(CommonLibDir)\xml\pugixml\src;$(CommonLibDir)\3rdparty\lpng1658;$(CommonLibDir)\3rdparty\zlib-1.3.2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -209,7 +210,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <UACExecutionLevel>AsInvoker</UACExecutionLevel>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\1.Projects_C++\Common\directx\webp\lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CommonLibDir)\directx\webp\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>
       </AdditionalDependencies>
     </Link>
@@ -225,45 +226,47 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Common\AutoFont.h" />
-    <ClInclude Include="..\Common\CButton\SCSystemButtons\SCSystemButtons.h" />
-    <ClInclude Include="..\Common\CDialog\CSCColorPicker\SCColorPicker.h" />
-    <ClInclude Include="..\Common\CDialog\CSCColorPicker\SCDropperDlg.h" />
-    <ClInclude Include="..\Common\CDialog\SCD2ImageDlg\SCD2ImageDlg.h" />
-    <ClInclude Include="..\Common\CDialog\SCShapeDlg\SCShapeDlg.h" />
-    <ClInclude Include="..\Common\CDialog\SCThemeDlg\SCThemeDlg.h">
+    <ClInclude Include="$(CommonLibDir)\AutoFont.h" />
+    <ClInclude Include="$(CommonLibDir)\CButton\SCSystemButtons\SCSystemButtons.h" />
+    <ClInclude Include="$(CommonLibDir)\CDialog\CSCColorPicker\SCColorPicker.h" />
+    <ClInclude Include="$(CommonLibDir)\CDialog\CSCColorPicker\SCDropperDlg.h" />
+    <ClInclude Include="$(CommonLibDir)\CDialog\SCD2ImageDlg\SCD2ImageDlg.h" />
+    <ClInclude Include="$(CommonLibDir)\CDialog\SCShapeDlg\SCShapeDlg.h" />
+    <ClInclude Include="$(CommonLibDir)\CDialog\SCThemeDlg\SCThemeDlg.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="..\Common\CEdit\CSCStaticEdit\SCStaticEdit.h" />
-    <ClInclude Include="..\Common\CEdit\SCEdit\SCEdit.h" />
-    <ClInclude Include="..\Common\colors.h" />
-    <ClInclude Include="..\Common\CScrollbar\SCScrollbar\SCScrollbar.h" />
-    <ClInclude Include="..\Common\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.h" />
-    <ClInclude Include="..\Common\CStatic\SCStatic\SCStatic.h" />
-    <ClInclude Include="..\Common\CWnd\WndShadow\WndShadow.h" />
-    <ClInclude Include="..\Common\data_structure\SCParagraph\SCParagraph.h" />
-    <ClInclude Include="..\Common\directx\CSCD2Context\SCD2Context.h" />
-    <ClInclude Include="..\Common\directx\CSCD2Image\SCD2Image.h" />
-    <ClInclude Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChanges.h" />
-    <ClInclude Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChangesPrivate.h" />
-    <ClInclude Include="..\Common\file_system\SCDirWatcher\SCDirWatcher.h" />
-    <ClInclude Include="..\Common\file_system\SCDirWatcher\ThreadSafeQueue.h" />
-    <ClInclude Include="..\Common\Functions.h" />
-    <ClInclude Include="..\Common\LayeredWindowHelperST.h" />
-    <ClInclude Include="..\Common\MemoryDC.h" />
-    <ClInclude Include="..\Common\messagebox\Win32InputBox\Win32InputBox.h" />
-    <ClInclude Include="..\Common\ocr\SCWinOcr.h" />
-    <ClInclude Include="..\Common\SCGdiplusBitmap.h" />
-    <ClInclude Include="..\Common\thread\CSCThread\SCThread.h" />
-    <ClInclude Include="..\Common\thread\CSCThreadGroup\SCThreadGroup.h" />
-    <ClInclude Include="..\Common\thread\ThreadManager.h" />
-    <ClInclude Include="..\Common\ThumbCtrl\SCThumbCtrl.h" />
+    <ClInclude Include="$(CommonLibDir)\CEdit\CSCStaticEdit\SCStaticEdit.h" />
+    <ClInclude Include="$(CommonLibDir)\CEdit\SCEdit\SCEdit.h" />
+    <ClInclude Include="$(CommonLibDir)\colors.h" />
+    <ClInclude Include="$(CommonLibDir)\CScrollbar\SCScrollbar\SCScrollbar.h" />
+    <ClInclude Include="$(CommonLibDir)\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.h" />
+    <ClInclude Include="$(CommonLibDir)\CStatic\SCStatic\SCStatic.h" />
+    <ClInclude Include="$(CommonLibDir)\CWnd\WndShadow\WndShadow.h" />
+    <ClInclude Include="$(CommonLibDir)\data_structure\SCParagraph\SCParagraph.h" />
+    <ClInclude Include="$(CommonLibDir)\directx\CSCD2Context\SCD2Context.h" />
+    <ClInclude Include="$(CommonLibDir)\directx\CSCD2Image\SCD2Image.h" />
+    <ClInclude Include="$(CommonLibDir)\file_system\SCDirWatcher\ReadDirectoryChanges.h" />
+    <ClInclude Include="$(CommonLibDir)\file_system\SCDirWatcher\ReadDirectoryChangesPrivate.h" />
+    <ClInclude Include="$(CommonLibDir)\file_system\SCDirWatcher\SCDirWatcher.h" />
+    <ClInclude Include="$(CommonLibDir)\file_system\SCDirWatcher\ThreadSafeQueue.h" />
+    <ClInclude Include="$(CommonLibDir)\Functions.h" />
+    <ClInclude Include="$(CommonLibDir)\LayeredWindowHelperST.h" />
+    <ClInclude Include="$(CommonLibDir)\MemoryDC.h" />
+    <ClInclude Include="$(CommonLibDir)\messagebox\Win32InputBox\Win32InputBox.h" />
+    <ClInclude Include="$(CommonLibDir)\ocr\SCWinOcr.h" />
+    <ClInclude Include="$(CommonLibDir)\SCGdiplusBitmap.h" />
+    <ClInclude Include="$(CommonLibDir)\SCApng.h" />
+    <ClInclude Include="$(CommonLibDir)\thread\CSCThread\SCThread.h" />
+    <ClInclude Include="$(CommonLibDir)\thread\CSCThreadGroup\SCThreadGroup.h" />
+    <ClInclude Include="$(CommonLibDir)\thread\ThreadManager.h" />
+    <ClInclude Include="$(CommonLibDir)\ThumbCtrl\SCThumbCtrl.h" />
     <ClInclude Include="ASee.h" />
     <ClInclude Include="ASeeDlg.h" />
     <ClInclude Include="BackTransparencyDlg.h" />
+    <ClInclude Include="ExportSvgToGifDlg.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
@@ -274,43 +277,43 @@
     <ClInclude Include="ZigzagColorDlg.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Common\AutoFont.cpp">
+    <ClCompile Include="$(CommonLibDir)\AutoFont.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\CButton\SCSystemButtons\SCSystemButtons.cpp">
+    <ClCompile Include="$(CommonLibDir)\CButton\SCSystemButtons\SCSystemButtons.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\CDialog\CSCColorPicker\SCColorPicker.cpp">
+    <ClCompile Include="$(CommonLibDir)\CDialog\CSCColorPicker\SCColorPicker.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\CDialog\CSCColorPicker\SCDropperDlg.cpp">
+    <ClCompile Include="$(CommonLibDir)\CDialog\CSCColorPicker\SCDropperDlg.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\CDialog\SCD2ImageDlg\SCD2ImageDlg.cpp">
+    <ClCompile Include="$(CommonLibDir)\CDialog\SCD2ImageDlg\SCD2ImageDlg.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\CDialog\SCShapeDlg\SCShapeDlg.cpp">
+    <ClCompile Include="$(CommonLibDir)\CDialog\SCShapeDlg\SCShapeDlg.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\CDialog\SCThemeDlg\SCThemeDlg.cpp">
+    <ClCompile Include="$(CommonLibDir)\CDialog\SCThemeDlg\SCThemeDlg.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -320,128 +323,128 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\Common\CEdit\CSCStaticEdit\SCStaticEdit.cpp">
+    <ClCompile Include="$(CommonLibDir)\CEdit\CSCStaticEdit\SCStaticEdit.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\CEdit\SCEdit\SCEdit.cpp">
+    <ClCompile Include="$(CommonLibDir)\CEdit\SCEdit\SCEdit.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\colors.cpp">
+    <ClCompile Include="$(CommonLibDir)\colors.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\CScrollbar\SCScrollbar\SCScrollbar.cpp">
+    <ClCompile Include="$(CommonLibDir)\CScrollbar\SCScrollbar\SCScrollbar.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.cpp">
+    <ClCompile Include="$(CommonLibDir)\CSliderCtrl\SCSliderCtrl\SCSliderCtrl.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\CStatic\SCStatic\SCStatic.cpp">
+    <ClCompile Include="$(CommonLibDir)\CStatic\SCStatic\SCStatic.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\CWnd\WndShadow\WndShadow.cpp">
+    <ClCompile Include="$(CommonLibDir)\CWnd\WndShadow\WndShadow.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\data_structure\SCParagraph\SCParagraph.cpp">
+    <ClCompile Include="$(CommonLibDir)\data_structure\SCParagraph\SCParagraph.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\directx\CSCD2Context\SCD2Context.cpp">
+    <ClCompile Include="$(CommonLibDir)\directx\CSCD2Context\SCD2Context.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\directx\CSCD2Image\SCD2Image.cpp">
+    <ClCompile Include="$(CommonLibDir)\directx\CSCD2Image\SCD2Image.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChanges.cpp">
+    <ClCompile Include="$(CommonLibDir)\file_system\SCDirWatcher\ReadDirectoryChanges.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\file_system\SCDirWatcher\ReadDirectoryChangesPrivate.cpp">
+    <ClCompile Include="$(CommonLibDir)\file_system\SCDirWatcher\ReadDirectoryChangesPrivate.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\file_system\SCDirWatcher\SCDirWatcher.cpp">
+    <ClCompile Include="$(CommonLibDir)\file_system\SCDirWatcher\SCDirWatcher.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\Functions.cpp">
+    <ClCompile Include="$(CommonLibDir)\Functions.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\LayeredWindowHelperST.cpp">
+    <ClCompile Include="$(CommonLibDir)\LayeredWindowHelperST.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\messagebox\Win32InputBox\Win32InputBox.cpp">
+    <ClCompile Include="$(CommonLibDir)\messagebox\Win32InputBox\Win32InputBox.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\ocr\SCWinOcr.cpp">
+    <ClCompile Include="$(CommonLibDir)\ocr\SCWinOcr.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
-    <ClCompile Include="..\Common\SCGdiplusBitmap.cpp">
+    <ClCompile Include="$(CommonLibDir)\SCGdiplusBitmap.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\thread\CSCThread\SCThread.cpp">
+    <ClCompile Include="$(CommonLibDir)\thread\CSCThread\SCThread.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\thread\ThreadManager.cpp">
+    <ClCompile Include="$(CommonLibDir)\thread\ThreadManager.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\ThumbCtrl\SCThumbCtrl.cpp">
+    <ClCompile Include="$(CommonLibDir)\ThumbCtrl\SCThumbCtrl.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -450,6 +453,7 @@
     <ClCompile Include="ASee.cpp" />
     <ClCompile Include="ASeeDlg.cpp" />
     <ClCompile Include="BackTransparencyDlg.cpp" />
+    <ClCompile Include="ExportSvgToGifDlg.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -460,143 +464,359 @@
     <ClCompile Include="snapshot_seek.cpp" />
     <ClCompile Include="TitleDlg.cpp" />
     <ClCompile Include="ZigzagColorDlg.cpp" />
-    <ClCompile Include="..\Common\SCSvg.cpp">
+    <ClCompile Include="$(CommonLibDir)\SCSvg.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\xml\pugixml\src\pugixml.cpp">
+    <ClCompile Include="$(CommonLibDir)\SCApng.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\graphics.cpp">
+    <ClCompile Include="$(CommonLibDir)\xml\pugixml\src\pugixml.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\lunasvg.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\graphics.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgelement.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\lunasvg.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svggeometryelement.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svgelement.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svglayoutstate.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svggeometryelement.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgpaintelement.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svglayoutstate.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgparser.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svgpaintelement.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgproperty.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svgparser.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgrenderstate.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svgproperty.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\source\svgtextelement.cpp">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svgrenderstate.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-blend.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\source\svgtextelement.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-canvas.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-blend.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-font.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-canvas.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-ft-math.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-font.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-ft-raster.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-ft-math.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-ft-stroker.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-ft-raster.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-matrix.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-ft-stroker.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-paint.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-matrix.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-path.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-paint.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-rasterize.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-path.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Common\3rdparty\lunasvg\plutovg\source\plutovg-surface.c">
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-rasterize.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lunasvg\plutovg\source\plutovg-surface.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lpng1658\png.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lpng1658\pngerror.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lpng1658\pngget.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lpng1658\pngmem.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lpng1658\pngpread.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lpng1658\pngread.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lpng1658\pngrio.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lpng1658\pngrtran.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lpng1658\pngrutil.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lpng1658\pngset.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lpng1658\pngtrans.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lpng1658\pngwio.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lpng1658\pngwrite.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lpng1658\pngwtran.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\lpng1658\pngwutil.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\zlib-1.3.2\adler32.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\zlib-1.3.2\compress.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\zlib-1.3.2\crc32.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\zlib-1.3.2\deflate.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\zlib-1.3.2\gzclose.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\zlib-1.3.2\gzlib.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\zlib-1.3.2\gzread.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\zlib-1.3.2\gzwrite.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\zlib-1.3.2\infback.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\zlib-1.3.2\inffast.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\zlib-1.3.2\inflate.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\zlib-1.3.2\inftrees.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\zlib-1.3.2\trees.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\zlib-1.3.2\uncompr.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
+    </ClCompile>
+    <ClCompile Include="$(CommonLibDir)\3rdparty\zlib-1.3.2\zutil.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <SDLCheck>false</SDLCheck>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
