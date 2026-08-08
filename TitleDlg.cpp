@@ -137,7 +137,7 @@ void CTitleDlg::fade_in(bool show)
 {
 	KillTimer(timer_fade_in);
 
-	//trace(show);
+	//sctrace(show);
 
 	m_fade_in = show;
 	m_in_fade_in = true;
@@ -227,7 +227,7 @@ void CTitleDlg::OnTimer(UINT_PTR nIDEvent)
 			TRACE(_T("  parent = %p\n"), GetParent());
 			CRect rw;
 			GetWindowRect(rw);
-			//trace(rw);
+			//sctrace(rw);
 			//TRACE(_T("  Mouse Y: %d, Threshold: %d\n"), point.y, m_titleDlg.get_titlebar_height() + 10);
 			//TRACE(_T("  IsZoomed: %d\n"), IsZoomed());
 			last_trace = now;

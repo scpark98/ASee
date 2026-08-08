@@ -1555,7 +1555,7 @@ void CASeeDlg::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 	if (!IsZoomed())
 	{
-		trace(point);
+		sctrace(point);
 	}
 	CDialogEx::OnLButtonDblClk(nFlags, point);
 }
